@@ -7,6 +7,39 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import Cursor from "./Cursor";
+import FlipCard from "./FlipCard";
+import MovingBackground from "./MovingBackground";
+
+
+
+// ─── Typewriter hook ─────────────────────────────
+const words = ["delightful", "accessible", "performant", "beautiful"];
+
+function useTypewriter(words: string[], typingSpeed = 100, deletingSpeed = 50, pauseTime = 2000) {
+  const [index, setIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentWord = words[index];
+    let timeout: number;
+
+    if (!isDeleting && charIndex < currentWord.length) {
+      timeout = window.setTimeout(() => setCharIndex((c) => c + 1), typingSpeed);
+    } else if (!isDeleting && charIndex === currentWord.length) {
+      timeout = window.setTimeout(() => setIsDeleting(true), pauseTime);
+    } else if (isDeleting && charIndex > 0) {
+      timeout = window.setTimeout(() => setCharIndex((c) => c - 1), deletingSpeed);
+    } else if (isDeleting && charIndex === 0) {
+      setIsDeleting(false);
+      setIndex((prev) => (prev + 1) % words.length);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [charIndex, isDeleting, index, words, typingSpeed, deletingSpeed, pauseTime]);
+
+  return words[index].substring(0, charIndex);
+}
 
 // ─── Helpers ──────────────────────────────────────
 function Reveal({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
@@ -66,7 +99,6 @@ function FloatingParticles() {
   );
 }
 
-// ─── Data ─────────────────────────────────────────
 const skills = [
   { icon: Code2, title: "Frontend", items: ["HTML5", "CSS3", "JavaScript (ES6+)", "React", "Responsive", "A11y (WCAG)"] },
   { icon: Smartphone, title: "Mobile", items: ["React Native", "NativeWind", "Xamarin", "Cross-platform", "Mobile UI/UX"] },
@@ -119,32 +151,17 @@ const certs = [
   "FNB App Academy — Full-Stack (exposure)",
 ];
 
-// ─── Section wrapper ──────────────────────────────
 function Section({ id, eyebrow, title, children }: { id: string; eyebrow: string; title: string; children: ReactNode }) {
   return (
-    <section id={id} className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+    <section id={id} className="mx-auto max-w-6xl px-6 py-24 md:py-32">
       <Reveal>
-        <div className="mb-10 flex flex-col gap-2">
+        <div className="mb-12 flex flex-col gap-2">
           <span className="text-sm font-semibold uppercase tracking-[0.2em] text-hotpink">{eyebrow}</span>
           <h2 className="font-display text-3xl font-bold md:text-5xl">{title}</h2>
         </div>
       </Reveal>
       {children}
     </section>
-  );
-}
-
-function Detail({ icon: Icon, label, value }: { icon: typeof MapPin; label: string; value: string }) {
-  return (
-    <li className="flex items-start gap-3">
-      <div className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-muted">
-        <Icon className="h-4 w-4 text-hotpink" />
-      </div>
-      <div>
-        <div className="text-xs uppercase tracking-wider text-muted-foreground">{label}</div>
-        <div className="font-medium">{value}</div>
-      </div>
-    </li>
   );
 }
 
@@ -163,16 +180,26 @@ function ContactRow({ icon: Icon, label, href }: { icon: typeof Mail; label: str
   );
 }
 
+// ─── About Flip Cards data ───────────────────────
+const aboutDetails = [
+  { icon: MapPin, label: "Based in", value: "South Africa", detail: "Eastern Cape & Gauteng" },
+  { icon: GraduationCap, label: "Studying", value: "BCom Honours", detail: "Information Systems @ UFH" },
+  { icon: Briefcase, label: "Currently", value: "Appimate", detail: "Frontend & Mobile Developer" },
+  { icon: Sparkles, label: "Languages", value: "English · isiXhosa", detail: "Bilingual professional" },
+];
+
 // ─── Main Portfolio ────────────────────────────────
 export default function Portfolio() {
   const { theme, toggle } = useTheme();
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
+  const typedWord = useTypewriter(words);
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
       <Cursor />
       <FloatingParticles />
+      <MovingBackground />
 
       {/* Scroll progress bar */}
       <motion.div
@@ -212,7 +239,7 @@ export default function Portfolio() {
       </header>
 
       {/* Hero */}
-      <section id="top" className="relative mx-auto max-w-6xl px-6 pb-24 pt-20 md:pt-32">
+      <section id="top" className="relative mx-auto flex min-h-[80vh] max-w-6xl flex-col justify-center px-6 py-24 md:py-32">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -231,7 +258,12 @@ export default function Portfolio() {
             Hi, I'm <span className="gradient-text">Kgomotso</span>.<br />
             I build{" "}
             <span className="relative inline-block">
-              <span className="gradient-text">delightful</span>
+              <span className="gradient-text">{typedWord}</span>
+              <motion.span
+                animate={{ opacity: [1, 0] }}
+                transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+                className="ml-0.5 inline-block h-[0.9em] w-0.75 bg-hotpink align-middle"
+              />
               <motion.span
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
@@ -283,12 +315,11 @@ export default function Portfolio() {
           </div>
         </motion.div>
 
-        {/* Stats */}
         <div className="mt-20 grid grid-cols-2 gap-4 md:grid-cols-4">
           {[{ k: "2+", v: "Years tutoring" }, { k: "4", v: "Shipped projects" }, { k: "3", v: "Hackathons" }, { k: "∞", v: "Curiosity" }].map(
             (s, i) => (
               <Reveal key={s.v} delay={i * 0.1}>
-                <div className="glass card-shadow rounded-2xl border border-border p-5">
+                <div className="glass card-shadow rounded-2xl border border-border p-5 text-center">
                   <div className="gradient-text font-display text-3xl font-bold">{s.k}</div>
                   <div className="mt-1 text-sm text-muted-foreground">{s.v}</div>
                 </div>
@@ -298,31 +329,29 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* About */}
-      <Section id="about" eyebrow="About" title="Curious builder. Careful communicator.">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-5">
-          <Reveal>
-            <p className="md:col-span-3 text-lg leading-relaxed text-muted-foreground">
-              I'm a detail-oriented Frontend & Mobile App Developer completing my BCom Honours in
-              Information Systems. At Appimate I build responsive web interfaces and cross-platform
-              mobile apps with React and React Native. Two years of tutoring taught me to make
-              complex ideas feel simple — that same instinct shapes the interfaces I build.
-            </p>
-          </Reveal>
-          <Reveal delay={0.15}>
-            <div className="glass card-shadow rounded-2xl border border-border p-6 md:col-span-2">
-              <ul className="space-y-3 text-sm">
-                <Detail icon={MapPin} label="Based in" value="South Africa" />
-                <Detail icon={GraduationCap} label="Studying" value="BCom Honours — Information Systems" />
-                <Detail icon={Briefcase} label="Currently" value="Frontend & Mobile @ Appimate" />
-                <Detail icon={Sparkles} label="Languages" value="English · isiXhosa" />
-              </ul>
-            </div>
-          </Reveal>
-        </div>
-      </Section>
+     {/* ── About section with FLIP CARDS ── */}
+<Section id="about" eyebrow="About" title="Curious builder. Careful communicator.">
+  <div className="grid grid-cols-1 gap-8 md:grid-cols-5">
+    <Reveal>
+      <div className="md:col-span-3 glass card-shadow rounded-2xl border border-border p-8 leading-relaxed text-muted-foreground">
+        <p className="text-lg">
+          I'm a detail-oriented Frontend & Mobile App Developer completing my BCom Honours in
+          Information Systems. At Appimate I build responsive web interfaces and cross-platform
+          mobile apps with React and React Native. Two years of tutoring taught me to make
+          complex ideas feel simple — that same instinct shapes the interfaces I build.
+        </p>
+      </div>
+    </Reveal>
+    <Reveal delay={0.15}>
+      <div className="md:col-span-2 grid grid-cols-2 gap-4">
+        {aboutDetails.map((item) => (
+          <FlipCard key={item.label} {...item} />
+        ))}
+      </div>
+    </Reveal>
+  </div>
+</Section>
 
-      {/* Skills */}
       <Section id="skills" eyebrow="Core skills" title="A stack I keep sharpening.">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {skills.map((s, i) => (
@@ -352,7 +381,6 @@ export default function Portfolio() {
         </div>
       </Section>
 
-      {/* Experience */}
       <Section id="work" eyebrow="Experience" title="Where I've been building.">
         <div className="relative">
           <div className="gradient-hero-bg absolute left-3 top-2 h-full w-0.5 md:left-1/2 md:-translate-x-1/2" />
@@ -383,7 +411,6 @@ export default function Portfolio() {
         </div>
       </Section>
 
-      {/* Projects */}
       <Section id="projects" eyebrow="Selected projects" title="Things I've shipped and prototyped.">
         <div className="grid gap-6 md:grid-cols-2">
           {projects.map((p, i) => (
@@ -415,7 +442,6 @@ export default function Portfolio() {
         </div>
       </Section>
 
-      {/* Certifications */}
       <Section id="certs" eyebrow="Learning" title="Certifications & training.">
         <div className="grid gap-4 sm:grid-cols-3">
           {certs.map((c, i) => (
@@ -431,7 +457,6 @@ export default function Portfolio() {
         </div>
       </Section>
 
-      {/* Contact */}
       <Section id="contact" eyebrow="Contact" title="Let's build something.">
         <Reveal>
           <div className="gradient-hero-bg glow-shadow relative overflow-hidden rounded-3xl p-10 text-primary-foreground md:p-16">

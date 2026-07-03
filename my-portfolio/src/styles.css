@@ -55,15 +55,24 @@
   --shadow-card: 0 10px 40px -10px oklch(0 0 0 / 0.6);
 }
 
-* { border-color: var(--color-border); }
-html { scroll-behavior: smooth; }
+* {
+  border-color: var(--color-border);
+}
+html {
+  scroll-behavior: smooth;
+  cursor: none;                      /* hides default cursor */
+}
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  cursor: none;                      /* ensures no flicker */
 }
-h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
 
 @utility gradient-text {
   background: var(--gradient-hero);
@@ -82,6 +91,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
   -webkit-backdrop-filter: blur(16px);
 }
 
+/* Existing blob & float animations */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(40px, -50px) scale(1.1); }
@@ -91,5 +101,12 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-12px); }
 }
-@utility animate-blob { animation: blob 18s ease-in-out infinite; }
-@utility animate-float { animation: float 4s ease-in-out infinite; }
+.animate-blob { animation: blob 18s ease-in-out infinite; }
+.animate-float { animation: float 4s ease-in-out infinite; }
+
+/* Floating particle animation */
+@keyframes particle {
+  0% { transform: translateY(0) scale(1); opacity: 0.6; }
+  100% { transform: translateY(-200px) scale(0.2); opacity: 0; }
+}
+.animate-particle { animation: particle 8s linear infinite; }

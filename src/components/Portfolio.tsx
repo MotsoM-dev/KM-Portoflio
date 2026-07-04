@@ -10,9 +10,6 @@ import Cursor from "./Cursor";
 import FlipCard from "./FlipCard";
 import MovingBackground from "./MovingBackground";
 
-
-
-// ─── Typewriter hook ─────────────────────────────
 const words = ["delightful", "accessible", "performant", "beautiful"];
 
 function useTypewriter(words: string[], typingSpeed = 100, deletingSpeed = 50, pauseTime = 2000) {
@@ -41,7 +38,6 @@ function useTypewriter(words: string[], typingSpeed = 100, deletingSpeed = 50, p
   return words[index].substring(0, charIndex);
 }
 
-// ─── Helpers ──────────────────────────────────────
 function Reveal({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
@@ -180,7 +176,6 @@ function ContactRow({ icon: Icon, label, href }: { icon: typeof Mail; label: str
   );
 }
 
-// ─── About Flip Cards data ───────────────────────
 const aboutDetails = [
   { icon: MapPin, label: "Based in", value: "South Africa", detail: "Eastern Cape & Gauteng" },
   { icon: GraduationCap, label: "Studying", value: "BCom Honours", detail: "Information Systems @ UFH" },
@@ -188,7 +183,6 @@ const aboutDetails = [
   { icon: Sparkles, label: "Languages", value: "English · isiXhosa", detail: "Bilingual professional" },
 ];
 
-// ─── Main Portfolio ────────────────────────────────
 export default function Portfolio() {
   const { theme, toggle } = useTheme();
   const { scrollYProgress } = useScroll();
@@ -201,29 +195,34 @@ export default function Portfolio() {
       <FloatingParticles />
       <MovingBackground />
 
-      {/* Scroll progress bar */}
       <motion.div
         style={{ scaleX: progress }}
         className="gradient-hero-bg fixed left-0 top-0 z-50 h-1 w-full origin-left"
       />
 
-      {/* Parallax background blobs */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <ParallaxBlob className="-left-32 top-10 h-96 w-96 bg-hotpink/30" />
         <ParallaxBlob className="right-0 top-1/3 h-96 w-96 bg-teal/25" />
         <ParallaxBlob className="bottom-0 left-1/3 h-96 w-96 bg-violet/25" />
       </div>
 
-      {/* Header */}
-      <header className="glass sticky top-0 z-40 border-b border-border">
+      <header className="glass sticky top-0 z-40 border-b border-border backdrop-blur-xl">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <a href="#top" className="flex items-center gap-2 font-display font-bold">
-            <span className="gradient-hero-bg grid h-8 w-8 place-items-center rounded-lg text-primary-foreground">K</span>
-            <span className="hidden sm:inline">Kgomotso.dev</span>
+          <a href="#top" className="flex items-center gap-2 font-display text-xl font-bold group">
+            <span className="gradient-hero-bg grid h-10 w-10 place-items-center rounded-xl text-primary-foreground transition-transform group-hover:scale-110 shadow-glow">
+              K
+            </span>
+            <span className="hidden sm:inline bg-linear-to-r from-hotpink to-violet bg-clip-text text-transparent">
+              Kgomotso.dev
+            </span>
           </a>
           <div className="hidden items-center gap-8 text-sm font-medium md:flex">
             {["about", "skills", "work", "projects", "contact"].map((s) => (
-              <a key={s} href={`#${s}`} className="capitalize text-muted-foreground transition-colors hover:text-foreground">
+              <a
+                key={s}
+                href={`#${s}`}
+                className="relative capitalize text-muted-foreground transition-colors hover:text-foreground after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-hotpink after:transition-all hover:after:w-full"
+              >
                 {s}
               </a>
             ))}
@@ -231,15 +230,14 @@ export default function Portfolio() {
           <button
             onClick={toggle}
             aria-label="Toggle theme"
-            className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card transition-transform hover:scale-110"
+            className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card transition-transform hover:scale-110 hover:border-hotpink"
           >
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
         </nav>
       </header>
 
-      {/* Hero */}
-      <section id="top" className="relative mx-auto flex min-h-[80vh] max-w-6xl flex-col justify-center px-6 py-24 md:py-32">
+      <section id="top" className="relative mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-24 md:py-32">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -263,12 +261,6 @@ export default function Portfolio() {
                 animate={{ opacity: [1, 0] }}
                 transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
                 className="ml-0.5 inline-block h-[0.9em] w-0.75 bg-hotpink align-middle"
-              />
-              <motion.span
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
-                className="gradient-hero-bg absolute -bottom-1 left-0 h-1 w-full origin-left rounded-full"
               />
             </span>{" "}
             web & mobile apps.
@@ -329,28 +321,28 @@ export default function Portfolio() {
         </div>
       </section>
 
-     {/* ── About section with FLIP CARDS ── */}
-<Section id="about" eyebrow="About" title="Curious builder. Careful communicator.">
-  <div className="grid grid-cols-1 gap-8 md:grid-cols-5">
-    <Reveal>
-      <div className="md:col-span-3 glass card-shadow rounded-2xl border border-border p-8 leading-relaxed text-muted-foreground">
-        <p className="text-lg">
-          I'm a detail-oriented Frontend & Mobile App Developer completing my BCom Honours in
-          Information Systems. At Appimate I build responsive web interfaces and cross-platform
-          mobile apps with React and React Native. Two years of tutoring taught me to make
-          complex ideas feel simple — that same instinct shapes the interfaces I build.
-        </p>
-      </div>
-    </Reveal>
-    <Reveal delay={0.15}>
-      <div className="md:col-span-2 grid grid-cols-2 gap-4">
-        {aboutDetails.map((item) => (
-          <FlipCard key={item.label} {...item} />
-        ))}
-      </div>
-    </Reveal>
-  </div>
-</Section>
+      {/* ── About section – redesigned with taller flip cards ── */}
+      <Section id="about" eyebrow="About" title="Curious builder. Careful communicator.">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-5">
+          <Reveal>
+            <div className="md:col-span-3 glass card-shadow rounded-2xl border border-border p-8 leading-relaxed text-muted-foreground">
+              <p className="text-lg">
+                I'm a detail-oriented Frontend & Mobile App Developer completing my BCom Honours in
+                Information Systems. At Appimate I build responsive web interfaces and cross-platform
+                mobile apps with React and React Native. Two years of tutoring taught me to make
+                complex ideas feel simple — that same instinct shapes the interfaces I build.
+              </p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <div className="md:col-span-2 grid grid-cols-2 gap-5">
+              {aboutDetails.map((item) => (
+                <FlipCard key={item.label} {...item} />
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </Section>
 
       <Section id="skills" eyebrow="Core skills" title="A stack I keep sharpening.">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

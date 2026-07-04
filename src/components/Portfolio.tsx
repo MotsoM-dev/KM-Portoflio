@@ -3,7 +3,7 @@ import { motion, useScroll, useSpring, useInView, useMotionValue, useTransform }
 import {
   Github, Linkedin, Mail, Phone, MapPin, Moon, Sun, ArrowRight,
   Sparkles, Code2, Smartphone, Palette, Database, GitBranch,
-  GraduationCap, Briefcase, Award, Rocket, ExternalLink,
+  GraduationCap, Briefcase, Award, Rocket, ExternalLink, ChevronUp,
 } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import Cursor from "./Cursor";
@@ -20,7 +20,6 @@ function useTypewriter(words: string[], typingSpeed = 100, deletingSpeed = 50, p
   useEffect(() => {
     const currentWord = words[index];
     let timeout: number;
-
     if (!isDeleting && charIndex < currentWord.length) {
       timeout = window.setTimeout(() => setCharIndex((c) => c + 1), typingSpeed);
     } else if (!isDeleting && charIndex === currentWord.length) {
@@ -31,7 +30,6 @@ function useTypewriter(words: string[], typingSpeed = 100, deletingSpeed = 50, p
       setIsDeleting(false);
       setIndex((prev) => (prev + 1) % words.length);
     }
-
     return () => clearTimeout(timeout);
   }, [charIndex, isDeleting, index, words, typingSpeed, deletingSpeed, pauseTime]);
 
@@ -42,12 +40,7 @@ function Reveal({ children, delay = 0 }: { children: ReactNode; delay?: number }
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <motion.div ref={ref} initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}>
       {children}
     </motion.div>
   );
@@ -57,39 +50,20 @@ function ParallaxBlob({ className }: { className: string }) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   useEffect(() => {
-    const move = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-    };
+    const move = (e: MouseEvent) => { mouseX.set(e.clientX); mouseY.set(e.clientY); };
     window.addEventListener("mousemove", move);
     return () => window.removeEventListener("mousemove", move);
   }, [mouseX, mouseY]);
   const x = useTransform(mouseX, [0, window.innerWidth], [-30, 30]);
   const y = useTransform(mouseY, [0, window.innerHeight], [-20, 20]);
-  return (
-    <motion.div
-      className={`animate-blob absolute rounded-full blur-3xl ${className}`}
-      style={{ x, y }}
-    />
-  );
+  return <motion.div className={`animate-blob absolute rounded-full blur-3xl ${className}`} style={{ x, y }} />;
 }
 
 function FloatingParticles() {
   return (
     <div className="pointer-events-none fixed inset-0 -z-5 overflow-hidden">
       {Array.from({ length: 12 }).map((_, i) => (
-        <div
-          key={i}
-          className="animate-particle absolute rounded-full bg-white/10 dark:bg-white/5"
-          style={{
-            left: `${Math.random() * 100}%`,
-            bottom: `-10px`,
-            width: `${Math.random() * 8 + 4}px`,
-            height: `${Math.random() * 8 + 4}px`,
-            animationDelay: `${Math.random() * 8}s`,
-            animationDuration: `${6 + Math.random() * 10}s`,
-          }}
-        />
+        <div key={i} className="animate-particle absolute rounded-full bg-white/10 dark:bg-white/5" style={{ left: `${Math.random()*100}%`, bottom: `-10px`, width: `${Math.random()*8+4}px`, height: `${Math.random()*8+4}px`, animationDelay: `${Math.random()*8}s`, animationDuration: `${6+Math.random()*10}s` }} />
       ))}
     </div>
   );
@@ -105,40 +79,16 @@ const skills = [
 ];
 
 const experience = [
-  { role: "Frontend & Mobile App Developer", org: "Appimate", period: "2025 — Present",
-    points: [
-      "Build responsive frontends with HTML5, CSS3, JavaScript & React.",
-      "Ship cross-platform mobile apps using React Native + NativeWind.",
-      "Translate designs into production-ready code with the design & backend team.",
-      "Contribute to code reviews and agile delivery.",
-    ] },
-  { role: "Systems Development Learner", org: "MICTSETA Learnership", period: "2025 — Present",
-    points: [
-      "Work-integrated training across programming, software design & project delivery.",
-      "Apply IS theory to hands-on development under industry mentorship.",
-      "Sharpen debugging and SDLC skills through real projects.",
-    ] },
-  { role: "Tutor — Information Systems", org: "University of Fort Hare", period: "2024 — Present",
-    points: [
-      "Tutor first-years in data management, systems analysis, IT infra & UI/UX.",
-      "Turn complex concepts into clear, accessible explanations.",
-      "Guide project documentation & prototyping to lift class performance.",
-    ] },
+  { role: "Frontend & Mobile App Developer", org: "Appimate", period: "2025 — Present", points: ["Build responsive frontends with HTML5, CSS3, JavaScript & React.", "Ship cross-platform mobile apps using React Native + NativeWind.", "Translate designs into production-ready code with the design & backend team.", "Contribute to code reviews and agile delivery."] },
+  { role: "Systems Development Learner", org: "MICTSETA Learnership", period: "2025 — Present", points: ["Work-integrated training across programming, software design & project delivery.", "Apply IS theory to hands-on development under industry mentorship.", "Sharpen debugging and SDLC skills through real projects."] },
+  { role: "Tutor — Information Systems", org: "University of Fort Hare", period: "2024 — Present", points: ["Tutor first-years in data management, systems analysis, IT infra & UI/UX.", "Turn complex concepts into clear, accessible explanations.", "Guide project documentation & prototyping to lift class performance."] },
 ];
 
 const projects = [
-  { name: "FutureTrack", tag: "Web · Education",
-    desc: "Web platform of past papers, study resources, career exploration and a university eligibility checker for SA Grade 10–12 learners.",
-    stack: ["React", "UX Writing", "IA"] },
-  { name: "Healthcare System", tag: "Mobile · Xamarin + MSSQL",
-    desc: "Mobile workflow to capture patient records, give clinicians access, and auto-email digital prescriptions and health tips.",
-    stack: ["Xamarin", "MSSQL", "Forms"] },
-  { name: "Cortex Hub — Human Rights Hackathon", tag: "Web · Civic Tech",
-    desc: "Front-end and issue submission form that lets rural schools report infrastructure issues for faster resolution.",
-    stack: ["React", "Forms", "UI"] },
-  { name: "Telkom10x — Network Support Portal", tag: "Hackathon · Eastern Cape",
-    desc: "Self-service troubleshooting concept with an AI assistant and community forum, focused on front-end flows.",
-    stack: ["Concept", "AI UX", "Frontend"] },
+  { name: "FutureTrack", tag: "Web · Education", desc: "Web platform of past papers, study resources, career exploration and a university eligibility checker for SA Grade 10–12 learners.", stack: ["React", "UX Writing", "IA"] },
+  { name: "Healthcare System", tag: "Mobile · Xamarin + MSSQL", desc: "Mobile workflow to capture patient records, give clinicians access, and auto-email digital prescriptions and health tips.", stack: ["Xamarin", "MSSQL", "Forms"] },
+  { name: "Cortex Hub — Human Rights Hackathon", tag: "Web · Civic Tech", desc: "Front-end and issue submission form that lets rural schools report infrastructure issues for faster resolution.", stack: ["React", "Forms", "UI"] },
+  { name: "Telkom10x — Network Support Portal", tag: "Hackathon · Eastern Cape", desc: "Self-service troubleshooting concept with an AI assistant and community forum, focused on front-end flows.", stack: ["Concept", "AI UX", "Frontend"] },
 ];
 
 const certs = [
@@ -147,9 +97,10 @@ const certs = [
   "FNB App Academy — Full-Stack (exposure)",
 ];
 
+// Sections now full width, no max-w
 function Section({ id, eyebrow, title, children }: { id: string; eyebrow: string; title: string; children: ReactNode }) {
   return (
-    <section id={id} className="mx-auto max-w-6xl px-6 py-24 md:py-32">
+    <section id={id} className="w-full px-4 md:px-8 py-24 md:py-32">
       <Reveal>
         <div className="mb-12 flex flex-col gap-2">
           <span className="text-sm font-semibold uppercase tracking-[0.2em] text-hotpink">{eyebrow}</span>
@@ -163,12 +114,7 @@ function Section({ id, eyebrow, title, children }: { id: string; eyebrow: string
 
 function ContactRow({ icon: Icon, label, href }: { icon: typeof Mail; label: string; href: string }) {
   return (
-    <a
-      href={href}
-      target={href.startsWith("http") ? "_blank" : undefined}
-      rel="noreferrer"
-      className="glass group flex items-center gap-3 rounded-xl border border-white/20 px-4 py-3 text-sm font-medium transition-transform hover:scale-[1.02]"
-    >
+    <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="glass group flex items-center gap-3 rounded-xl border border-white/20 px-4 py-3 text-sm font-medium transition-transform hover:scale-[1.02]">
       <Icon className="h-4 w-4" />
       <span className="flex-1 truncate">{label}</span>
       <ArrowRight className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
@@ -188,154 +134,94 @@ export default function Portfolio() {
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
   const typedWord = useTypewriter(words);
+  const [showTopButton, setShowTopButton] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setShowTopButton(window.scrollY > 400);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
       <Cursor />
       <FloatingParticles />
       <MovingBackground />
-
-      <motion.div
-        style={{ scaleX: progress }}
-        className="gradient-hero-bg fixed left-0 top-0 z-50 h-1 w-full origin-left"
-      />
-
+      <motion.div style={{ scaleX: progress }} className="gradient-hero-bg fixed left-0 top-0 z-50 h-1 w-full origin-left" />
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <ParallaxBlob className="-left-32 top-10 h-96 w-96 bg-hotpink/30" />
         <ParallaxBlob className="right-0 top-1/3 h-96 w-96 bg-teal/25" />
         <ParallaxBlob className="bottom-0 left-1/3 h-96 w-96 bg-violet/25" />
       </div>
 
-      <header className="glass sticky top-0 z-40 border-b border-border backdrop-blur-xl">
-        <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      {/* Header – sticky, full width */}
+      <header className="glass sticky top-0 z-40 border-b border-border backdrop-blur-xl w-full">
+        <nav className="flex items-center justify-between px-4 md:px-8 py-4">
           <a href="#top" className="flex items-center gap-2 font-display text-xl font-bold group">
-            <span className="gradient-hero-bg grid h-10 w-10 place-items-center rounded-xl text-primary-foreground transition-transform group-hover:scale-110 shadow-glow">
-              K
-            </span>
-            <span className="hidden sm:inline bg-linear-to-r from-hotpink to-violet bg-clip-text text-transparent">
-              Kgomotso.dev
-            </span>
+            <span className="gradient-hero-bg grid h-10 w-10 place-items-center rounded-xl text-primary-foreground transition-transform group-hover:scale-110 shadow-glow">K</span>
+            <span className="hidden sm:inline bg-linear-to-r from-hotpink to-violet bg-clip-text text-transparent">Kgomotso.dev</span>
           </a>
           <div className="hidden items-center gap-8 text-sm font-medium md:flex">
             {["about", "skills", "work", "projects", "contact"].map((s) => (
-              <a
-                key={s}
-                href={`#${s}`}
-                className="relative capitalize text-muted-foreground transition-colors hover:text-foreground after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-hotpink after:transition-all hover:after:w-full"
-              >
-                {s}
-              </a>
+              <a key={s} href={`#${s}`} className="relative capitalize text-muted-foreground transition-colors hover:text-foreground after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-hotpink after:transition-all hover:after:w-full">{s}</a>
             ))}
           </div>
-          <button
-            onClick={toggle}
-            aria-label="Toggle theme"
-            className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card transition-transform hover:scale-110 hover:border-hotpink"
-          >
+          <button onClick={toggle} aria-label="Toggle theme" className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card transition-transform hover:scale-110 hover:border-hotpink">
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
         </nav>
       </header>
 
-      <section id="top" className="relative mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-24 md:py-32">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="flex flex-col items-start gap-6"
-        >
+      {/* Hero – full width, fills screen height */}
+      <section id="top" className="relative flex min-h-screen w-full flex-col justify-center px-4 md:px-8 py-24 md:py-32">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="flex flex-col items-start gap-6">
           <span className="glass inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 text-xs font-medium">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-hotpink opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-hotpink" />
-            </span>
+            <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-hotpink opacity-75" /><span className="relative inline-flex h-2 w-2 rounded-full bg-hotpink" /></span>
             Available for opportunities · South Africa
           </span>
-
           <h1 className="font-display text-5xl font-bold leading-[1.05] md:text-7xl lg:text-8xl">
             Hi, I'm <span className="gradient-text">Kgomotso</span>.<br />
-            I build{" "}
-            <span className="relative inline-block">
-              <span className="gradient-text">{typedWord}</span>
-              <motion.span
-                animate={{ opacity: [1, 0] }}
-                transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
-                className="ml-0.5 inline-block h-[0.9em] w-0.75 bg-hotpink align-middle"
-              />
-            </span>{" "}
-            web & mobile apps.
+            I build <span className="relative inline-block"><span className="gradient-text">{typedWord}</span><motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }} className="ml-0.5 inline-block h-[0.9em] w-0.75 bg-hotpink align-middle" /></span> web & mobile apps.
           </h1>
-
           <p className="max-w-2xl text-lg text-muted-foreground md:text-xl">
-            Frontend & Mobile App Developer at{" "}
-            <span className="font-semibold text-foreground">Appimate</span>,
-            BCom Honours (Information Systems) at the University of Fort Hare.
-            I turn ideas into accessible, performant React and React Native experiences.
+            Frontend & Mobile App Developer at <span className="font-semibold text-foreground">Appimate</span>, BCom Honours (Information Systems) at the University of Fort Hare. I turn ideas into accessible, performant React and React Native experiences.
           </p>
-
           <div className="flex flex-wrap gap-3">
-            <a
-              href="#projects"
-              className="gradient-hero-bg glow-shadow group inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-primary-foreground transition-transform hover:scale-105"
-            >
-              See my work
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 font-medium transition-colors hover:bg-muted"
-            >
-              Get in touch
-            </a>
+            <a href="#projects" className="gradient-hero-bg glow-shadow group inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-primary-foreground transition-transform hover:scale-105">See my work <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></a>
+            <a href="#contact" className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 font-medium transition-colors hover:bg-muted">Get in touch</a>
           </div>
-
           <div className="mt-4 flex items-center gap-5 text-muted-foreground">
-            <a href="https://github.com/MotsoM-dev" target="_blank" rel="noreferrer" className="transition-colors hover:text-hotpink">
-              <Github className="h-5 w-5" />
-            </a>
-            <a
-              href="https://linkedin.com/in/kgomotso-mathombo-a848a5386"
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-hotpink"
-            >
-              <Linkedin className="h-5 w-5" />
-            </a>
-            <a href="mailto:kgomotsomathombo@gmail.com" className="transition-colors hover:text-hotpink">
-              <Mail className="h-5 w-5" />
-            </a>
+            <a href="https://github.com/MotsoM-dev" target="_blank" rel="noreferrer" className="transition-colors hover:text-hotpink"><Github className="h-5 w-5" /></a>
+            <a href="https://linkedin.com/in/kgomotso-mathombo-a848a5386" target="_blank" rel="noreferrer" className="transition-colors hover:text-hotpink"><Linkedin className="h-5 w-5" /></a>
+            <a href="mailto:kgomotsomathombo@gmail.com" className="transition-colors hover:text-hotpink"><Mail className="h-5 w-5" /></a>
           </div>
         </motion.div>
-
         <div className="mt-20 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {[{ k: "2+", v: "Years tutoring" }, { k: "4", v: "Shipped projects" }, { k: "3", v: "Hackathons" }, { k: "∞", v: "Curiosity" }].map(
-            (s, i) => (
-              <Reveal key={s.v} delay={i * 0.1}>
-                <div className="glass card-shadow rounded-2xl border border-border p-5 text-center">
-                  <div className="gradient-text font-display text-3xl font-bold">{s.k}</div>
-                  <div className="mt-1 text-sm text-muted-foreground">{s.v}</div>
-                </div>
-              </Reveal>
-            )
-          )}
+          {[{ k: "2+", v: "Years tutoring" }, { k: "4", v: "Shipped projects" }, { k: "3", v: "Hackathons" }, { k: "∞", v: "Curiosity" }].map((s, i) => (
+            <Reveal key={s.v} delay={i * 0.1}>
+              <div className="glass card-shadow rounded-2xl border border-border p-5 text-center">
+                <div className="gradient-text font-display text-3xl font-bold">{s.k}</div>
+                <div className="mt-1 text-sm text-muted-foreground">{s.v}</div>
+              </div>
+            </Reveal>
+          ))}
         </div>
       </section>
 
-      {/* ── About section – redesigned with taller flip cards ── */}
+      {/* About – full width, two equal columns */}
       <Section id="about" eyebrow="About" title="Curious builder. Careful communicator.">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-5">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <Reveal>
-            <div className="md:col-span-3 glass card-shadow rounded-2xl border border-border p-8 leading-relaxed text-muted-foreground">
+            <div className="glass card-shadow rounded-2xl border border-border p-8 leading-relaxed text-muted-foreground h-full">
               <p className="text-lg">
-                I'm a detail-oriented Frontend & Mobile App Developer completing my BCom Honours in
-                Information Systems. At Appimate I build responsive web interfaces and cross-platform
-                mobile apps with React and React Native. Two years of tutoring taught me to make
-                complex ideas feel simple — that same instinct shapes the interfaces I build.
+                I'm a detail-oriented Frontend & Mobile App Developer completing my BCom Honours in Information Systems. At Appimate I build responsive web interfaces and cross-platform mobile apps with React and React Native. Two years of tutoring taught me to make complex ideas feel simple — that same instinct shapes the interfaces I build.
               </p>
             </div>
           </Reveal>
           <Reveal delay={0.15}>
-            <div className="md:col-span-2 grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-2 gap-5 h-full">
               {aboutDetails.map((item) => (
                 <FlipCard key={item.label} {...item} />
               ))}
@@ -348,23 +234,13 @@ export default function Portfolio() {
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {skills.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.05}>
-              <motion.div
-                whileHover={{ y: -6 }}
-                className="glass card-shadow group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border p-6 transition-shadow hover:shadow-lg"
-              >
+              <motion.div whileHover={{ y: -6 }} className="glass card-shadow group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border p-6 transition-shadow hover:shadow-lg">
                 <div className="gradient-hero-bg absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity group-hover:opacity-40" />
-                <div className="gradient-pink-bg mb-4 grid h-11 w-11 shrink-0 place-items-center rounded-xl text-white">
-                  <s.icon className="h-5 w-5" />
-                </div>
+                <div className="gradient-pink-bg mb-4 grid h-11 w-11 shrink-0 place-items-center rounded-xl text-white"><s.icon className="h-5 w-5" /></div>
                 <h3 className="font-display text-lg font-semibold">{s.title}</h3>
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {s.items.map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full border border-border bg-background/60 px-2.5 py-1 text-xs text-muted-foreground"
-                    >
-                      {item}
-                    </span>
+                    <span key={item} className="rounded-full border border-border bg-background/60 px-2.5 py-1 text-xs text-muted-foreground">{item}</span>
                   ))}
                 </div>
               </motion.div>
@@ -388,10 +264,7 @@ export default function Portfolio() {
                       <div className="text-sm text-muted-foreground">{e.org}</div>
                       <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
                         {e.points.map((p) => (
-                          <li key={p} className="flex gap-2">
-                            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-hotpink" />
-                            <span>{p}</span>
-                          </li>
+                          <li key={p} className="flex gap-2"><span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-hotpink" /><span>{p}</span></li>
                         ))}
                       </ul>
                     </div>
@@ -407,22 +280,14 @@ export default function Portfolio() {
         <div className="grid gap-6 md:grid-cols-2">
           {projects.map((p, i) => (
             <Reveal key={p.name} delay={i * 0.08}>
-              <motion.article
-                whileHover={{ y: -6 }}
-                className="glass card-shadow group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border p-8"
-              >
+              <motion.article whileHover={{ y: -6 }} className="glass card-shadow group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border p-8">
                 <div className="gradient-cool-bg absolute -right-16 -top-16 h-40 w-40 rounded-full opacity-30 blur-2xl transition-opacity group-hover:opacity-60" />
-                <div className="mb-3 flex items-center gap-2">
-                  <Rocket className="h-4 w-4 text-hotpink" />
-                  <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{p.tag}</span>
-                </div>
+                <div className="mb-3 flex items-center gap-2"><Rocket className="h-4 w-4 text-hotpink" /><span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{p.tag}</span></div>
                 <h3 className="font-display text-2xl font-semibold">{p.name}</h3>
                 <p className="mt-3 flex-1 text-muted-foreground">{p.desc}</p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {p.stack.map((s) => (
-                    <span key={s} className="gradient-pink-bg rounded-full px-3 py-1 text-xs font-medium text-white">
-                      {s}
-                    </span>
+                    <span key={s} className="gradient-pink-bg rounded-full px-3 py-1 text-xs font-medium text-white">{s}</span>
                   ))}
                 </div>
                 <div className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-hotpink opacity-0 transition-opacity group-hover:opacity-100">
@@ -439,9 +304,7 @@ export default function Portfolio() {
           {certs.map((c, i) => (
             <Reveal key={c} delay={i * 0.08}>
               <div className="glass card-shadow flex items-center gap-3 rounded-2xl border border-border p-5">
-                <div className="gradient-cool-bg grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white">
-                  <Award className="h-5 w-5" />
-                </div>
+                <div className="gradient-cool-bg grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white"><Award className="h-5 w-5" /></div>
                 <div className="text-sm font-medium">{c}</div>
               </div>
             </Reveal>
@@ -456,10 +319,7 @@ export default function Portfolio() {
             <div className="relative grid gap-8 md:grid-cols-2 md:items-center">
               <div>
                 <h3 className="font-display text-3xl font-bold md:text-4xl">Have a project or a role in mind?</h3>
-                <p className="mt-3 max-w-md text-primary-foreground/85">
-                  I'm open to junior frontend & mobile roles, freelance work, and collaborations.
-                  I usually reply within a day.
-                </p>
+                <p className="mt-3 max-w-md text-primary-foreground/85">I'm open to junior frontend & mobile roles, freelance work, and collaborations. I usually reply within a day.</p>
               </div>
               <div className="flex flex-col gap-3">
                 <ContactRow icon={Mail} label="kgomotsomathombo@gmail.com" href="mailto:kgomotsomathombo@gmail.com" />
@@ -472,14 +332,23 @@ export default function Portfolio() {
         </Reveal>
       </Section>
 
-      <footer className="border-t border-border py-10">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 text-sm text-muted-foreground md:flex-row">
+      <footer className="border-t border-border w-full py-10">
+        <div className="flex flex-col items-center justify-between gap-3 px-4 md:px-8 text-sm text-muted-foreground md:flex-row">
           <div>© {new Date().getFullYear()} Kgomotso Mathombo. Built with React & lots of pink.</div>
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-hotpink" /> Crafted in South Africa
-          </div>
+          <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-hotpink" /> Crafted in South Africa</div>
         </div>
       </footer>
+
+      {/* Back to top */}
+      <motion.button
+        onClick={scrollToTop}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: showTopButton ? 1 : 0, scale: showTopButton ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        className="fixed bottom-6 right-6 z-50 grid h-12 w-12 place-items-center rounded-full bg-hotpink text-white shadow-lg hover:scale-110 transition-transform"
+      >
+        <ChevronUp className="h-6 w-6" />
+      </motion.button>
     </div>
   );
 }

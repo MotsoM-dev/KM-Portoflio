@@ -31,6 +31,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
+import Blog from "./Blog";
 import Cursor from "./Cursor";
 import FlipCard from "./FlipCard";
 import MovingBackground from "./MovingBackground";
@@ -41,13 +42,14 @@ const phoneNumber = "071 642 3985";
 const phoneClipboardValue = "+27716423985";
 const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}`;
 
-type PageKey = "home" | "about" | "skills" | "experience" | "projects" | "contact";
+type PageKey = "home" | "about" | "skills" | "experience" | "projects" | "blog" | "contact";
 
 const navItems: Array<{ href: string; label: string; page: PageKey }> = [
   { href: "/about", label: "About", page: "about" },
   { href: "/skills", label: "Skills", page: "skills" },
   { href: "/experience", label: "Experience", page: "experience" },
   { href: "/projects", label: "Projects", page: "projects" },
+  { href: "/blog", label: "Blog", page: "blog" },
 ];
 
 function useTypewriter(words: string[], typingSpeed = 100, deletingSpeed = 50, pauseTime = 2000) {
@@ -789,8 +791,11 @@ function Footer() {
     <footer className="border-t border-border py-8">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 text-sm text-muted-foreground md:flex-row md:px-8">
         <div>(c) {new Date().getFullYear()} Kgomotso Mathombo. Built with Next.js & React.</div>
-        <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-hotpink" /> Crafted in South Africa
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-hotpink" /> Crafted in South Africa</span>
+          <a href="/blog?admin=1" aria-label="Open admin login" className="rounded-full border border-border px-2 py-1 text-[10px] uppercase tracking-[0.18em] opacity-45 transition-opacity hover:opacity-100">
+            Login
+          </a>
         </div>
       </div>
     </footer>
@@ -816,6 +821,7 @@ export default function Portfolio({ page = "home" }: { page?: PageKey }) {
     skills: <SkillsPage />,
     experience: <ExperiencePage />,
     projects: <ProjectsPage />,
+    blog: <Blog />,
     contact: <ContactPage />,
   };
 

@@ -1,32 +1,42 @@
-# React + TypeScript + Vite
+# MotsoM-Dev Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Next.js portfolio app for Kgomotso Mathombo.
 
-Currently, two official plugins are available:
+## Run The App On Windows
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Use the launcher:
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```powershell
+.\run-dev.cmd
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+You can also double-click `run-dev.cmd` in File Explorer.
+
+PowerShell may block `npm run dev` because it tries to execute `npm.ps1`. If you want to use npm directly, use:
+
+```powershell
+npm.cmd run dev
+```
+
+Next.js will print the local URL. It is usually:
+
+```text
+http://127.0.0.1:3000
+```
+
+If port 3000 is already being used, Next may choose another port. Open the URL shown in the terminal.
+
+## If Dependencies Are Missing
+
+```powershell
+npm.cmd install
+```
+
+Then run the app again.
+
+## Other Commands
+
+```powershell
+npm.cmd run build
+npm.cmd run start
+```

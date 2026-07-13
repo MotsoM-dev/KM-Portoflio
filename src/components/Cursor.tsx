@@ -1,82 +1,170 @@
-import { useEffect, useState, useRef } from "react";
-import { motion, useMotionValue, useSpring, useMotionTemplate } from "motion/react";
-import { useTheme } from "@/hooks/use-theme";
+import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useSpring } from "motion/react";
+
+type TrailDot = {
+  id: number;
+  x: number;
+  y: number;
+  size: number;
+  driftX: number;
+  driftY: number;
+  rotate: number;
+  variant: number;
+};
+
+const trailBackgrounds = [
+  "radial-gradient(circle at 32% 30%, color-mix(in oklab, white 48%, var(--primary) 52%) 0 14%, transparent 34%), radial-gradient(circle at 68% 68%, color-mix(in oklab, var(--color-teal) 44%, transparent) 0 34%, transparent 62%), radial-gradient(circle, color-mix(in oklab, var(--primary) 54%, transparent) 0 48%, transparent 76%)",
+  "radial-gradient(circle at 34% 32%, color-mix(in oklab, white 42%, var(--color-violet) 58%) 0 14%, transparent 36%), radial-gradient(circle at 66% 70%, color-mix(in oklab, var(--primary) 40%, transparent) 0 34%, transparent 64%), radial-gradient(circle, color-mix(in oklab, var(--color-violet) 52%, transparent) 0 48%, transparent 76%)",
+  "radial-gradient(circle at 34% 32%, color-mix(in oklab, white 44%, var(--color-teal) 56%) 0 14%, transparent 36%), radial-gradient(circle at 68% 68%, color-mix(in oklab, var(--color-violet) 40%, transparent) 0 34%, transparent 64%), radial-gradient(circle, color-mix(in oklab, var(--color-teal) 50%, transparent) 0 48%, transparent 76%)",
+];
 
 export default function Cursor() {
-  const { theme } = useTheme();
   const [visible, setVisible] = useState(false);
+  const [pressed, setPressed] = useState(false);
+  const [trail, setTrail] = useState<TrailDot[]>([]);
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
-
-  // Spring for the main aura – fast but smooth
-  const springX = useSpring(cursorX, { stiffness: 250, damping: 15 });
-  const springY = useSpring(cursorY, { stiffness: 250, damping: 15 });
-
-  // Slightly delayed spring for the inner dot (creates a trailing effect)
-  const dotX = useSpring(cursorX, { stiffness: 180, damping: 25 });
-  const dotY = useSpring(cursorY, { stiffness: 180, damping: 25 });
-
-  // Pulsing ring scale
-  const [pulse, setPulse] = useState(1);
-  const pulseRef = useRef<number | null>(null);
+  const ringX = useSpring(cursorX, { stiffness: 780, damping: 42, mass: 0.18 });
+  const ringY = useSpring(cursorY, { stiffness: 780, damping: 42, mass: 0.18 });
+  const trailTimeouts = useRef<number[]>([]);
+  const lastTrailAt = useRef(0);
+  const nextTrailId = useRef(0);
 
   useEffect(() => {
-    const move = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-      // Trigger a quick pulse on every move
-      setPulse(1.2);
-      if (pulseRef.current) clearTimeout(pulseRef.current);
-      pulseRef.current = window.setTimeout(() => setPulse(1), 150);
+    const addTrailDot = (x: number, y: number) => {
+      const now = performance.now();
+      if (now - lastTrailAt.current < 34) return;
+
+      lastTrailAt.current = now;
+      const id = nextTrailId.current++;
+      const direction = id % 2 === 0 ? 1 : -1;
+      const wave = Math.sin(id * 1.7);
+      const dot = {
+        id,
+        x: x - wave * 5,
+        y: y + Math.cos(id * 1.1) * 4,
+        size: 10 + (id % 5) * 2,
+        driftX: wave * 18 + direction * 5,
+        driftY: -10 - (id % 5) * 3,
+        rotate: direction * (16 + (id % 4) * 14),
+        variant: id % trailBackgrounds.length,
+      };
+
+      setTrail((current) => [...current.slice(-9), dot]);
+
+      const timeout = window.setTimeout(() => {
+        setTrail((current) => current.filter((item) => item.id !== id));
+        trailTimeouts.current = trailTimeouts.current.filter((item) => item !== timeout);
+      }, 950);
+      trailTimeouts.current.push(timeout);
     };
-    const enter = () => setVisible(true);
-    const leave = () => setVisible(false);
+
+    const move = (event: MouseEvent) => {
+      cursorX.set(event.clientX);
+      cursorY.set(event.clientY);
+      setVisible(true);
+      addTrailDot(event.clientX, event.clientY);
+    };
+
+    const leave = () => {
+      setVisible(false);
+      setTrail([]);
+    };
+
+    const down = () => setPressed(true);
+    const up = () => setPressed(false);
+
     document.addEventListener("mousemove", move);
-    document.addEventListener("mouseenter", enter);
     document.addEventListener("mouseleave", leave);
+    document.addEventListener("mousedown", down);
+    document.addEventListener("mouseup", up);
+
     return () => {
       document.removeEventListener("mousemove", move);
-      document.removeEventListener("mouseenter", enter);
       document.removeEventListener("mouseleave", leave);
-      if (pulseRef.current) clearTimeout(pulseRef.current);
+      document.removeEventListener("mousedown", down);
+      document.removeEventListener("mouseup", up);
+      trailTimeouts.current.forEach((timeout) => window.clearTimeout(timeout));
     };
   }, [cursorX, cursorY]);
 
-  const auraGradient =
-    theme === "dark"
-      ? "bg-gradient-to-r from-hotpink via-violet to-teal opacity-80"
-      : "bg-gradient-to-r from-pink-400 via-purple-400 to-fuchsia-400 opacity-80";
-
   return (
-    <motion.div
-      className="pointer-events-none fixed top-0 left-0 z-9999"
-      style={{ x: springX, y: springY, translateX: "-50%", translateY: "-50%" }}
-    >
-      {/* Pulsing ring */}
+    <>
+      {trail.map((dot) => (
+        <motion.div
+          key={dot.id}
+          className="pointer-events-none fixed left-0 top-0 rounded-full blur-sm"
+          style={{
+            x: dot.x,
+            y: dot.y,
+            zIndex: 9998,
+            width: dot.size,
+            height: dot.size,
+            translateX: "-50%",
+            translateY: "-50%",
+            background: trailBackgrounds[dot.variant],
+            boxShadow:
+              "0 0 18px color-mix(in oklab, var(--primary) 36%, transparent), 0 0 32px color-mix(in oklab, var(--color-teal) 24%, transparent), 0 0 44px color-mix(in oklab, var(--color-violet) 16%, transparent)",
+          }}
+          initial={{ opacity: 0.66, scale: 0.42, rotate: 0 }}
+          animate={{
+            opacity: 0,
+            scale: 2.65,
+            x: dot.x + dot.driftX,
+            y: dot.y + dot.driftY,
+            rotate: dot.rotate,
+          }}
+          transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
+        />
+      ))}
+
       <motion.div
-        className="absolute top-1/2 left-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/50"
-        animate={{
-          scale: pulse,
-          opacity: visible ? 0.6 : 0,
+        className="pointer-events-none fixed left-0 top-0 h-4 w-4 rounded-full"
+        style={{
+          x: ringX,
+          y: ringY,
+          zIndex: 9999,
+          translateX: "-50%",
+          translateY: "-50%",
+          background: "conic-gradient(from 180deg, var(--primary), var(--color-violet), var(--color-teal), var(--primary))",
+          boxShadow:
+            "0 0 0 1px color-mix(in oklab, var(--foreground) 12%, transparent), 0 0 10px color-mix(in oklab, var(--primary) 32%, transparent), 0 0 20px color-mix(in oklab, var(--color-teal) 15%, transparent)",
         }}
-        transition={{ duration: 0.15 }}
-      />
+        animate={{
+          opacity: visible ? 1 : 0,
+          scale: visible ? (pressed ? 0.72 : 1) : 0.45,
+          rotate: pressed ? 135 : 0,
+        }}
+        transition={{ type: "spring", stiffness: 540, damping: 34, mass: 0.32 }}
+      >
+        <span
+          className="absolute inset-[2px] rounded-full border border-white/45 backdrop-blur-md"
+          style={{ background: "color-mix(in oklab, var(--background) 78%, transparent)" }}
+        />
+        <span
+          className="absolute inset-[5px] rounded-full"
+          style={{
+            background:
+              "radial-gradient(circle, color-mix(in oklab, var(--foreground) 94%, white 6%) 0 45%, color-mix(in oklab, var(--primary) 65%, transparent) 46% 100%)",
+            boxShadow:
+              "0 0 8px color-mix(in oklab, var(--foreground) 48%, transparent), 0 0 14px color-mix(in oklab, var(--primary) 34%, transparent)",
+          }}
+        />
+      </motion.div>
 
-      {/* Main gradient aura */}
       <motion.div
-        className={`rounded-full blur-sm ${auraGradient}`}
-        style={{ width: 36, height: 36 }}
-        animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0 }}
-        transition={{ duration: 0.15 }}
+        className="pointer-events-none fixed left-0 top-0 h-1 w-1 rounded-full bg-foreground"
+        style={{
+          x: cursorX,
+          y: cursorY,
+          zIndex: 10000,
+          translateX: "-50%",
+          translateY: "-50%",
+          boxShadow: "0 0 8px color-mix(in oklab, var(--foreground) 58%, transparent)",
+        }}
+        animate={{ opacity: visible ? 1 : 0, scale: pressed ? 1.55 : 1 }}
+        transition={{ type: "spring", stiffness: 700, damping: 28, mass: 0.18 }}
       />
-
-      {/* Trailing inner dot */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"
-        style={{ x: dotX, y: dotY }} // This uses the delayed spring for trailing effect
-        animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0 }}
-        transition={{ duration: 0.15 }}
-      />
-    </motion.div>
+    </>
   );
 }

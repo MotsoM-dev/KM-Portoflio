@@ -27,8 +27,8 @@ export default function FlipCard({ icon: Icon, label, value, detail }: FlipCardP
         <div className="glass card-shadow absolute inset-0 flex flex-col items-center justify-center gap-5 rounded-2xl border border-border p-4 backface-hidden">
           <motion.div
             className="gradient-pink-bg grid h-18 w-18 place-items-center rounded-2xl text-white shadow-lg"
-            whileHover={{ scale: 1.15, rotate: [0, -8, 8, 0] }}
-            transition={{ type: "spring", stiffness: 400 }}
+            whileHover={{ scale: 1.12, rotate: -6 }}
+            transition={{ type: "spring", stiffness: 360, damping: 18 }}
           >
             <Icon className="h-9 w-9" />
           </motion.div>

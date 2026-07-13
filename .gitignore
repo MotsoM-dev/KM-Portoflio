@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+dist-node
+*.tsbuildinfo
+.next
+next-env.d.ts
+.vercel

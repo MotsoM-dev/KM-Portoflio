@@ -13,7 +13,6 @@ import {
   Code2,
   Database,
   Download,
-  ExternalLink,
   FileText,
   Github,
   GitBranch,
@@ -24,12 +23,12 @@ import {
   Moon,
   Palette,
   Phone,
-  Rocket,
   Smartphone,
   Sparkles,
   Sun,
   Trophy,
 } from "lucide-react";
+import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { useTheme } from "@/hooks/use-theme";
 import Blog from "./Blog";
 import Cursor from "./Cursor";
@@ -152,7 +151,7 @@ function FloatingParticles() {
 }
 
 const skills = [
-  { icon: Code2, title: "Frontend", items: ["HTML5", "CSS3", "JavaScript", "React", "Next.js", "A11y"] },
+  { icon: Code2, title: "Frontend", items: ["HTML5", "CSS3", "JavaScript", "React", "Next.js"] },
   { icon: Smartphone, title: "Mobile", items: ["React Native", "NativeWind", "Xamarin", "Cross-platform", "Mobile UI/UX"] },
   { icon: Palette, title: "Design", items: ["Figma", "Wireframes", "Prototypes", "UX Writing", "Usability Testing"] },
   { icon: Database, title: "Data & Backend", items: ["Python", "FastAPI", "Supabase", "Neon", "MSSQL", "SQL", "REST/JSON", "C#/.NET basics"] },
@@ -166,10 +165,14 @@ const experience = [
     org: "Appimate",
     period: "2025 - Present",
     points: [
-      "Build responsive frontends with HTML5, CSS3, JavaScript, React, and Next.js.",
-      "Ship cross-platform mobile apps using React Native and NativeWind.",
-      "Translate designs into production-ready code with design and backend teams.",
-      "Contribute to reviews, debugging, and agile delivery.",
+      "Design and develop responsive web applications and cross-platform mobile apps.",
+      "Turn UI/UX concepts into scalable, production-ready frontend experiences.",
+      "Collaborate with designers and backend developers in agile delivery workflows.",
+      "Improve application quality through reviews, debugging, and usability-focused iteration.",
+    ],
+    details: [
+      "As a Frontend and Mobile App Developer at Appimate, I contribute to the design and development of responsive web and cross-platform mobile applications that prioritize performance, usability, and clean user experiences. Working closely with designers and backend developers, I transform UI/UX concepts into scalable, production-ready applications using modern frontend technologies.",
+      "My role extends beyond writing code. I actively participate in agile development processes, collaborate during code reviews, troubleshoot technical challenges, and continuously seek opportunities to improve application quality and user satisfaction. This experience has strengthened my ability to work in fast-paced development environments while maintaining high standards of code quality and teamwork.",
     ],
   },
   {
@@ -177,52 +180,59 @@ const experience = [
     org: "MICTSETA Learnership",
     period: "2025 - Present",
     points: [
-      "Work-integrated training across programming, software design, and project delivery.",
-      "Apply information systems theory to hands-on development under industry mentorship.",
-      "Sharpen debugging and SDLC skills through real projects.",
+      "Combine academic knowledge with practical software engineering experience.",
+      "Develop deeper understanding of SDLC, programming principles, and systems analysis.",
+      "Strengthen database design, application development, and debugging skills.",
+      "Build professional habits around collaboration, adaptability, and continuous learning.",
+    ],
+    details: [
+      "Through the MICTSETA Systems Development Learnership, I combine academic knowledge with practical software engineering experience in a structured industry environment. The programme has deepened my understanding of the software development lifecycle, programming principles, systems analysis, database design, and application development.",
+      "Working on real-world projects has strengthened my analytical thinking, debugging skills, and ability to design reliable software solutions. The learnership has also reinforced the importance of collaboration, adaptability, continuous learning, and professional development within modern technology teams.",
     ],
   },
   {
-    role: "Tutor - Information Systems",
+    role: "Information Systems Tutor",
     org: "University of Fort Hare",
     period: "2024 - Present",
     points: [
-      "Tutor first-years in data management, systems analysis, IT infrastructure, and UI/UX.",
-      "Turn complex concepts into clear, accessible explanations.",
-      "Guide project documentation and prototyping to lift class performance.",
+      "Support undergraduate students across Information Systems modules.",
+      "Simplify technical concepts into practical, easy-to-understand explanations.",
+      "Mentor students through assignments, documentation, systems analysis, and database concepts.",
+      "Build communication, leadership, mentoring, and collaborative learning skills.",
+    ],
+    details: [
+      "As an Information Systems Tutor, I support undergraduate students in developing both technical knowledge and problem-solving confidence across a range of Information Systems modules. I simplify complex concepts into practical, easy-to-understand explanations while mentoring students through assignments, project documentation, systems analysis, database concepts, and software design principles.",
+      "This experience has significantly strengthened my communication, leadership, and mentoring abilities. It has taught me how to explain technical concepts clearly to different audiences, provide constructive guidance, and foster collaborative learning, skills that translate directly into effective teamwork within software development environments.",
     ],
   },
 ];
-
 const projects = [
   {
     name: "UCT Fintech Winter School Hackathon",
-    tag: "2nd Place - Fintech Hackathon",
+    tag: "2026 - 2nd Place Fintech Hackathon",
     desc: "Won 2nd place with a marketplace concept that helps MSMEs and funders discover each other, connect, and build funding relationships through a trusted network.",
-    stack: ["Fintech", "MSME Marketplace", "Funding Access", "Networking"],
+    stack: ["React", "Mobile development", "HTML", "CSS", "JavaScript"],
     featured: true,
   },
   {
     name: "FutureTrack",
-    tag: "Web - Education",
+    tag: "2025 - Web Education",
     desc: "Web platform of past papers, study resources, career exploration, and a university eligibility checker for South African Grade 10-12 learners.",
-    stack: ["React", "UX Writing", "IA"],
+    stack: ["HTML", "JavaScript", "CSS", "C#"],
   },
-
   {
     name: "Cortex Hub - Human Rights Hackathon",
-    tag: "Web - Civic Tech",
+    tag: "2025 - Civic Tech Hackathon",
     desc: "Front-end and issue submission form that lets rural schools report infrastructure issues for faster resolution.",
-    stack: ["React", "Forms", "UI"],
+    stack: ["HTML", "CSS", "JavaScript"],
   },
   {
     name: "Telkom10x - Network Support Portal",
-    tag: "2nd Place - Telkom Hackathon",
+    tag: "2025 - 2nd Place Telkom Hackathon",
     desc: "Won 2nd place for a self-service network support portal concept with an AI assistant and community forum, focused on practical front-end flows for faster troubleshooting.",
-    stack: ["2nd Place", "Concept", "AI UX", "Frontend"],
+    stack: ["HTML", "CSS", "JavaScript"],
   },
 ];
-
 const certs = ["UCT Fintech Winter School Hackathon Certificate", "Microsoft AI Fluency", "IBM Python for Data Science", "FNB App Academy - Full-Stack exposure"];
 
 const aboutDetails = [
@@ -464,7 +474,18 @@ function HomePage() {
   );
 }
 
+const aboutParagraphs = [
+  "I'm a Frontend and Mobile App Developer from South Africa currently completing a BCom Honours in Information Systems. My passion lies at the intersection of technology, creativity, and problem-solving, where clean code meets thoughtful design to create products that make a genuine impact.",
+  "Beyond writing code, I'm driven by curiosity. Whether I'm exploring cloud technologies, cybersecurity, artificial intelligence, or emerging software trends, I'm constantly investing in becoming a stronger engineer. I believe great developers never stop learning, and every project is an opportunity to improve both technically and creatively.",
+  "My experience spans industry development, systems development training, university tutoring, and collaborative hackathons, giving me the ability to communicate technical ideas clearly, adapt quickly, and thrive in fast-paced environments. I enjoy working with diverse teams, solving complex problems, and building software that delivers measurable value.",
+  "What truly defines me is my mindset. I approach challenges with discipline, ownership, and a commitment to excellence. I'm not simply looking to write code. I'm looking to contribute to products that improve people's lives, collaborate with ambitious teams across the world, and continue growing into a software engineer capable of leading impactful projects.",
+  "I'm excited by opportunities that challenge me, inspire innovation, and allow me to build technology that matters.",
+];
+
 function AboutPage() {
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const visibleParagraphs = aboutOpen ? aboutParagraphs : aboutParagraphs.slice(0, 2);
+
   return (
     <PageShell>
       <PageIntro
@@ -476,32 +497,25 @@ function AboutPage() {
         <Reveal>
           <div className="glass card-shadow h-full rounded-2xl border border-border p-8 leading-8 text-muted-foreground md:p-10">
             <h2 className="font-display text-2xl font-semibold text-foreground">I'm Kgomotso Mathombo.</h2>
-            <p className="mt-5">
-              I'm a Frontend and Mobile App Developer from South Africa currently completing a BCom Honours in Information
-              Systems. My passion lies at the intersection of technology, creativity, and problem-solving, where clean code
-              meets thoughtful design to create products that make a genuine impact.
-            </p>
-            <p className="mt-4">
-              Beyond writing code, I'm driven by curiosity. Whether I'm exploring cloud technologies, cybersecurity,
-              artificial intelligence, or emerging software trends, I'm constantly investing in becoming a stronger engineer.
-              I believe great developers never stop learning, and every project is an opportunity to improve both technically
-              and creatively.
-            </p>
-            <p className="mt-4">
-              My experience spans industry development, systems development training, university tutoring, and collaborative
-              hackathons, giving me the ability to communicate technical ideas clearly, adapt quickly, and thrive in fast-paced
-              environments. I enjoy working with diverse teams, solving complex problems, and building software that delivers
-              measurable value.
-            </p>
-            <p className="mt-4">
-              What truly defines me is my mindset. I approach challenges with discipline, ownership, and a commitment to
-              excellence. I'm not simply looking to write code. I'm looking to contribute to products that improve people's
-              lives, collaborate with ambitious teams across the world, and continue growing into a software engineer capable
-              of leading impactful projects.
-            </p>
-            <p className="mt-4 font-medium text-foreground">
-              I'm excited by opportunities that challenge me, inspire innovation, and allow me to build technology that matters.
-            </p>
+            <div className="relative mt-5">
+              <div className="space-y-4">
+                {visibleParagraphs.map((paragraph, index) => (
+                  <p key={paragraph} className={aboutOpen && index === aboutParagraphs.length - 1 ? "font-medium text-foreground" : undefined}>
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+              {!aboutOpen && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-card to-transparent" />}
+            </div>
+            <button
+              type="button"
+              onClick={() => setAboutOpen((open) => !open)}
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-hotpink hover:bg-muted"
+              aria-expanded={aboutOpen}
+            >
+              {aboutOpen ? "Show less" : "Read more"}
+              {aboutOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </button>
           </div>
         </Reveal>
         <Reveal delay={0.1}>
@@ -515,7 +529,6 @@ function AboutPage() {
     </PageShell>
   );
 }
-
 function SkillsPage() {
   return (
     <PageShell>
@@ -587,42 +600,126 @@ function ExperiencePage() {
         title="Where I've been building."
         copy="A blend of industry work, structured learning, teaching, and competitive product-building experience."
       />
-      <div className="grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
-        <Reveal>
-          <div className="gradient-hero-bg glow-shadow rounded-2xl p-8 text-primary-foreground">
-            <Trophy className="h-9 w-9" />
-            <h2 className="mt-5 font-display text-3xl font-bold">2nd Place, UCT Fintech Winter School Hackathon</h2>
-            <p className="mt-4 leading-7 text-primary-foreground/85">
-              I designed a marketplace for MSMEs and funders to connect, network, and move funding conversations from
-              scattered discovery into a more trusted digital environment.
-            </p>
+
+      <Reveal>
+        <motion.section
+          whileHover={{ y: -5 }}
+          className="gradient-hero-bg glow-shadow relative z-20 mb-12 overflow-hidden rounded-2xl p-8 text-primary-foreground md:p-10"
+        >
+          <motion.div
+            aria-hidden="true"
+            className="absolute -right-20 -top-24 h-64 w-64 rounded-full bg-white/20 blur-3xl"
+            animate={{ scale: [1, 1.12, 1], rotate: [0, 18, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            aria-hidden="true"
+            className="absolute -bottom-28 left-8 h-64 w-64 rounded-full bg-white/15 blur-3xl"
+            animate={{ x: [0, 16, 0], y: [0, -12, 0] }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <div className="relative grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+            <div>
+              <Trophy className="h-10 w-10" />
+              <h2 className="mt-5 font-display text-3xl font-bold md:text-5xl">Building across product, learning, and impact.</h2>
+              <p className="mt-4 max-w-2xl leading-8 text-primary-foreground/85">
+                My experience combines real delivery at Appimate, structured systems development training, university tutoring,
+                and hackathon pressure where ideas have to become usable quickly.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {["Frontend & mobile delivery", "Systems development learnership", "University tutoring", "2x hackathon 2nd place wins"].map((item) => (
+                <div key={item} className="flex items-center gap-3 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-semibold backdrop-blur">
+                  <span className="h-2 w-2 rounded-full bg-white" /> {item}
+                </div>
+              ))}
+            </div>
           </div>
-        </Reveal>
-        <div className="space-y-5">
-          {experience.map((item, index) => (
-            <Reveal key={item.role} delay={index * 0.08}>
-              <article className="glass card-shadow rounded-2xl border border-border p-6">
-                <div className="text-xs font-medium uppercase tracking-wider text-hotpink">{item.period}</div>
-                <h2 className="mt-1 font-display text-xl font-semibold">{item.role}</h2>
-                <div className="text-sm text-muted-foreground">{item.org}</div>
-                <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                  {item.points.map((point) => (
-                    <li key={point} className="flex gap-2">
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-hotpink" />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            </Reveal>
-          ))}
+        </motion.section>
+      </Reveal>
+
+      <section className="relative z-10 mx-auto max-w-5xl">
+        <div className="absolute bottom-0 left-6 top-0 w-px bg-linear-to-b from-hotpink via-violet to-teal md:left-1/2" />
+        <div className="space-y-8 md:space-y-10">
+          {experience.map((item, index) => {
+            const Icon = item.role.includes("Tutor") ? GraduationCap : item.role.includes("Learner") ? GitBranch : Briefcase;
+            return (
+              <Reveal key={item.role} delay={index * 0.08}>
+                <div className={`relative z-10 pl-16 md:pl-0 ${index % 2 === 0 ? "md:pr-[calc(50%+3rem)]" : "md:pl-[calc(50%+3rem)]"}`}>
+                  <motion.div
+                    animate={{ scale: [1, 1.08, 1], rotate: [0, 4, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
+                    className="gradient-cool-bg absolute left-0 top-6 z-20 grid h-12 w-12 place-items-center rounded-2xl text-white shadow-lg md:left-1/2 md:-translate-x-1/2"
+                  >
+                    <Icon className="h-5 w-5" />
+                  </motion.div>
+
+                  <motion.article
+                    whileHover={{ y: -6, scale: 1.01 }}
+                    className="glass card-shadow group relative min-h-[28rem] overflow-hidden rounded-2xl border border-border p-6 md:min-h-[26rem] md:p-7"
+                  >
+                    <div className="gradient-hero-bg absolute -right-12 -top-12 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity group-hover:opacity-40" />
+                    <div className="relative z-10 transition-all duration-300 ease-out md:group-hover:-translate-y-8 md:group-hover:opacity-0">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <span className="rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-hotpink">
+                          {item.period}
+                        </span>
+                        <span className="rounded-full bg-hotpink/10 px-3 py-1 text-xs font-semibold text-hotpink">0{index + 1}</span>
+                      </div>
+                      <h2 className="mt-4 font-display text-2xl font-semibold">{item.role}</h2>
+                      <div className="mt-1 text-sm font-medium text-muted-foreground">{item.org}</div>
+                      <ul className="mt-5 space-y-3 text-sm leading-6 text-muted-foreground">
+                        {item.points.map((point) => (
+                          <li key={point} className="flex gap-3">
+                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hotpink" />
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-hotpink md:hidden">
+                        More detail
+                      </div>
+                    </div>
+
+                    <div className="mt-5 space-y-4 text-sm leading-7 text-muted-foreground md:hidden">
+                      {item.details.map((detail) => (
+                        <p key={detail}>{detail}</p>
+                      ))}
+                    </div>
+
+                    <div className="pointer-events-auto absolute inset-0 hidden translate-y-full flex-col overflow-y-auto border-t border-border bg-card p-6 opacity-0 shadow-2xl backdrop-blur-xl transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:flex">
+                      <div className="mb-3 flex items-center justify-between gap-3">
+                        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-hotpink">Role detail</span>
+                        <span className="rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-muted-foreground">Hover reveal</span>
+                      </div>
+                      <h3 className="font-display text-2xl font-semibold text-foreground">{item.role}</h3>
+                      <div className="mt-1 text-sm font-medium text-muted-foreground">{item.org} | {item.period}</div>
+                      <div className="mt-5 space-y-4 text-sm leading-7 text-muted-foreground">
+                        {item.details.map((detail) => (
+                          <p key={detail}>{detail}</p>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.article>
+                </div>
+              </Reveal>
+            );
+          })}
         </div>
-      </div>
+      </section>
     </PageShell>
   );
 }
-
 function ProjectsPage() {
+  const projectItems = projects.map((project) => ({
+    title: project.name,
+    description: project.desc,
+    tag: project.tag,
+    stack: project.stack,
+    featured: project.featured,
+    icon: project.featured ? <Trophy className="h-4 w-4 text-hotpink transition-colors group-hover/card:text-white" /> : <Code2 className="h-4 w-4 text-hotpink transition-colors group-hover/card:text-white" />,
+  }));
+
   return (
     <PageShell>
       <PageIntro
@@ -630,40 +727,16 @@ function ProjectsPage() {
         title="Things I've shipped, prototyped, and pitched."
         copy="A portfolio of practical interfaces, civic ideas, mobile workflows, and fintech problem-solving."
       />
-      <div className="grid gap-6 md:grid-cols-2">
-        {projects.map((project, index) => (
-          <Reveal key={project.name} delay={index * 0.06}>
-            <motion.article
-              whileHover={{ y: -6 }}
-              className={`glass card-shadow group relative flex h-full flex-col overflow-hidden rounded-2xl border p-8 ${
-                project.featured ? "border-hotpink/60 md:col-span-2" : "border-border"
-              }`}
-            >
-              <div className="gradient-cool-bg absolute -right-16 -top-16 h-40 w-40 rounded-full opacity-30 blur-2xl transition-opacity group-hover:opacity-60" />
-              <div className="relative mb-3 flex items-center gap-2">
-                {project.featured ? <Trophy className="h-4 w-4 text-hotpink" /> : <Rocket className="h-4 w-4 text-hotpink" />}
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{project.tag}</span>
-              </div>
-              <h2 className="relative font-display text-2xl font-semibold md:text-3xl">{project.name}</h2>
-              <p className="relative mt-3 flex-1 leading-7 text-muted-foreground">{project.desc}</p>
-              <div className="relative mt-5 flex flex-wrap gap-2">
-                {project.stack.map((item) => (
-                  <span key={item} className="gradient-pink-bg rounded-full px-3 py-1 text-xs font-medium text-white">
-                    {item}
-                  </span>
-                ))}
-              </div>
-              <div className="relative mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-hotpink opacity-0 transition-opacity group-hover:opacity-100">
-                Case study coming soon <ExternalLink className="h-3.5 w-3.5" />
-              </div>
-            </motion.article>
-          </Reveal>
-        ))}
-      </div>
+      <Reveal>
+        <section className="relative overflow-hidden rounded-3xl border border-border bg-card/35 p-3 md:p-5">
+          <div className="gradient-hero-bg pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full opacity-15 blur-3xl" />
+          <div className="gradient-cool-bg pointer-events-none absolute -bottom-28 left-8 h-72 w-72 rounded-full opacity-15 blur-3xl" />
+          <HoverEffect items={projectItems} className="relative z-10" />
+        </section>
+      </Reveal>
     </PageShell>
   );
 }
-
 const coverLetterParagraphs = [
   "I am excited to apply for the remote opportunity at your company. As a Frontend and Mobile App Developer currently completing my BCom Honours in Information Systems, I have built a strong foundation in developing responsive web applications, cross-platform mobile solutions, and user-focused digital experiences. Alongside my academic journey, I am gaining practical industry experience as a Frontend and Mobile App Developer at Appimate while completing a MICTSETA Systems Development Learnership, allowing me to combine technical knowledge with real-world software development practices.",
   "What sets me apart is not only my technical ability but also my commitment to continuous learning. I thrive in environments where I can solve problems, collaborate with diverse teams, and quickly adapt to new technologies. Working in agile environments has taught me how to communicate effectively, manage priorities, and consistently deliver quality work, whether independently or as part of a distributed team.",

@@ -13,9 +13,9 @@ type TrailDot = {
 };
 
 const trailBackgrounds = [
-  "radial-gradient(circle at 32% 30%, color-mix(in oklab, white 48%, var(--primary) 52%) 0 14%, transparent 34%), radial-gradient(circle at 68% 68%, color-mix(in oklab, var(--color-teal) 44%, transparent) 0 34%, transparent 62%), radial-gradient(circle, color-mix(in oklab, var(--primary) 54%, transparent) 0 48%, transparent 76%)",
-  "radial-gradient(circle at 34% 32%, color-mix(in oklab, white 42%, var(--color-violet) 58%) 0 14%, transparent 36%), radial-gradient(circle at 66% 70%, color-mix(in oklab, var(--primary) 40%, transparent) 0 34%, transparent 64%), radial-gradient(circle, color-mix(in oklab, var(--color-violet) 52%, transparent) 0 48%, transparent 76%)",
-  "radial-gradient(circle at 34% 32%, color-mix(in oklab, white 44%, var(--color-teal) 56%) 0 14%, transparent 36%), radial-gradient(circle at 68% 68%, color-mix(in oklab, var(--color-violet) 40%, transparent) 0 34%, transparent 64%), radial-gradient(circle, color-mix(in oklab, var(--color-teal) 50%, transparent) 0 48%, transparent 76%)",
+  "radial-gradient(circle at 32% 30%, color-mix(in oklab, white 54%, var(--color-hotpink) 46%) 0 13%, transparent 33%), radial-gradient(circle at 66% 64%, color-mix(in oklab, var(--color-teal) 55%, transparent) 0 32%, transparent 64%), radial-gradient(circle, color-mix(in oklab, var(--color-hotpink) 62%, transparent) 0 48%, transparent 78%)",
+  "radial-gradient(circle at 34% 32%, color-mix(in oklab, white 48%, var(--color-violet) 52%) 0 13%, transparent 34%), radial-gradient(circle at 66% 70%, color-mix(in oklab, var(--color-hotpink) 52%, transparent) 0 32%, transparent 64%), radial-gradient(circle, color-mix(in oklab, var(--color-violet) 60%, transparent) 0 48%, transparent 78%)",
+  "radial-gradient(circle at 34% 32%, color-mix(in oklab, white 50%, var(--color-teal) 50%) 0 13%, transparent 34%), radial-gradient(circle at 68% 68%, color-mix(in oklab, var(--color-violet) 52%, transparent) 0 32%, transparent 64%), radial-gradient(circle, color-mix(in oklab, var(--color-teal) 58%, transparent) 0 48%, transparent 78%)",
 ];
 
 export default function Cursor() {
@@ -104,7 +104,7 @@ export default function Cursor() {
             translateY: "-50%",
             background: trailBackgrounds[dot.variant],
             boxShadow:
-              "0 0 18px color-mix(in oklab, var(--primary) 36%, transparent), 0 0 32px color-mix(in oklab, var(--color-teal) 24%, transparent), 0 0 44px color-mix(in oklab, var(--color-violet) 16%, transparent)",
+              "0 0 18px color-mix(in oklab, var(--color-hotpink) 42%, transparent), 0 0 34px color-mix(in oklab, var(--color-violet) 30%, transparent), 0 0 52px color-mix(in oklab, var(--color-teal) 24%, transparent)",
           }}
           initial={{ opacity: 0.66, scale: 0.42, rotate: 0 }}
           animate={{
@@ -126,9 +126,9 @@ export default function Cursor() {
           zIndex: 9999,
           translateX: "-50%",
           translateY: "-50%",
-          background: "conic-gradient(from 180deg, var(--primary), var(--color-violet), var(--color-teal), var(--primary))",
+          background: "conic-gradient(from 180deg, var(--color-hotpink), var(--color-violet), var(--color-teal), var(--color-hotpink))",
           boxShadow:
-            "0 0 0 1px color-mix(in oklab, var(--foreground) 12%, transparent), 0 0 10px color-mix(in oklab, var(--primary) 32%, transparent), 0 0 20px color-mix(in oklab, var(--color-teal) 15%, transparent)",
+            "0 0 0 1px color-mix(in oklab, var(--color-hotpink) 34%, transparent), 0 0 14px color-mix(in oklab, var(--color-hotpink) 42%, transparent), 0 0 26px color-mix(in oklab, var(--color-teal) 26%, transparent), 0 0 38px color-mix(in oklab, var(--color-violet) 18%, transparent)",
         }}
         animate={{
           opacity: visible ? 1 : 0,
@@ -145,22 +145,23 @@ export default function Cursor() {
           className="absolute inset-[5px] rounded-full"
           style={{
             background:
-              "radial-gradient(circle, color-mix(in oklab, var(--foreground) 94%, white 6%) 0 45%, color-mix(in oklab, var(--primary) 65%, transparent) 46% 100%)",
+              "radial-gradient(circle, color-mix(in oklab, white 82%, var(--color-teal) 18%) 0 32%, var(--color-hotpink) 33% 58%, var(--color-violet) 59% 100%)",
             boxShadow:
-              "0 0 8px color-mix(in oklab, var(--foreground) 48%, transparent), 0 0 14px color-mix(in oklab, var(--primary) 34%, transparent)",
+              "0 0 8px color-mix(in oklab, var(--color-hotpink) 48%, transparent), 0 0 16px color-mix(in oklab, var(--color-violet) 34%, transparent)",
           }}
         />
       </motion.div>
 
       <motion.div
-        className="pointer-events-none fixed left-0 top-0 h-1 w-1 rounded-full bg-foreground"
+        className="pointer-events-none fixed left-0 top-0 h-1 w-1 rounded-full"
         style={{
           x: cursorX,
           y: cursorY,
           zIndex: 10000,
           translateX: "-50%",
           translateY: "-50%",
-          boxShadow: "0 0 8px color-mix(in oklab, var(--foreground) 58%, transparent)",
+          background: "var(--color-hotpink)",
+          boxShadow: "0 0 8px color-mix(in oklab, var(--color-hotpink) 64%, transparent), 0 0 14px color-mix(in oklab, var(--color-teal) 36%, transparent)",
         }}
         animate={{ opacity: visible ? 1 : 0, scale: pressed ? 1.55 : 1 }}
         transition={{ type: "spring", stiffness: 700, damping: 28, mass: 0.18 }}

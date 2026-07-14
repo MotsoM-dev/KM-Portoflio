@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "../styles.css";
 
+
 export const metadata: Metadata = {
   title: "Kgomotso Mathombo - Frontend & Mobile Developer",
   description:

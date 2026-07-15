@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import { AnimatePresence, motion } from 'motion/react';
-import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import {
   AtSign,
   Camera,
@@ -28,9 +28,8 @@ import {
   Zap,
 } from 'lucide-react';
 import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
+import { supabase } from '@/lib/supabase';
 
-const POSTS_KEY = 'motsom-dev-visual-feed-posts';
-const LEGACY_POSTS_KEY = 'motsom-dev-blog-posts';
 const SETTINGS_KEY = 'motsom-dev-feed-settings';
 const ADMIN_KEY = 'motsom-dev-blog-admin';
 const ADMIN_PASSWORD_HASH = '3c7bff9a336ba17f715cbffd291cfdad52f33e4887c164a0a368ba429555b160';
@@ -73,7 +72,6 @@ const starterPosts: VisualPost[] = [
 const interestIcons = [Smartphone, Code2, Sparkles, Layers, ShieldCheck, Palette, Zap];
 const interestGradients = ['gradient-hero-bg', 'gradient-cool-bg', 'gradient-pink-bg'];
 
-const createId = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const formatDate = (value: string) => new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(value));
 
 async function hashText(value: string) {
@@ -88,12 +86,6 @@ function normalizeTag(value: string) {
   return cleaned.startsWith('#') ? cleaned : `#${cleaned}`;
 }
 
-function normalizeTags(values: unknown) {
-  if (!Array.isArray(values)) return [];
-  const tags = values.filter((value): value is string => typeof value === 'string').map(normalizeTag).filter(Boolean);
-  return Array.from(new Set(tags));
-}
-
 function parseTagList(value: string) {
   const tags = value.split(/[\s,]+/).map(normalizeTag).filter(Boolean);
   return Array.from(new Set(tags));
@@ -101,79 +93,20 @@ function parseTagList(value: string) {
 
 function normalizeMediaItem(value: unknown): BlogMedia | undefined {
   if (!value || typeof value !== 'object') return undefined;
-  const media = value as Partial<BlogMedia> & { type?: unknown };
+  const media = value as Partial<BlogMedia>;
   if (typeof media.src !== 'string' || !media.src) return undefined;
-  const sourceKind = media.kind === 'video' || media.type === 'video' || media.src.startsWith('data:video') ? 'video' : 'image';
+  const sourceKind = media.kind === 'video' || media.src.startsWith('data:video') ? 'video' : 'image';
   return { src: media.src, name: typeof media.name === 'string' ? media.name : 'Feed media', kind: sourceKind };
 }
 
-function normalizeMedia(mediaValue: unknown, legacyImage: unknown) {
-  const fromMedia = Array.isArray(mediaValue) ? mediaValue.map(normalizeMediaItem).filter((item): item is BlogMedia => Boolean(item)) : [];
-  const fromImage = normalizeMediaItem(legacyImage);
-  return (fromMedia.length > 0 ? fromMedia : fromImage ? [fromImage] : []).slice(0, MAX_MEDIA_FILES);
-}
-
-function normalizePost(value: unknown): VisualPost | undefined {
-  if (!value || typeof value !== 'object') return undefined;
-  const raw = value as { id?: unknown; caption?: unknown; body?: unknown; title?: unknown; createdAt?: unknown; tags?: unknown; media?: unknown; image?: unknown };
-  const captionSource = typeof raw.caption === 'string' ? raw.caption : typeof raw.body === 'string' ? raw.body : typeof raw.title === 'string' ? raw.title : '';
-  const caption = captionSource.trim();
-  if (!caption) return undefined;
+function normalizePostFromSupabase(raw: any): VisualPost {
   return {
-    id: typeof raw.id === 'string' && raw.id ? raw.id : createId(),
-    caption,
-    createdAt: typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString(),
-    tags: normalizeTags(raw.tags),
-    media: normalizeMedia(raw.media, raw.image),
+    id: raw.id,
+    caption: raw.caption,
+    createdAt: raw.created_at,
+    tags: raw.tags || [],
+    media: raw.post_media?.map((m: any) => normalizeMediaItem(m)).filter(Boolean) as BlogMedia[] || [],
   };
-}
-
-function readPostList(key: string) {
-  const saved = window.localStorage.getItem(key);
-  if (!saved) return [];
-  const parsed = JSON.parse(saved) as unknown;
-  if (!Array.isArray(parsed)) return [];
-  return parsed.map(normalizePost).filter((post): post is VisualPost => Boolean(post));
-}
-
-function readPosts() {
-  try {
-    const visualPosts = readPostList(POSTS_KEY);
-    if (visualPosts.length > 0) return visualPosts;
-    const legacyPosts = readPostList(LEGACY_POSTS_KEY);
-    if (legacyPosts.length > 0) return legacyPosts;
-    return starterPosts;
-  } catch {
-    return starterPosts;
-  }
-}
-
-function readSettings() {
-  try {
-    const saved = window.localStorage.getItem(SETTINGS_KEY);
-    if (!saved) return defaultSettings;
-    const parsed = JSON.parse(saved) as Partial<FeedSettings>;
-    const tags = normalizeTags(parsed.tags);
-    const interests = Array.isArray(parsed.interests) && parsed.interests.some((item) => typeof item === 'string' && item.trim())
-      ? parsed.interests.filter((item): item is string => typeof item === 'string').map((item) => item.trim())
-      : defaultInterests;
-    return { tags: tags.length > 0 ? tags : defaultTags, interests };
-  } catch {
-    return defaultSettings;
-  }
-}
-
-function copyToClipboard(value: string) {
-  if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(value);
-  const textarea = document.createElement('textarea');
-  textarea.value = value;
-  textarea.style.position = 'fixed';
-  textarea.style.opacity = '0';
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand('copy');
-  document.body.removeChild(textarea);
-  return Promise.resolve();
 }
 
 function getMediaValidationError(file: File) {
@@ -181,26 +114,6 @@ function getMediaValidationError(file: File) {
   if (file.type.startsWith('image/') && file.size > MAX_IMAGE_BYTES) return 'Images must be under 2 MB so they can save locally.';
   if (file.type.startsWith('video/') && file.size > MAX_VIDEO_BYTES) return 'Videos must be under 8 MB so they can save locally.';
   return '';
-}
-
-function readMediaFile(file: File) {
-  return new Promise<BlogMedia>((resolve, reject) => {
-    const error = getMediaValidationError(file);
-    if (error) {
-      reject(new Error(error));
-      return;
-    }
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error('Could not read one of the selected files.'));
-    reader.onload = () => {
-      if (typeof reader.result !== 'string') {
-        reject(new Error('Could not read one of the selected files.'));
-        return;
-      }
-      resolve({ src: reader.result, name: file.name, kind: file.type.startsWith('video/') ? 'video' : 'image' });
-    };
-    reader.readAsDataURL(file);
-  });
 }
 
 function Avatar({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
@@ -215,7 +128,7 @@ function Avatar({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
 
 function DefaultVisual({ caption, index }: { caption: string; index: number }) {
   return (
-    <div className='gradient-cool-bg relative grid h-full min-h-[18rem] w-full overflow-hidden place-items-center text-white'>
+    <div className='gradient-cool-bg relative grid h-full min-h-18rem w-full overflow-hidden place-items-center text-white'>
       <motion.div aria-hidden='true' className='absolute -left-1/4 top-0 h-full w-1/2 skew-x-12 bg-white/20 blur-2xl' animate={{ x: ['0%', '260%'] }} transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: index * 0.12 }} />
       <motion.div aria-hidden='true' className='absolute right-8 top-8 h-28 w-28 rounded-full border border-white/20' animate={{ scale: [1, 1.18, 1], rotate: [0, 20, 0] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }} />
       <div className='relative grid max-w-sm gap-4 px-7 text-center'>
@@ -254,14 +167,9 @@ function MediaCollage({ media, caption, index }: { media: BlogMedia[]; caption: 
   const extraCount = Math.max(media.length - 4, 0);
   const cellBase = 'relative overflow-hidden rounded-2xl border border-white/10 bg-black shadow-lg shadow-black/20';
   const renderCell = (item: BlogMedia, itemIndex: number, className = '') => (
-    <motion.div
-      key={`${item.name}-${itemIndex}`}
-      className={`${cellBase} ${className}`}
-      whileHover={{ scale: 1.025 }}
-      transition={{ duration: 0.22 }}
-    >
+    <motion.div key={`${item.name}-${itemIndex}`} className={`${cellBase} ${className}`} whileHover={{ scale: 1.025 }} transition={{ duration: 0.22 }}>
       <MediaDisplay media={item} caption={caption} index={index + itemIndex} />
-      <div className='absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-white/5 opacity-80' />
+      <div className='absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-white/5 opacity-80' />
       {item.kind === 'video' && (
         <div className='absolute left-2 top-2 grid h-8 w-8 place-items-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur'>
           <Film className='h-4 w-4' />
@@ -275,22 +183,19 @@ function MediaCollage({ media, caption, index }: { media: BlogMedia[]; caption: 
     </motion.div>
   );
 
-  if (media.length === 2) {
-    return <div className='grid h-full min-h-[18rem] grid-cols-2 gap-2 bg-black p-2'>{visibleMedia.map((item, itemIndex) => renderCell(item, itemIndex, 'h-full'))}</div>;
-  }
-
+  if (media.length === 2) return <div className='grid h-full min-h-72 grid-cols-2 gap-2 bg-black p-2'>{visibleMedia.map((item, i) => renderCell(item, i, 'h-full'))}</div>;
   if (media.length === 3) {
     return (
-      <div className='grid h-full min-h-[18rem] grid-cols-[1.2fr_0.8fr] grid-rows-2 gap-2 bg-black p-2'>
+      <div className='grid h-full min-h-72 grid-cols-[1.2fr_0.8fr] grid-rows-2 gap-2 bg-black p-2'>
         {renderCell(visibleMedia[0], 0, 'row-span-2')}
         {renderCell(visibleMedia[1], 1)}
         {renderCell(visibleMedia[2], 2)}
       </div>
     );
   }
-
-  return <div className='grid h-full min-h-[18rem] grid-cols-2 grid-rows-2 gap-2 bg-black p-2'>{visibleMedia.map((item, itemIndex) => renderCell(item, itemIndex))}</div>;
+  return <div className='grid h-full min-h-72 grid-cols-2 grid-rows-2 gap-2 bg-black p-2'>{visibleMedia.map((item, i) => renderCell(item, i))}</div>;
 }
+
 function MediaPreviewGrid({ media, onRemove }: { media: BlogMedia[]; onRemove: (index: number) => void }) {
   if (media.length === 0) return null;
   return (
@@ -337,30 +242,47 @@ export default function Blog() {
   const [sharedPostId, setSharedPostId] = useState('');
   const [viewerPostId, setViewerPostId] = useState('');
   const [viewerMediaIndex, setViewerMediaIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchPosts = async () => {
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*, post_media(*)')
+      .order('created_at', { ascending: false });
+
+    if (error) console.error(error);
+    else {
+      const normalized = data?.map(normalizePostFromSupabase) || [];
+      setPosts(normalized.length > 0 ? normalized : starterPosts);
+    }
+  };
+
+  const fetchSettings = () => {
+    try {
+      const saved = localStorage.getItem(SETTINGS_KEY);
+      if (saved) setSettings(JSON.parse(saved));
+    } catch {}
+  };
 
   useEffect(() => {
-    setPosts(readPosts());
-    setSettings(readSettings());
-    setIsAdmin(window.sessionStorage.getItem(ADMIN_KEY) === 'true');
+    fetchPosts();
+    fetchSettings();
+    setIsAdmin(sessionStorage.getItem(ADMIN_KEY) === 'true');
     setAdminOpen(new URLSearchParams(window.location.search).get('admin') === '1');
     setLoaded(true);
   }, []);
 
   useEffect(() => {
-    if (loaded) window.localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
-  }, [loaded, posts]);
-
-  useEffect(() => {
-    if (loaded) window.localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    if (loaded) localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   }, [loaded, settings]);
 
   const activeTags = settings.tags.length > 0 ? settings.tags : defaultTags;
   const interests = settings.interests.length > 0 ? settings.interests : defaultInterests;
-  const deleteTarget = useMemo(() => posts.find((post) => post.id === deleteTargetId), [deleteTargetId, posts]);
+  const deleteTarget = posts.find((post) => post.id === deleteTargetId);
   const featuredPost = posts[0];
-  const viewerPost = useMemo(() => posts.find((post) => post.id === viewerPostId), [posts, viewerPostId]);
+  const viewerPost = posts.find((post) => post.id === viewerPostId);
   const viewerMediaCount = Math.max(viewerPost?.media.length ?? 0, 1);
-  const viewerMedia = viewerPost?.media[viewerMediaIndex] ?? viewerPost?.media[0];
+  const viewerMedia = viewerPost?.media[viewerMediaIndex];
 
   const closeAdmin = () => {
     setAdminOpen(false);
@@ -377,38 +299,47 @@ export default function Blog() {
     setIsAdmin(true);
     setPassword('');
     setLoginError('');
-    window.sessionStorage.setItem(ADMIN_KEY, 'true');
+    sessionStorage.setItem(ADMIN_KEY, 'true');
   };
 
   const logout = () => {
     setIsAdmin(false);
     setEditingPostId('');
-    window.sessionStorage.removeItem(ADMIN_KEY);
+    sessionStorage.removeItem(ADMIN_KEY);
   };
 
-  const processMediaFiles = (fileList: FileList | null, currentCount: number, onSuccess: (media: BlogMedia[]) => void, setError: (value: string) => void) => {
+  const uploadMediaFile = async (file: File): Promise<BlogMedia> => {
+    const error = getMediaValidationError(file);
+    if (error) throw new Error(error);
+
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+
+    const { error: uploadError } = await supabase.storage.from('blog-media').upload(fileName, file, { upsert: true });
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage.from('blog-media').getPublicUrl(fileName);
+
+    return { src: publicUrl, name: file.name, kind: file.type.startsWith('video/') ? 'video' : 'image' };
+  };
+
+  const processMediaFiles = async (fileList: FileList | null, currentCount: number, onSuccess: (media: BlogMedia[]) => void, setError: (value: string) => void) => {
     setError('');
     const files = Array.from(fileList ?? []);
     if (files.length === 0) return;
+
     const remaining = MAX_MEDIA_FILES - currentCount;
-    if (remaining <= 0) {
-      setError(`You can add up to ${MAX_MEDIA_FILES} media files per post.`);
-      return;
+    if (remaining <= 0) return setError(`You can add up to ${MAX_MEDIA_FILES} media files per post.`);
+
+    const validFiles = files.slice(0, remaining).filter(f => !getMediaValidationError(f));
+    if (validFiles.length === 0) return setError('No supported media files were selected.');
+
+    try {
+      const uploaded = await Promise.all(validFiles.map(uploadMediaFile));
+      onSuccess(uploaded);
+    } catch (err: any) {
+      setError(err.message);
     }
-    const selectedFiles = files.slice(0, remaining);
-    const invalidMessage = selectedFiles.map(getMediaValidationError).find(Boolean) ?? '';
-    const validFiles = selectedFiles.filter((file) => !getMediaValidationError(file));
-    if (validFiles.length === 0) {
-      setError(invalidMessage || 'No supported media files were selected.');
-      return;
-    }
-    void Promise.all(validFiles.map(readMediaFile))
-      .then((media) => {
-        onSuccess(media);
-        if (files.length > remaining) setError(`Only ${MAX_MEDIA_FILES} media files can be saved per post.`);
-        else if (invalidMessage) setError(invalidMessage);
-      })
-      .catch((error: Error) => setError(error.message));
   };
 
   const handleDraftMediaChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -421,15 +352,22 @@ export default function Blog() {
     event.currentTarget.value = '';
   };
 
-  const addPost = (event: FormEvent<HTMLFormElement>) => {
+  const addPost = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const caption = draftCaption.trim();
     if (!caption) return;
-    setPosts((current) => [{ id: createId(), caption, media: draftMedia, tags: parseTagList(draftTags), createdAt: new Date().toISOString() }, ...current]);
-    setDraftCaption('');
-    setDraftTags('');
-    setDraftMedia([]);
-    setMediaError('');
+
+    setIsLoading(true);
+    const { data: post, error: postError } = await supabase.from('posts').insert({ caption, tags: parseTagList(draftTags) }).select().single();
+
+    if (!postError && post && draftMedia.length > 0) {
+      const mediaPayload = draftMedia.map((m, i) => ({ post_id: post.id, src: m.src, name: m.name, kind: m.kind, position: i }));
+      await supabase.from('post_media').insert(mediaPayload);
+    }
+
+    setIsLoading(false);
+    await fetchPosts();
+    setDraftCaption(''); setDraftTags(''); setDraftMedia([]); setMediaError('');
   };
 
   const startEditing = (post: VisualPost) => {
@@ -449,12 +387,23 @@ export default function Blog() {
     setEditMediaError('');
   };
 
-  const saveEditedPost = (event: FormEvent<HTMLFormElement>) => {
+  const saveEditedPost = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const caption = editCaption.trim();
     if (!editingPostId || !caption) return;
-    setPosts((current) => current.map((post) => (post.id === editingPostId ? { ...post, caption, media: editMedia, tags: parseTagList(editTags) } : post)));
+
+    setIsLoading(true);
+    await supabase.from('posts').update({ caption, tags: parseTagList(editTags) }).eq('id', editingPostId);
+    await supabase.from('post_media').delete().eq('post_id', editingPostId);
+
+    if (editMedia.length > 0) {
+      const mediaPayload = editMedia.map((m, i) => ({ post_id: editingPostId, src: m.src, name: m.name, kind: m.kind, position: i }));
+      await supabase.from('post_media').insert(mediaPayload);
+    }
+
+    setIsLoading(false);
     cancelEditing();
+    await fetchPosts();
   };
 
   const addFeedTag = (event: FormEvent<HTMLFormElement>) => {
@@ -465,9 +414,7 @@ export default function Blog() {
     setNewFeedTag('');
   };
 
-  const removeFeedTag = (tag: string) => {
-    setSettings((current) => ({ ...current, tags: current.tags.filter((item) => item !== tag) }));
-  };
+  const removeFeedTag = (tag: string) => setSettings((current) => ({ ...current, tags: current.tags.filter((item) => item !== tag) }));
 
   const addInterest = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -477,9 +424,7 @@ export default function Blog() {
     setNewInterest('');
   };
 
-  const removeInterest = (interest: string) => {
-    setSettings((current) => ({ ...current, interests: current.interests.filter((item) => item !== interest) }));
-  };
+  const removeInterest = (interest: string) => setSettings((current) => ({ ...current, interests: current.interests.filter((item) => item !== interest) }));
 
   const requestDeletePost = (postId: string) => {
     setDeleteTargetId(postId);
@@ -495,25 +440,21 @@ export default function Blog() {
 
   const confirmDeletePost = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!deleteTarget) {
-      cancelDelete();
-      return;
-    }
+    if (!deleteTarget) return;
     const hash = await hashText(deletePassword);
     if (hash !== ADMIN_PASSWORD_HASH) {
       setDeleteError('Password did not match. Post was not deleted.');
       return;
     }
-    setPosts((current) => current.filter((post) => post.id !== deleteTarget.id));
-    if (editingPostId === deleteTarget.id) cancelEditing();
-    if (viewerPostId === deleteTarget.id) setViewerPostId('');
+    await supabase.from('posts').delete().eq('id', deleteTarget.id);
     cancelDelete();
+    await fetchPosts();
   };
 
   const sharePost = async (postId: string) => {
-    await copyToClipboard(`${window.location.origin}/blog#${postId}`);
+    await navigator.clipboard.writeText(`${window.location.origin}/blog#${postId}`);
     setSharedPostId(postId);
-    window.setTimeout(() => setSharedPostId(''), 1600);
+    setTimeout(() => setSharedPostId(''), 1600);
   };
 
   const openViewer = (postId: string, index = 0) => {
@@ -529,6 +470,14 @@ export default function Blog() {
   const moveViewer = (direction: -1 | 1) => {
     setViewerMediaIndex((current) => (current + direction + viewerMediaCount) % viewerMediaCount);
   };
+  
+  useEffect(() => {
+  supabase.from('posts').select('count', { count: 'exact', head: true })
+    .then(({ error }) => {
+      if (error) console.error('Supabase connection error:', error);
+      else console.log('Supabase connected successfully');
+    });
+}, []);
 
   return (
     <main className='mx-auto min-h-screen w-full max-w-7xl px-4 pb-20 pt-28 md:px-8 md:pt-32'>
@@ -580,7 +529,7 @@ export default function Blog() {
                     <motion.div aria-hidden='true' className='absolute -right-8 -top-8 h-16 w-16 rounded-full bg-hotpink/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
                     <div className='relative grid h-full content-between gap-3'>
                       <div className={`${interestGradients[index % interestGradients.length]} grid h-9 w-9 place-items-center rounded-xl text-white shadow-md transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110`}><Icon className='h-4 w-4' /></div>
-                      <div className='max-w-full break-words font-display text-[0.82rem] font-semibold leading-tight [overflow-wrap:anywhere]'>{interest}</div>
+                      <div className='max-w-full wrap-anywhere font-display text-[0.82rem] font-semibold leading-tight'>{interest}</div>
                     </div>
                   </motion.div>
                 );
@@ -624,11 +573,11 @@ export default function Blog() {
                     className='min-w-0 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-hotpink focus-visible:ring-offset-4 focus-visible:ring-offset-background'
                   >
                     <CardContainer containerClassName='w-full py-0' className='w-full'>
-                      <CardBody className='group/card relative h-full min-h-[32rem] w-full max-w-none overflow-hidden rounded-3xl border border-border bg-card/95 p-0 card-shadow'>
+                      <CardBody className='group/card relative h-full min-h-128 w-full max-w-none overflow-hidden rounded-3xl border border-border bg-card/95 p-0 card-shadow'>
                         <CardItem translateZ={70} className='relative block w-full'>
-                          <div className='relative aspect-[4/3] w-full overflow-hidden rounded-t-3xl bg-muted'>
+                          <div className='relative aspect-4/3 w-full overflow-hidden rounded-t-3xl bg-muted'>
                             <MediaCollage media={post.media} caption={post.caption} index={index} />
-                            <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4'>
+                            <div className='absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 to-transparent p-4'>
                               <div className='flex flex-wrap items-center justify-between gap-2'>
                                 <div className='inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur'>
                                   {hasVideo ? <Film className='h-3.5 w-3.5' /> : <Camera className='h-3.5 w-3.5' />} Media post
@@ -723,7 +672,7 @@ export default function Blog() {
 
       <AnimatePresence>
         {viewerPost && (
-          <div className='fixed inset-0 z-[75] grid place-items-center bg-background/80 px-3 py-5 backdrop-blur-xl md:px-6' onClick={closeViewer}>
+          <div className='fixed inset-0 z-75 grid place-items-center bg-background/80 px-3 py-5 backdrop-blur-xl md:px-6' onClick={closeViewer}>
             <motion.section
               initial={{ opacity: 0, y: 24, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -748,7 +697,7 @@ export default function Blog() {
               </div>
 
               <div className='relative overflow-hidden rounded-3xl border border-border bg-black'>
-                <div className='aspect-[16/10] max-h-[68vh] min-h-[18rem] w-full'>
+                <div className='aspect-16/10 max-h-[68vh] min-h-72 w-full'>
                   <MediaDisplay media={viewerMedia} caption={viewerPost.caption} index={viewerMediaIndex} controls fit='contain' />
                 </div>
                 {viewerMediaCount > 1 && (
@@ -786,7 +735,7 @@ export default function Blog() {
       </AnimatePresence>
 
       {adminOpen && (
-        <div className='fixed inset-0 z-[70] grid place-items-center bg-background/75 px-4 py-8 backdrop-blur-md'>
+        <div className='fixed inset-0 z-70 grid place-items-center bg-background/75 px-4 py-8 backdrop-blur-md'>
           <motion.section initial={{ opacity: 0, y: 24, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.25 }} className='max-h-[88vh] w-full max-w-5xl overflow-y-auto rounded-3xl border border-border bg-card p-5 card-shadow md:p-7' role='dialog' aria-modal='true' aria-label='Admin Studio'>
             <div className='flex items-start justify-between gap-4'>
               <div className='flex gap-4'>
@@ -863,7 +812,7 @@ export default function Blog() {
                     <textarea value={editCaption} onChange={(event) => setEditCaption(event.target.value)} placeholder='Caption' rows={6} className='resize-none rounded-2xl border border-border bg-card px-4 py-3 text-sm leading-7 outline-none focus:border-hotpink' />
                     <input value={editTags} onChange={(event) => setEditTags(event.target.value)} placeholder='#MobileDev #UX #FinTech' className='rounded-2xl border border-border bg-card px-4 py-3 text-sm outline-none focus:border-hotpink' />
                     <div className='flex flex-wrap gap-3'>
-                      <button type='submit' className='gradient-hero-bg inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white shadow-lg'><Save className='h-4 w-4' /> Save changes</button>
+                      <button type='submit' disabled={isLoading} className='gradient-hero-bg inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white shadow-lg'><Save className='h-4 w-4' /> {isLoading ? 'Saving...' : 'Save changes'}</button>
                       <button type='button' onClick={cancelEditing} className='inline-flex items-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-semibold text-muted-foreground hover:border-hotpink hover:text-hotpink'><X className='h-4 w-4' /> Cancel</button>
                     </div>
                   </form>
@@ -889,7 +838,7 @@ export default function Blog() {
                     <input value={draftTags} onChange={(event) => setDraftTags(event.target.value)} placeholder='#MobileDev #UX #FinTech' className='rounded-2xl border border-border bg-card px-4 py-3 text-sm outline-none focus:border-hotpink' />
                     <div className='flex flex-wrap items-center gap-3'>
                       {draftMedia.length > 0 && <button type='button' onClick={() => setDraftMedia([])} className='inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-xs font-semibold text-muted-foreground hover:border-hotpink hover:text-hotpink'><Trash2 className='h-4 w-4' /> Clear media</button>}
-                      <button type='submit' className='gradient-hero-bg inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white shadow-lg'><Plus className='h-4 w-4' /> Publish post</button>
+                      <button type='submit' disabled={isLoading} className='gradient-hero-bg inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white shadow-lg'><Plus className='h-4 w-4' /> {isLoading ? 'Saving...' : 'Publish post'}</button>
                     </div>
                   </form>
                 )}
@@ -938,7 +887,7 @@ export default function Blog() {
 
       <AnimatePresence>
         {deleteTarget && (
-          <div className='fixed inset-0 z-[80] grid place-items-center bg-background/80 px-4 py-8 backdrop-blur-md'>
+          <div className='fixed inset-0 z-80 grid place-items-center bg-background/80 px-4 py-8 backdrop-blur-md'>
             <motion.form onSubmit={confirmDeletePost} initial={{ opacity: 0, y: 20, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 12, scale: 0.96 }} transition={{ duration: 0.22 }} className='w-full max-w-md rounded-3xl border border-border bg-card p-6 card-shadow'>
               <div className='flex items-start gap-4'>
                 <div className='gradient-pink-bg grid h-12 w-12 shrink-0 place-items-center rounded-2xl text-white'><Trash2 className='h-5 w-5' /></div>

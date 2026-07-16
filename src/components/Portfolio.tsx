@@ -316,7 +316,7 @@ function Header({ theme, toggle }: { theme: "light" | "dark"; toggle: () => void
           <span className="gradient-hero-bg grid h-10 w-10 place-items-center rounded-xl text-primary-foreground shadow-glow transition-transform group-hover:scale-105">
             K
           </span>
-          <span className="hidden bg-linear-to-r from-hotpink to-violet bg-clip-text text-transparent sm:inline">
+          <span className="bg-linear-to-r from-hotpink to-violet bg-clip-text text-transparent inline">
             MotsoM-Dev
           </span>
         </Link>

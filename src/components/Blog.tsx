@@ -27,10 +27,10 @@ import {
   X,
   Zap,
 } from 'lucide-react';
-import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
-import { supabase } from '@/lib/supabase';
+import { CardBody, CardContainer, CardItem } from './ui/3d-card';
+import { supabase } from '../lib/supabase';
 
-const SETTINGS_KEY = 'motsom-dev-feed-settings';
+const SETTINGS_ROW_NAME = 'default';
 const ADMIN_KEY = 'motsom-dev-blog-admin';
 const ADMIN_PASSWORD_HASH = '3c7bff9a336ba17f715cbffd291cfdad52f33e4887c164a0a368ba429555b160';
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
@@ -44,30 +44,6 @@ type FeedSettings = { tags: string[]; interests: string[] };
 const defaultInterests = ['Mobile development', 'Web development', 'FinTech', 'Blockchain', 'Cybersecurity', 'UX', 'UI'];
 const defaultTags = ['#MobileDev', '#WebDev', '#FinTech', '#Blockchain', '#Cybersecurity', '#UX', '#UI'];
 const defaultSettings: FeedSettings = { tags: defaultTags, interests: defaultInterests };
-
-const starterPosts: VisualPost[] = [
-  {
-    id: 'mobile-first-product-flow',
-    caption: 'Mobile-first product flows that feel quick, clear, and human. I like interfaces that make complex work feel lighter.',
-    createdAt: '2026-07-13T10:00:00.000Z',
-    tags: ['#MobileDev', '#UX', '#UI'],
-    media: [],
-  },
-  {
-    id: 'fintech-msme-marketplace',
-    caption: 'FinTech thinking from my MSME and funder marketplace idea: better discovery, better trust, and better access to opportunity.',
-    createdAt: '2026-07-12T14:15:00.000Z',
-    tags: ['#FinTech', '#MSMEs', '#Hackathon'],
-    media: [],
-  },
-  {
-    id: 'secure-web-experiments',
-    caption: 'Experimenting with secure, polished web experiences where the interface, data layer, and product story all work together.',
-    createdAt: '2026-07-11T09:30:00.000Z',
-    tags: ['#WebDev', '#Cybersecurity', '#BuildInPublic'],
-    media: [],
-  },
-];
 
 const interestIcons = [Smartphone, Code2, Sparkles, Layers, ShieldCheck, Palette, Zap];
 const interestGradients = ['gradient-hero-bg', 'gradient-cool-bg', 'gradient-pink-bg'];
@@ -218,9 +194,8 @@ function MediaPreviewGrid({ media, onRemove }: { media: BlogMedia[]; onRemove: (
 }
 
 export default function Blog() {
-  const [posts, setPosts] = useState<VisualPost[]>(starterPosts);
+  const [posts, setPosts] = useState<VisualPost[]>([]);
   const [settings, setSettings] = useState<FeedSettings>(defaultSettings);
-  const [loaded, setLoaded] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [password, setPassword] = useState('');
@@ -250,18 +225,35 @@ export default function Blog() {
       .select('*, post_media(*)')
       .order('created_at', { ascending: false });
 
-    if (error) console.error(error);
-    else {
+    if (error) {
+      console.error(error);
+      setPosts([]);
+    } else {
       const normalized = data?.map(normalizePostFromSupabase) || [];
-      setPosts(normalized.length > 0 ? normalized : starterPosts);
+      setPosts(normalized);
     }
   };
 
-  const fetchSettings = () => {
-    try {
-      const saved = localStorage.getItem(SETTINGS_KEY);
-      if (saved) setSettings(JSON.parse(saved));
-    } catch {}
+  const fetchSettings = async () => {
+    const { data, error } = await supabase
+      .from('feed_settings')
+      .select('tags, interests')
+      .eq('name', SETTINGS_ROW_NAME)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      console.error(error);
+    }
+
+    if (data) {
+      setSettings({ tags: data.tags || [], interests: data.interests || [] });
+    } else {
+      await supabase.from('feed_settings').upsert(
+        { name: SETTINGS_ROW_NAME, tags: defaultTags, interests: defaultInterests },
+        { onConflict: 'name' }
+      );
+      setSettings(defaultSettings);
+    }
   };
 
   useEffect(() => {
@@ -269,14 +261,10 @@ export default function Blog() {
     fetchSettings();
     setIsAdmin(sessionStorage.getItem(ADMIN_KEY) === 'true');
     setAdminOpen(new URLSearchParams(window.location.search).get('admin') === '1');
-    setLoaded(true);
   }, []);
 
-  useEffect(() => {
-    if (loaded) localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-  }, [loaded, settings]);
-
-  const activeTags = settings.tags.length > 0 ? settings.tags : defaultTags;
+  const allPostTags = Array.from(new Set(posts.flatMap((post) => post.tags))); 
+  const activeTags = settings.tags.length > 0 ? settings.tags : allPostTags.length > 0 ? allPostTags : defaultTags;
   const interests = settings.interests.length > 0 ? settings.interests : defaultInterests;
   const deleteTarget = posts.find((post) => post.id === deleteTargetId);
   const featuredPost = posts[0];
@@ -406,25 +394,44 @@ export default function Blog() {
     await fetchPosts();
   };
 
-  const addFeedTag = (event: FormEvent<HTMLFormElement>) => {
+  const saveSettings = async (updatedSettings: FeedSettings) => {
+    setSettings(updatedSettings);
+    const { error } = await supabase.from('feed_settings').upsert(
+      { name: SETTINGS_ROW_NAME, tags: updatedSettings.tags, interests: updatedSettings.interests },
+      { onConflict: 'name' }
+    );
+    if (error) console.error(error);
+  };
+
+  const addFeedTag = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const tag = normalizeTag(newFeedTag);
     if (!tag) return;
-    setSettings((current) => ({ ...current, tags: [tag, ...current.tags.filter((item) => item.toLowerCase() !== tag.toLowerCase())].slice(0, 14) }));
+    await saveSettings({
+      ...settings,
+      tags: [tag, ...settings.tags.filter((item) => item.toLowerCase() !== tag.toLowerCase())].slice(0, 14),
+    });
     setNewFeedTag('');
   };
 
-  const removeFeedTag = (tag: string) => setSettings((current) => ({ ...current, tags: current.tags.filter((item) => item !== tag) }));
+  const removeFeedTag = async (tag: string) => {
+    await saveSettings({ ...settings, tags: settings.tags.filter((item) => item !== tag) });
+  };
 
-  const addInterest = (event: FormEvent<HTMLFormElement>) => {
+  const addInterest = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const interest = newInterest.trim();
     if (!interest) return;
-    setSettings((current) => ({ ...current, interests: [interest, ...current.interests.filter((item) => item.toLowerCase() !== interest.toLowerCase())].slice(0, 12) }));
+    await saveSettings({
+      ...settings,
+      interests: [interest, ...settings.interests.filter((item) => item.toLowerCase() !== interest.toLowerCase())].slice(0, 12),
+    });
     setNewInterest('');
   };
 
-  const removeInterest = (interest: string) => setSettings((current) => ({ ...current, interests: current.interests.filter((item) => item !== interest) }));
+  const removeInterest = async (interest: string) => {
+    await saveSettings({ ...settings, interests: settings.interests.filter((item) => item !== interest) });
+  };
 
   const requestDeletePost = (postId: string) => {
     setDeleteTargetId(postId);

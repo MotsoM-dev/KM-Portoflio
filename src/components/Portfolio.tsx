@@ -28,8 +28,8 @@ import {
   Sun,
   Trophy,
 } from "lucide-react";
-import { HoverEffect } from "@/components/ui/card-hover-effect";
-import { useTheme } from "@/hooks/use-theme";
+import { HoverEffect } from "./ui/card-hover-effect";
+import { useTheme } from "../hooks/use-theme";
 import Blog from "./Blog";
 import Cursor from "./Cursor";
 import FlipCard from "./FlipCard";
@@ -656,7 +656,7 @@ function ExperiencePage() {
 
                   <motion.article
                     whileHover={{ y: -6, scale: 1.01 }}
-                    className="glass card-shadow group relative min-h-[28rem] overflow-hidden rounded-2xl border border-border p-6 md:min-h-[26rem] md:p-7"
+                    className="glass card-shadow group relative min-h-112 overflow-hidden rounded-2xl border border-border p-6 md:min-h-104 md:p-7"
                   >
                     <div className="gradient-hero-bg absolute -right-12 -top-12 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity group-hover:opacity-40" />
                     <div className="relative z-10 transition-all duration-300 ease-out md:group-hover:-translate-y-8 md:group-hover:opacity-0">

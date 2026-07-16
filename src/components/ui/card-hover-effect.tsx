@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import { AnimatePresence, motion } from "motion/react";
 import { useState, type ReactNode } from "react";
 
@@ -98,7 +98,7 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "glass card-shadow relative z-20 flex h-full min-h-[24rem] w-full flex-col overflow-hidden rounded-2xl border border-border bg-card/88 p-6 transition-all duration-200 group-hover/card:-translate-y-1 group-hover/card:border-hotpink/45 group-hover/card:bg-card md:h-[26rem] md:p-8",
+        "glass card-shadow relative z-20 flex h-full min-h-96 w-full flex-col overflow-hidden rounded-2xl border border-border bg-card/88 p-6 transition-all duration-200 group-hover/card:-translate-y-1 group-hover/card:border-hotpink/45 group-hover/card:bg-card md:h-104 md:p-8",
         className,
       )}
     >

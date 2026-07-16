@@ -217,6 +217,7 @@ export default function Blog() {
   const [sharedPostId, setSharedPostId] = useState('');
   const [viewerPostId, setViewerPostId] = useState('');
   const [viewerMediaIndex, setViewerMediaIndex] = useState(0);
+  const [expandedCaptionIds, setExpandedCaptionIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchPosts = async () => {
@@ -275,6 +276,12 @@ export default function Blog() {
   const closeAdmin = () => {
     setAdminOpen(false);
     window.history.replaceState(null, '', '/blog');
+  };
+
+  const toggleCaption = (postId: string) => {
+    setExpandedCaptionIds((current) =>
+      current.includes(postId) ? current.filter((item) => item !== postId) : [...current, postId]
+    );
   };
 
   const login = async (event: FormEvent<HTMLFormElement>) => {
@@ -613,7 +620,39 @@ export default function Blog() {
                             </CardItem>
                           </div>
 
-                          <CardItem translateZ={55} className='block w-full'><p className='text-base leading-8 text-foreground md:text-lg'>{post.caption}</p></CardItem>
+                          <CardItem translateZ={55} className='block w-full'>
+                            <div className='text-base leading-8 text-foreground md:text-lg'>
+                              {expandedCaptionIds.includes(post.id) ? (
+                                <>
+                                  <p>{post.caption}</p>
+                                  <button
+                                    type='button'
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      toggleCaption(post.id);
+                                    }}
+                                    className='mt-3 inline-flex items-center gap-2 rounded-full border border-hotpink bg-hotpink/10 px-3 py-2 text-sm font-semibold text-hotpink transition hover:bg-hotpink/20'
+                                  >
+                                    Show less
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <p className='line-clamp-3'>{post.caption}</p>
+                                  <button
+                                    type='button'
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      toggleCaption(post.id);
+                                    }}
+                                    className='mt-3 inline-flex items-center gap-2 rounded-full border border-hotpink bg-hotpink/10 px-3 py-2 text-sm font-semibold text-hotpink transition hover:bg-hotpink/20'
+                                  >
+                                    Read more
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </CardItem>
                           <CardItem translateZ={40} className='flex w-full flex-wrap gap-2'>
                             {postTags.map((tag) => <span key={`${post.id}-${tag}`} className='rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-muted-foreground'>{tag}</span>)}
                           </CardItem>

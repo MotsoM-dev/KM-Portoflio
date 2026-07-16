@@ -20,6 +20,7 @@ import {
   Linkedin,
   Mail,
   MapPin,
+  Menu,
   Moon,
   Palette,
   Phone,
@@ -27,6 +28,7 @@ import {
   Sparkles,
   Sun,
   Trophy,
+  X,
 } from "lucide-react";
 import { HoverEffect } from "./ui/card-hover-effect";
 import { useTheme } from "../hooks/use-theme";
@@ -301,6 +303,11 @@ function ContactRow({
 }
 function Header({ theme, toggle }: { theme: "light" | "dark"; toggle: () => void }) {
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   return (
     <header className="glass fixed left-0 right-0 top-0 z-40 border-b border-border backdrop-blur-xl">
@@ -345,24 +352,42 @@ function Header({ theme, toggle }: { theme: "light" | "dark"; toggle: () => void
           >
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
+          <button
+            type="button"
+            aria-label="Open navigation menu"
+            onClick={() => setMobileOpen((current) => !current)}
+            className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card transition-transform hover:scale-105 hover:border-hotpink md:hidden"
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </nav>
-      <div className="flex gap-2 overflow-x-auto border-t border-border/60 px-4 py-2 md:hidden">
-        {navItems.map((item) => {
-          const active = pathname === item.href;
-          return (
+      {mobileOpen && (
+        <div className="absolute inset-x-0 top-full z-30 border-t border-border bg-card/95 px-4 py-4 shadow-2xl backdrop-blur-xl md:hidden">
+          <div className="grid gap-3">
+            {navItems.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`rounded-2xl px-4 py-3 text-sm font-semibold transition ${
+                    active ? "gradient-hero-bg text-primary-foreground shadow-glow" : "border border-border bg-background/70 text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
             <Link
-              key={item.href}
-              href={item.href}
-              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium ${
-                active ? "gradient-hero-bg text-primary-foreground" : "border border-border bg-card text-muted-foreground"
-              }`}
+              href="/contact"
+              className="rounded-2xl border border-border bg-background/80 px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:text-foreground"
             >
-              {item.label}
+              Hire me
             </Link>
-          );
-        })}
-      </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

@@ -36,6 +36,7 @@ import Blog from "./Blog";
 import Cursor from "./Cursor";
 import FlipCard from "./FlipCard";
 import MovingBackground from "./MovingBackground";
+import Particles from "./Particles";
 
 const words = ["delightful", "accessible", "performant", "beautiful"];
 const emailAddress = "kgomotsomathombo@gmail.com";
@@ -173,7 +174,7 @@ const experience = [
       "Improve application quality through reviews, debugging, and usability-focused iteration.",
     ],
     details: [
-      "As a Frontend and Mobile App Developer at Appimate, I contribute to the design and development of responsive web and cross-platform mobile applications that prioritize performance, usability, and clean user experiences. Working closely with designers and backend developers, I transform UI/UX concepts into scalable, production-ready applications using modern frontend technologies.",
+      "As a Frontend and Mobile App Developer, I contribute to the design and development of responsive web and cross-platform mobile applications that prioritize performance, usability, and clean user experiences. Working closely with designers and backend developers, I transform UI/UX concepts into scalable, production-ready applications using modern frontend technologies.",
       "My role extends beyond writing code. I actively participate in agile development processes, collaborate during code reviews, troubleshoot technical challenges, and continuously seek opportunities to improve application quality and user satisfaction. This experience has strengthened my ability to work in fast-paced development environments while maintaining high standards of code quality and teamwork.",
     ],
   },
@@ -398,6 +399,22 @@ function HomePage() {
 
   return (
     <PageShell>
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[72vh] overflow-hidden">
+        <Particles
+          particleCount={180}
+          particleSpread={12}
+          speed={0.08}
+          particleBaseSize={140}
+          moveParticlesOnHover={true}
+          particleHoverFactor={1.45}
+          alphaParticles={true}
+          sizeRandomness={0.9}
+          cameraDistance={18}
+          disableRotation={true}
+          pixelRatio={1}
+          className="h-full w-full"
+        />
+      </div>
       <div className="grid min-h-[calc(100vh-8rem)] items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <Reveal>
           <div className="flex flex-col items-start gap-6">
@@ -422,7 +439,7 @@ function HomePage() {
               web & mobile apps.
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-muted-foreground md:text-xl">
-              Frontend & Mobile App Developer at <span className="font-semibold text-foreground">Appimate</span>, BCom
+               <span className="font-semibold text-foreground">Frontend & Mobile App Developer</span>, BCom
               Honours Information Systems student, and hackathon-tested builder focused on useful products with clean
               interfaces.
             </p>
@@ -763,13 +780,13 @@ function ProjectsPage() {
   );
 }
 const coverLetterParagraphs = [
-  "I am excited to apply for the remote opportunity at your company. As a Frontend and Mobile App Developer currently completing my BCom Honours in Information Systems, I have built a strong foundation in developing responsive web applications, cross-platform mobile solutions, and user-focused digital experiences. Alongside my academic journey, I am gaining practical industry experience as a Frontend and Mobile App Developer at Appimate while completing a MICTSETA Systems Development Learnership, allowing me to combine technical knowledge with real-world software development practices.",
-  "What sets me apart is not only my technical ability but also my commitment to continuous learning. I thrive in environments where I can solve problems, collaborate with diverse teams, and quickly adapt to new technologies. Working in agile environments has taught me how to communicate effectively, manage priorities, and consistently deliver quality work, whether independently or as part of a distributed team.",
-  "Throughout my experience, I have developed responsive web interfaces using React, JavaScript, HTML, and CSS, while also building mobile applications with React Native. I enjoy transforming designs into intuitive user experiences and writing clean, maintainable code that contributes to scalable products. My background in tutoring Information Systems has further strengthened my communication skills, patience, and ability to explain technical concepts clearly, qualities that have proven invaluable when collaborating with designers, developers, and stakeholders.",
-  "I am particularly drawn to remote work because it rewards accountability, discipline, and results. I am highly organized, self-motivated, and comfortable managing my workload independently while maintaining clear communication across teams and time zones. I genuinely enjoy learning new technologies and am always looking for opportunities to improve both my technical and professional skills.",
-  "Beyond my professional experience, I have participated in several software development projects and hackathons where I collaborated with multidisciplinary teams to build functional solutions under tight deadlines. These experiences reinforced my ability to think critically, adapt quickly, and remain calm under pressure while delivering meaningful outcomes.",
-  "I am eager to contribute my technical skills, curiosity, and strong work ethic to a company that values innovation, collaboration, and continuous growth. I am confident that my combination of academic achievement, industry experience, and passion for technology would make me a valuable addition to your remote team.",
-  "Thank you for taking the time to consider my application. I would welcome the opportunity to discuss how my skills and enthusiasm can contribute to your organization. I look forward to hearing from you.",
+  "Thank you for taking the time to visit my portfolio. I'm a Frontend and Mobile App Developer currently completing my BCom Honours in Information Systems while gaining industry experience at Appimate and through a MICTSETA Systems Development Learnership. I enjoy turning ideas into responsive web applications and cross-platform mobile experiences that are intuitive, scalable, and built with users in mind.",
+
+  "Working in Agile product teams has taught me how to collaborate across design, backend, and QA while managing priorities and delivering production-ready features through disciplined Git/GitHub workflows. I build with React, Next.js, TypeScript, React Native, HTML, CSS, and modern development tools, always focusing on writing clean, maintainable code that creates real value. Alongside development, two years of tutoring Information Systems strengthened my communication skills and my ability to explain technical concepts clearly, making collaboration with both technical and non-technical teams natural.",
+
+  "I enjoy challenging environments where learning and execution go hand in hand. Whether building products during internships, developing personal projects, or competing in hackathons, I consistently embrace opportunities to solve problems under pressure. These experiences have strengthened my adaptability, attention to detail, and ability to deliver functional solutions within demanding deadlines while maintaining a calm, solution-focused mindset.",
+
+  "I'm looking for an opportunity to contribute to a team that values ownership, curiosity, and continuous improvement. If you're searching for someone who learns quickly, communicates well, takes initiative, and genuinely enjoys building products that make a difference, I'd love to be part of your team.",
 ];
 
 function ContactPage() {

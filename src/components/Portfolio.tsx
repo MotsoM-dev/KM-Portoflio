@@ -30,7 +30,6 @@ import {
   Trophy,
   X,
 } from "lucide-react";
-import { HoverEffect } from "./ui/card-hover-effect";
 import { useTheme } from "../hooks/use-theme";
 import Blog from "./Blog";
 import Cursor from "./Cursor";
@@ -167,6 +166,9 @@ const experience = [
     role: "Frontend & Mobile App Developer",
     org: "Appimate",
     period: "2025 - Present",
+    theme: "Product delivery",
+    accent: "gradient-hero-bg",
+    logo: "/company-logos/appimate.png",
     points: [
       "Design and develop responsive web applications and cross-platform mobile apps.",
       "Turn UI/UX concepts into scalable, production-ready frontend experiences.",
@@ -179,9 +181,30 @@ const experience = [
     ],
   },
   {
+    role: "Administration Support",
+    org: "iLitha Gaming",
+    period: "2026",
+    theme: "Operations",
+    accent: "gradient-cool-bg",
+    logo: "/company-logos/ilitha.png",
+    points: [
+      "Managed registration workflows for players, participants, and gaming activities.",
+      "Handled day-to-day administration for a growing gaming company.",
+      "Kept records organized so events, onboarding, and internal operations could run smoothly.",
+      "Supported communication and coordination between the business and its community.",
+    ],
+    details: [
+      "At iLitha Gaming, I supported the administrative side of the company by managing registrations, organizing records, and helping keep operational processes clear and reliable. The work strengthened my attention to detail, communication, and ability to support a fast-moving entertainment and gaming environment.",
+      "This role gave me practical experience in business administration, user onboarding, and the behind-the-scenes systems that help a company serve its community consistently.",
+    ],
+  },
+  {
     role: "Systems Development Learner",
     org: "MICTSETA Learnership",
     period: "2025 - Present",
+    theme: "Structured learning",
+    accent: "gradient-pink-bg",
+    logo: "/company-logos/mict-seta.jpg",
     points: [
       "Combine academic knowledge with practical software engineering experience.",
       "Develop deeper understanding of SDLC, programming principles, and systems analysis.",
@@ -197,6 +220,9 @@ const experience = [
     role: "Information Systems Tutor",
     org: "University of Fort Hare",
     period: "2024 - Present",
+    theme: "Teaching",
+    accent: "gradient-cool-bg",
+    logo: "/company-logos/ufh.png",
     points: [
       "Support undergraduate students across Information Systems modules.",
       "Simplify technical concepts into practical, easy-to-understand explanations.",
@@ -208,13 +234,41 @@ const experience = [
       "This experience has significantly strengthened my communication, leadership, and mentoring abilities. It has taught me how to explain technical concepts clearly to different audiences, provide constructive guidance, and foster collaborative learning, skills that translate directly into effective teamwork within software development environments.",
     ],
   },
+  {
+    role: "Mobile Developer & Social Media Marketing",
+    org: "Techshield Connect",
+    period: "2023 - 2026",
+    theme: "Mobile + growth",
+    accent: "gradient-hero-bg",
+    logo: "/company-logos/techshield.png",
+    points: [
+      "Worked on mobile development tasks and product-facing digital experiences.",
+      "Supported social media marketing to improve visibility and customer engagement.",
+      "Balanced technical delivery with communication, content, and brand presence.",
+      "Built early professional experience across both software and business growth workflows.",
+    ],
+    details: [
+      "At Techshield Connect, I worked across mobile development and social media marketing, combining technical implementation with digital communication. The role helped me understand how product work, customer attention, and online presence connect in a real business environment.",
+      "This experience shaped my ability to think beyond code: how a mobile product is presented, how users discover it, and how clear communication supports growth.",
+    ],
+  },
 ];
-const projects = [
+type ProjectCategory = "Mobile Apps" | "Websites" | "Web Apps";
+
+const projects: Array<{
+  name: string;
+  tag: string;
+  desc: string;
+  stack: string[];
+  category: ProjectCategory;
+  featured?: boolean;
+}> = [
   {
     name: "UCT Fintech Winter School Hackathon",
     tag: "2026 - 2nd Place Fintech Hackathon",
     desc: "Won 2nd place with a marketplace concept that helps MSMEs and funders discover each other, connect, and build funding relationships through a trusted network.",
     stack: ["React", "Mobile development", "HTML", "CSS", "JavaScript"],
+    category: "Mobile Apps",
     featured: true,
   },
   {
@@ -222,18 +276,47 @@ const projects = [
     tag: "2025 - Web Education",
     desc: "Web platform of past papers, study resources, career exploration, and a university eligibility checker for South African Grade 10-12 learners.",
     stack: ["HTML", "JavaScript", "CSS", "C#"],
+    category: "Web Apps",
   },
   {
     name: "Cortex Hub - Human Rights Hackathon",
     tag: "2025 - Civic Tech Hackathon",
     desc: "Front-end and issue submission form that lets rural schools report infrastructure issues for faster resolution.",
     stack: ["HTML", "CSS", "JavaScript"],
+    category: "Websites",
   },
   {
     name: "Telkom10x - Network Support Portal",
     tag: "2025 - 2nd Place Telkom Hackathon",
     desc: "Won 2nd place for a self-service network support portal concept with an AI assistant and community forum, focused on practical front-end flows for faster troubleshooting.",
     stack: ["HTML", "CSS", "JavaScript"],
+    category: "Web Apps",
+  },
+];
+
+const projectCategories: Array<{
+  name: ProjectCategory;
+  intro: string;
+  icon: typeof Code2;
+  accent: string;
+}> = [
+  {
+    name: "Mobile Apps",
+    intro: "App ideas and mobile-first flows shaped for real users on the move.",
+    icon: Smartphone,
+    accent: "gradient-hero-bg",
+  },
+  {
+    name: "Websites",
+    intro: "Clear, purposeful web experiences with strong front-end structure.",
+    icon: Palette,
+    accent: "gradient-pink-bg",
+  },
+  {
+    name: "Web Apps",
+    intro: "Interactive platforms, portals, and tools built around useful workflows.",
+    icon: Code2,
+    accent: "gradient-cool-bg",
   },
 ];
 const certs = ["UCT Fintech Winter School Hackathon Certificate", "Microsoft AI Fluency", "IBM Python for Data Science", "FNB App Academy - Full-Stack exposure"];
@@ -634,19 +717,95 @@ function SkillsPage() {
   );
 }
 
+function PinkTimelineDuck() {
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="relative h-14 w-18"
+      animate={{ x: [-3, 3, -3], y: [0, -4, 0], rotate: [-4, 4, -4] }}
+      transition={{ duration: 0.48, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <motion.div
+        className="absolute bottom-3 left-4 h-8 w-10 rounded-full bg-pink-400 shadow-lg shadow-pink-400/30"
+        animate={{ scaleX: [1, 1.06, 1], scaleY: [1, 0.94, 1] }}
+        transition={{ duration: 0.48, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <div className="absolute left-3 top-3 h-6 w-6 rounded-full bg-pink-300 shadow-md" />
+      <div className="absolute left-1 top-5 h-3 w-5 rounded-l-full bg-orange-300" />
+      <div className="absolute left-7 top-4.5 h-1.5 w-1.5 rounded-full bg-slate-950" />
+      <motion.div
+        className="absolute bottom-5 left-8 h-4 w-6 rounded-full bg-pink-500/85"
+        animate={{ rotate: [-24, 18, -24], y: [0, -2, 0] }}
+        transition={{ duration: 0.48, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.span
+        className="absolute bottom-1 left-8 h-4 w-1.5 origin-top rounded-full bg-orange-300"
+        animate={{ rotate: [-42, 32, -42], x: [-4, 5, -4] }}
+        transition={{ duration: 0.32, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.span
+        className="absolute bottom-1 left-12 h-4 w-1.5 origin-top rounded-full bg-orange-300"
+        animate={{ rotate: [32, -42, 32], x: [5, -4, 5] }}
+        transition={{ duration: 0.32, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.span
+        className="absolute bottom-0 left-5 h-1.5 w-6 rounded-full bg-orange-300"
+        animate={{ x: [-6, 6, -6], scaleX: [0.8, 1.18, 0.8] }}
+        transition={{ duration: 0.32, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.span
+        className="absolute bottom-0 left-11 h-1.5 w-6 rounded-full bg-orange-300"
+        animate={{ x: [6, -6, 6], scaleX: [1.18, 0.8, 1.18] }}
+        transition={{ duration: 0.32, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </motion.div>
+  );
+}
+
 function ExperiencePage() {
+  const timelineRef = useRef<HTMLElement>(null);
+  const [timelineHeight, setTimelineHeight] = useState(0);
+  const { scrollYProgress: timelineProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start center", "end center"],
+  });
+  const duckTravel = Math.max(timelineHeight - 72, 12);
+  const duckYRaw = useTransform(timelineProgress, [0, 1], [12, duckTravel]);
+  const duckY = useSpring(duckYRaw, { stiffness: 180, damping: 24 });
+  const experienceStats = [
+    { value: "5", label: "Experience chapters" },
+    { value: "3+", label: "Years of experience" },
+    { value: "2023", label: "Journey started" },
+  ];
+
+  useEffect(() => {
+    const timeline = timelineRef.current;
+    if (!timeline) return;
+
+    const updateHeight = () => setTimelineHeight(timeline.offsetHeight);
+    updateHeight();
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(timeline);
+    window.addEventListener("resize", updateHeight);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateHeight);
+    };
+  }, []);
+
   return (
     <PageShell>
       <PageIntro
         eyebrow="Experience"
-        title="Where I've been building."
-        copy="A blend of industry work, structured learning, teaching, and competitive product-building experience."
+        title="A career path with range."
+        copy="A timeline of product delivery, mobile development, teaching, business operations, marketing, and structured software learning."
       />
 
       <Reveal>
         <motion.section
           whileHover={{ y: -5 }}
-          className="gradient-hero-bg glow-shadow relative z-20 mb-12 overflow-hidden rounded-2xl p-8 text-primary-foreground md:p-10"
+          className="gradient-hero-bg glow-shadow relative z-20 mb-14 overflow-hidden rounded-2xl p-6 text-primary-foreground md:p-9"
         >
           <motion.div
             aria-hidden="true"
@@ -660,86 +819,144 @@ function ExperiencePage() {
             animate={{ x: [0, 16, 0], y: [0, -12, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
           />
-          <div className="relative grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+          <div className="relative grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
             <div>
-              <Trophy className="h-10 w-10" />
-              <h2 className="mt-5 font-display text-3xl font-bold md:text-5xl">Building across product, learning, and impact.</h2>
-              <p className="mt-4 max-w-2xl leading-8 text-primary-foreground/85">
-                My experience combines real delivery at Appimate, structured systems development training, university tutoring,
-                and hackathon pressure where ideas have to become usable quickly.
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] backdrop-blur">
+                <Sparkles className="h-3.5 w-3.5" /> Experience map
+              </div>
+              <h2 className="mt-5 font-display text-3xl font-bold leading-tight md:text-5xl">From building screens to running the details behind them.</h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-primary-foreground/85 md:text-base">
+                My path is not one-note: I have worked in mobile development, frontend delivery, social media marketing,
+                administration, tutoring, and formal software training. That mix makes me practical, adaptable, and product-minded.
               </p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {["Frontend & mobile delivery", "Systems development learnership", "University tutoring", "2x hackathon 2nd place wins"].map((item) => (
-                <div key={item} className="flex items-center gap-3 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-semibold backdrop-blur">
-                  <span className="h-2 w-2 rounded-full bg-white" /> {item}
-                </div>
-              ))}
+            <div className="grid gap-4">
+              <motion.div
+                initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-2 shadow-2xl backdrop-blur"
+              >
+                <img
+                  src="/animations/dukie-talking.gif"
+                  alt="Dukie the pink duck talking about the timeline"
+                  className="h-auto w-full rounded-xl object-cover"
+                />
+              </motion.div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {experienceStats.map((stat, index) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.45, delay: index * 0.08 + 0.12 }}
+                    className="rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur"
+                  >
+                    <div className="font-display text-3xl font-bold">{stat.value}</div>
+                    <div className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-white/75">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </motion.section>
       </Reveal>
 
-      <section className="relative z-10 mx-auto max-w-5xl">
+      <section ref={timelineRef} className="relative z-10 mx-auto max-w-6xl">
         <div className="absolute bottom-0 left-6 top-0 w-px bg-linear-to-b from-hotpink via-violet to-teal md:left-1/2" />
-        <div className="space-y-8 md:space-y-10">
+        <motion.div
+          aria-label="Pink duck walking along the experience timeline"
+          style={{ y: duckY }}
+          className="pointer-events-none absolute left-6 top-0 z-30 -translate-x-1/2 md:left-1/2"
+        >
+          <PinkTimelineDuck />
+        </motion.div>
+        <div className="absolute left-6 top-0 hidden h-full w-16 -translate-x-1/2 md:left-1/2 md:block">
+          <motion.div
+            aria-hidden="true"
+            className="gradient-hero-bg absolute left-1/2 top-8 h-16 w-1 -translate-x-1/2 rounded-full blur-[1px]"
+            animate={{ y: [0, 220, 440, 660, 880, 0], opacity: [0.4, 1, 0.7, 1, 0.35, 0.4] }}
+            transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+        <div className="space-y-8 md:space-y-12">
           {experience.map((item, index) => {
-            const Icon = item.role.includes("Tutor") ? GraduationCap : item.role.includes("Learner") ? GitBranch : Briefcase;
+            const Icon = item.role.includes("Tutor")
+              ? GraduationCap
+              : item.role.includes("Learner")
+                ? GitBranch
+                : item.role.includes("Mobile")
+                  ? Smartphone
+                  : item.role.includes("Administration")
+                    ? FileText
+                    : Briefcase;
             return (
               <Reveal key={item.role} delay={index * 0.08}>
-                <div className={`relative z-10 pl-16 md:pl-0 ${index % 2 === 0 ? "md:pr-[calc(50%+3rem)]" : "md:pl-[calc(50%+3rem)]"}`}>
+                <div className={`relative z-10 pl-16 md:pl-0 ${index % 2 === 0 ? "md:pr-[calc(50%+3.5rem)]" : "md:pl-[calc(50%+3.5rem)]"}`}>
                   <motion.div
-                    animate={{ scale: [1, 1.08, 1], rotate: [0, 4, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
-                    className="gradient-cool-bg absolute left-0 top-6 z-20 grid h-12 w-12 place-items-center rounded-2xl text-white shadow-lg md:left-1/2 md:-translate-x-1/2"
+                    animate={{ scale: [1, 1.06, 1] }}
+                    transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: index * 0.25 }}
+                    className="absolute left-6 top-6 z-20 grid min-h-11 min-w-18 -translate-x-1/2 place-items-center rounded-full border border-border bg-background px-3 py-1 text-center shadow-lg md:left-1/2"
                   >
-                    <Icon className="h-5 w-5" />
+                    <span className="text-[10px] font-bold uppercase leading-tight tracking-[0.08em] text-hotpink">
+                      {item.period}
+                    </span>
                   </motion.div>
 
                   <motion.article
                     whileHover={{ y: -6, scale: 1.01 }}
-                    className="glass card-shadow group relative min-h-112 overflow-hidden rounded-2xl border border-border p-6 md:min-h-104 md:p-7"
+                    className="glass card-shadow group relative overflow-hidden rounded-2xl border border-border p-5 md:p-6"
                   >
-                    <div className="gradient-hero-bg absolute -right-12 -top-12 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity group-hover:opacity-40" />
-                    <div className="relative z-10 transition-all duration-300 ease-out md:group-hover:-translate-y-8 md:group-hover:opacity-0">
+                    <div className={`${item.accent} absolute inset-x-0 top-0 h-1`} />
+                    <div className="gradient-hero-bg absolute -right-16 -top-16 h-40 w-40 rounded-full opacity-0 blur-2xl transition-opacity group-hover:opacity-30" />
+                    <div className="relative z-10">
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <span className="rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-hotpink">
                           {item.period}
                         </span>
-                        <span className="rounded-full bg-hotpink/10 px-3 py-1 text-xs font-semibold text-hotpink">0{index + 1}</span>
+                        <span className="rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-muted-foreground">
+                          Chapter {String(index + 1).padStart(2, "0")}
+                        </span>
                       </div>
-                      <h2 className="mt-4 font-display text-2xl font-semibold">{item.role}</h2>
-                      <div className="mt-1 text-sm font-medium text-muted-foreground">{item.org}</div>
-                      <ul className="mt-5 space-y-3 text-sm leading-6 text-muted-foreground">
-                        {item.points.map((point) => (
-                          <li key={point} className="flex gap-3">
-                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hotpink" />
+
+                      <div className="mt-5 flex items-start gap-4">
+                        <div className={`${item.accent} hidden h-14 w-14 shrink-0 place-items-center rounded-2xl text-white shadow-lg sm:grid`}>
+                          {"logo" in item ? (
+                            <img src={item.logo} alt={`${item.org} logo`} className="h-full w-full rounded-2xl bg-white object-cover" />
+                          ) : (
+                            <Icon className="h-6 w-6" />
+                          )}
+                        </div>
+                        <div>
+                          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{item.theme}</div>
+                          <h2 className="mt-1 font-display text-2xl font-semibold leading-tight">{item.role}</h2>
+                          <div className="mt-1 text-sm font-medium text-muted-foreground">{item.org}</div>
+                        </div>
+                      </div>
+
+                      <p className="mt-5 text-sm leading-7 text-muted-foreground">{item.details[0]}</p>
+
+                      <div className="mt-5 grid gap-2">
+                        {item.points.map((point, pointIndex) => (
+                          <motion.div
+                            key={point}
+                            initial={{ opacity: 0, x: index % 2 === 0 ? -12 : 12 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, amount: 0.4 }}
+                            transition={{ duration: 0.38, delay: pointIndex * 0.05 }}
+                            className="flex gap-3 rounded-xl border border-border bg-background/45 p-3 text-sm leading-6 text-muted-foreground"
+                          >
+                            <span className={`${item.accent} mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-full text-[10px] font-bold text-white`}>
+                              {pointIndex + 1}
+                            </span>
                             <span>{point}</span>
-                          </li>
+                          </motion.div>
                         ))}
-                      </ul>
-                      <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-hotpink md:hidden">
-                        More detail
                       </div>
-                    </div>
 
-                    <div className="mt-5 space-y-4 text-sm leading-7 text-muted-foreground md:hidden">
-                      {item.details.map((detail) => (
-                        <p key={detail}>{detail}</p>
-                      ))}
-                    </div>
-
-                    <div className="pointer-events-auto absolute inset-0 hidden translate-y-full flex-col overflow-y-auto border-t border-border bg-card p-6 opacity-0 shadow-2xl backdrop-blur-xl transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:flex">
-                      <div className="mb-3 flex items-center justify-between gap-3">
-                        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-hotpink">Role detail</span>
-                        <span className="rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-muted-foreground">Hover reveal</span>
-                      </div>
-                      <h3 className="font-display text-2xl font-semibold text-foreground">{item.role}</h3>
-                      <div className="mt-1 text-sm font-medium text-muted-foreground">{item.org} | {item.period}</div>
-                      <div className="mt-5 space-y-4 text-sm leading-7 text-muted-foreground">
-                        {item.details.map((detail) => (
-                          <p key={detail}>{detail}</p>
-                        ))}
+                      <div className="mt-5 rounded-xl border border-border bg-card/60 p-4">
+                        <div className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-hotpink">What it added</div>
+                        <p className="text-sm leading-7 text-muted-foreground">{item.details[1]}</p>
                       </div>
                     </div>
                   </motion.article>
@@ -753,29 +970,143 @@ function ExperiencePage() {
   );
 }
 function ProjectsPage() {
-  const projectItems = projects.map((project) => ({
-    title: project.name,
-    description: project.desc,
-    tag: project.tag,
-    stack: project.stack,
-    featured: project.featured,
-    icon: project.featured ? <Trophy className="h-4 w-4 text-hotpink transition-colors group-hover/card:text-white" /> : <Code2 className="h-4 w-4 text-hotpink transition-colors group-hover/card:text-white" />,
-  }));
+  const [activeCategory, setActiveCategory] = useState<ProjectCategory>("Mobile Apps");
+  const activeCategoryConfig = projectCategories.find((category) => category.name === activeCategory) ?? projectCategories[0];
+  const activeProjects = projects.filter((project) => project.category === activeCategory);
+  const ActiveIcon = activeCategoryConfig.icon;
 
   return (
     <PageShell>
       <PageIntro
         eyebrow="Selected projects"
-        title="Things I've shipped, prototyped, and pitched."
-        copy="A portfolio of practical interfaces, civic ideas, mobile workflows, and fintech problem-solving."
+        title="Projects grouped by the way they work."
+        copy="A cleaner look at my mobile apps, websites, and web apps, from hackathon concepts to practical user-facing platforms."
       />
-      <Reveal>
-        <section className="relative overflow-hidden rounded-3xl border border-border bg-card/35 p-3 md:p-5">
-          <div className="gradient-hero-bg pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full opacity-15 blur-3xl" />
-          <div className="gradient-cool-bg pointer-events-none absolute -bottom-28 left-8 h-72 w-72 rounded-full opacity-15 blur-3xl" />
-          <HoverEffect items={projectItems} className="relative z-10" />
-        </section>
-      </Reveal>
+      <div className="space-y-8">
+        <Reveal>
+          <section className="mx-auto max-w-4xl">
+            <div className="relative rounded-full border border-border bg-card/70 p-1.5 shadow-[0_18px_70px_-42px_color-mix(in_oklab,var(--color-hotpink)_75%,transparent)] backdrop-blur">
+              <div className="grid grid-cols-3 gap-1">
+                {projectCategories.map((category) => {
+                  const Icon = category.icon;
+                  const active = activeCategory === category.name;
+                  const total = projects.filter((project) => project.category === category.name).length;
+
+                  return (
+                    <button
+                      key={category.name}
+                      type="button"
+                      onClick={() => setActiveCategory(category.name)}
+                      className={`relative isolate flex min-h-14 items-center justify-center gap-2 overflow-hidden rounded-full px-2 text-xs font-semibold transition-colors sm:text-sm ${
+                        active ? "text-white" : "text-muted-foreground hover:text-foreground"
+                      }`}
+                      aria-pressed={active}
+                    >
+                      {active && (
+                        <motion.span
+                          layoutId="project-category-slider"
+                          className={`${category.accent} absolute inset-0 -z-10 rounded-full shadow-glow`}
+                          transition={{ type: "spring", stiffness: 430, damping: 34 }}
+                        />
+                      )}
+                      <Icon className="h-4 w-4 shrink-0" />
+                      <span className="truncate">{category.name}</span>
+                      <span
+                        className={`hidden h-6 min-w-6 place-items-center rounded-full px-2 text-[11px] sm:grid ${
+                          active ? "bg-white/18 text-white" : "border border-border bg-background/70 text-muted-foreground"
+                        }`}
+                      >
+                        {total}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="mx-auto mt-4 h-1 max-w-2xl overflow-hidden rounded-full bg-border/70">
+              <motion.div
+                className={`${activeCategoryConfig.accent} h-full rounded-full`}
+                animate={{
+                  x: `${projectCategories.findIndex((category) => category.name === activeCategory) * 100}%`,
+                }}
+                transition={{ type: "spring", stiffness: 360, damping: 32 }}
+                style={{ width: `${100 / projectCategories.length}%` }}
+              />
+            </div>
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <motion.section
+            key={activeCategory}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className={`${activeCategoryConfig.accent} grid h-12 w-12 place-items-center rounded-2xl text-white shadow-glow`}>
+                  <ActiveIcon className="h-5 w-5" />
+                </span>
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-hotpink">Now viewing</div>
+                  <h2 className="font-display text-3xl font-semibold">{activeCategory}</h2>
+                </div>
+              </div>
+              <p className="max-w-xl text-sm leading-6 text-muted-foreground">{activeCategoryConfig.intro}</p>
+            </div>
+
+            <div className="grid gap-5 lg:grid-cols-2">
+              {activeProjects.map((project, projectIndex) => {
+                const ProjectIcon = project.featured ? Trophy : Code2;
+
+                return (
+                  <motion.article
+                    key={project.name}
+                    initial={{ opacity: 0, y: 24, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.5, delay: projectIndex * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                    className="group relative min-h-80 overflow-hidden rounded-2xl border border-border bg-card/75 p-6 transition-all hover:-translate-y-1 hover:border-hotpink/45 hover:bg-card md:p-7"
+                  >
+                    <div className={`${activeCategoryConfig.accent} pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full opacity-15 blur-3xl transition-opacity group-hover:opacity-30`} />
+                    <div className="relative z-10 flex h-full flex-col">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <span className="grid h-9 w-9 place-items-center rounded-xl border border-border bg-background/80 text-hotpink transition-colors group-hover:border-hotpink/45 group-hover:bg-hotpink/10">
+                            <ProjectIcon className="h-4 w-4" />
+                          </span>
+                          <span className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">{project.tag}</span>
+                        </div>
+                        <span className="rounded-full border border-hotpink/30 bg-hotpink/10 px-3 py-1 text-xs font-semibold text-hotpink">
+                          {project.category}
+                        </span>
+                      </div>
+
+                      <h3 className="mt-5 font-display text-2xl font-semibold leading-tight md:text-3xl">{project.name}</h3>
+                      <p className="mt-3 flex-1 leading-7 text-muted-foreground">{project.desc}</p>
+
+                      <div className="mt-6">
+                        <div className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-hotpink">Tech stack</div>
+                        <div className="flex flex-wrap gap-2">
+                          {project.stack.map((tech) => (
+                            <span
+                              key={tech}
+                              className="rounded-full border border-border bg-background/75 px-3 py-1 text-xs font-medium text-muted-foreground transition-colors group-hover:border-hotpink/40 group-hover:bg-hotpink/10 group-hover:text-foreground"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.article>
+                );
+              })}
+            </div>
+          </motion.section>
+        </Reveal>
+      </div>
     </PageShell>
   );
 }

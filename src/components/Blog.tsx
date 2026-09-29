@@ -28,7 +28,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { CardBody, CardContainer, CardItem } from './ui/3d-card';
-import { supabase } from '../lib/supabase';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
 const SETTINGS_ROW_NAME = 'default';
 const ADMIN_KEY = 'motsom-dev-blog-admin';
@@ -221,6 +221,11 @@ export default function Blog() {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchPosts = async () => {
+    if (!supabase) {
+      setPosts([]);
+      return;
+    }
+
     const { data, error } = await supabase
       .from('posts')
       .select('*, post_media(*)')
@@ -236,6 +241,11 @@ export default function Blog() {
   };
 
   const fetchSettings = async () => {
+    if (!supabase) {
+      setSettings(defaultSettings);
+      return;
+    }
+
     const { data, error } = await supabase
       .from('feed_settings')
       .select('tags, interests')
@@ -304,6 +314,10 @@ export default function Blog() {
   };
 
   const uploadMediaFile = async (file: File): Promise<BlogMedia> => {
+    if (!supabase) {
+      throw new Error('Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to enable uploads.');
+    }
+
     const error = getMediaValidationError(file);
     if (error) throw new Error(error);
 
@@ -351,6 +365,10 @@ export default function Blog() {
     event.preventDefault();
     const caption = draftCaption.trim();
     if (!caption) return;
+    if (!supabase) {
+      setMediaError('Supabase is not configured. Add the public Supabase environment variables before publishing posts.');
+      return;
+    }
 
     setIsLoading(true);
     const { data: post, error: postError } = await supabase.from('posts').insert({ caption, tags: parseTagList(draftTags) }).select().single();
@@ -386,6 +404,10 @@ export default function Blog() {
     event.preventDefault();
     const caption = editCaption.trim();
     if (!editingPostId || !caption) return;
+    if (!supabase) {
+      setEditMediaError('Supabase is not configured. Add the public Supabase environment variables before saving posts.');
+      return;
+    }
 
     setIsLoading(true);
     await supabase.from('posts').update({ caption, tags: parseTagList(editTags) }).eq('id', editingPostId);
@@ -403,6 +425,8 @@ export default function Blog() {
 
   const saveSettings = async (updatedSettings: FeedSettings) => {
     setSettings(updatedSettings);
+    if (!supabase) return;
+
     const { error } = await supabase.from('feed_settings').upsert(
       { name: SETTINGS_ROW_NAME, tags: updatedSettings.tags, interests: updatedSettings.interests },
       { onConflict: 'name' }
@@ -460,6 +484,11 @@ export default function Blog() {
       setDeleteError('Password did not match. Post was not deleted.');
       return;
     }
+    if (!supabase) {
+      setDeleteError('Supabase is not configured. Add the public Supabase environment variables before deleting posts.');
+      return;
+    }
+
     await supabase.from('posts').delete().eq('id', deleteTarget.id);
     cancelDelete();
     await fetchPosts();
@@ -486,12 +515,17 @@ export default function Blog() {
   };
   
   useEffect(() => {
-  supabase.from('posts').select('count', { count: 'exact', head: true })
-    .then(({ error }) => {
-      if (error) console.error('Supabase connection error:', error);
-      else console.log('Supabase connected successfully');
-    });
-}, []);
+    if (!isSupabaseConfigured || !supabase) {
+      console.info('Supabase is not configured; blog feed is using local defaults.');
+      return;
+    }
+
+    supabase.from('posts').select('count', { count: 'exact', head: true })
+      .then(({ error }) => {
+        if (error) console.error('Supabase connection error:', error);
+        else console.log('Supabase connected successfully');
+      });
+  }, []);
 
   return (
     <main className='mx-auto min-h-screen w-full max-w-7xl px-4 pb-20 pt-28 md:px-8 md:pt-32'>

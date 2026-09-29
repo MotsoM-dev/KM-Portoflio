@@ -398,13 +398,13 @@ function HomePage() {
   const featuredProject = projects[0];
 
   return (
-    <PageShell>
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[72vh] overflow-hidden">
+    <main className="relative mx-auto grid h-screen max-h-screen w-full max-w-7xl overflow-hidden px-4 pb-4 pt-22 md:px-8 md:pt-24">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-full overflow-hidden">
         <Particles
-          particleCount={180}
+          particleCount={140}
           particleSpread={12}
           speed={0.08}
-          particleBaseSize={140}
+          particleBaseSize={120}
           moveParticlesOnHover={true}
           particleHoverFactor={1.45}
           alphaParticles={true}
@@ -415,17 +415,17 @@ function HomePage() {
           className="h-full w-full"
         />
       </div>
-      <div className="grid min-h-[calc(100vh-8rem)] items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="relative z-10 grid min-h-0 items-center gap-5 lg:grid-cols-[1.08fr_0.92fr]">
         <Reveal>
-          <div className="flex flex-col items-start gap-6">
-            <span className="glass inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 text-xs font-medium">
+          <div className="flex flex-col items-start gap-4 md:gap-5">
+            <span className="glass inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-[11px] font-medium md:px-4 md:text-xs">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-hotpink opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-hotpink" />
               </span>
               2x 2nd Place Hackathon Winner
             </span>
-            <h1 className="font-display text-5xl font-bold leading-[1.05] md:text-7xl lg:text-8xl">
+            <h1 className="max-w-4xl font-display text-4xl font-bold leading-[1.02] sm:text-5xl md:text-6xl xl:text-7xl">
               Hi, I'm <span className="gradient-text">Kgomotso</span>.
               <br />I build{" "}
               <span className="relative inline-block">
@@ -438,26 +438,26 @@ function HomePage() {
               </span>{" "}
               web & mobile apps.
             </h1>
-            <p className="max-w-2xl text-lg leading-8 text-muted-foreground md:text-xl">
+            <p className="max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base md:text-lg md:leading-7">
                <span className="font-semibold text-foreground">Frontend & Mobile App Developer</span>, BCom
               Honours Information Systems student, and hackathon-tested builder focused on useful products with clean
               interfaces.
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2.5">
               <Link
                 href="/projects"
-                className="gradient-hero-bg glow-shadow group inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-primary-foreground transition-transform hover:scale-105"
+                className="gradient-hero-bg glow-shadow group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform hover:scale-105 md:px-6 md:py-3 md:text-base"
               >
                 See my work <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 font-medium transition-colors hover:bg-muted"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium transition-colors hover:bg-muted md:px-6 md:py-3 md:text-base"
               >
                 Get in touch
               </Link>
             </div>
-            <div className="mt-2 flex items-center gap-5 text-muted-foreground">
+            <div className="flex items-center gap-5 text-muted-foreground">
               <a href="https://github.com/MotsoM-dev" target="_blank" rel="noreferrer" className="transition-colors hover:text-hotpink">
                 <Github className="h-5 w-5" />
               </a>
@@ -477,10 +477,10 @@ function HomePage() {
         </Reveal>
 
         <Reveal delay={0.12}>
-          <div className="grid gap-5">
+          <div className="hidden gap-4 lg:grid">
             <motion.article
               whileHover={{ y: -6 }}
-              className="glass card-shadow relative overflow-hidden rounded-2xl border border-border p-6 md:p-8"
+              className="glass card-shadow relative overflow-hidden rounded-2xl border border-border p-5 xl:p-6"
             >
               <div className="gradient-cool-bg absolute -right-20 -top-20 h-52 w-52 rounded-full opacity-35 blur-3xl" />
               <div className="relative flex items-start gap-4">
@@ -489,8 +489,8 @@ function HomePage() {
                 </div>
                 <div>
                   <div className="text-xs font-semibold uppercase tracking-[0.2em] text-hotpink">Recent win</div>
-                  <h2 className="mt-2 font-display text-2xl font-bold">{featuredProject.name}</h2>
-                  <p className="mt-3 leading-7 text-muted-foreground">{featuredProject.desc}</p>
+                  <h2 className="mt-2 font-display text-xl font-bold xl:text-2xl">{featuredProject.name}</h2>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground xl:text-base xl:leading-7">{featuredProject.desc}</p>
                 </div>
               </div>
             </motion.article>
@@ -502,8 +502,8 @@ function HomePage() {
                 { k: "3", v: "Hackathons" },
               ].map((stat, index) => (
                 <Reveal key={stat.v} delay={index * 0.05}>
-                  <div className="glass card-shadow rounded-2xl border border-border p-5 text-center">
-                    <div className="gradient-text font-display text-3xl font-bold">{stat.k}</div>
+                  <div className="glass card-shadow rounded-2xl border border-border p-4 text-center xl:p-5">
+                    <div className="gradient-text font-display text-2xl font-bold xl:text-3xl">{stat.k}</div>
                     <div className="mt-1 text-sm text-muted-foreground">{stat.v}</div>
                   </div>
                 </Reveal>
@@ -512,7 +512,7 @@ function HomePage() {
           </div>
         </Reveal>
       </div>
-    </PageShell>
+    </main>
   );
 }
 
@@ -953,7 +953,7 @@ export default function Portfolio({ page = "home" }: { page?: PageKey }) {
       </div>
       <Header theme={theme} toggle={toggle} />
       {pages[page]}
-      <Footer />
+      {page !== "home" && <Footer />}
       <motion.button
         onClick={scrollToTop}
         initial={{ opacity: 0, scale: 0 }}

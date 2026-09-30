@@ -40,6 +40,7 @@ import Cursor from "./Cursor";
 import FlipCard from "./FlipCard";
 import MovingBackground from "./MovingBackground";
 import Particles from "./Particles";
+import WalkingDuck from "./WalkingDuck";
 
 const words = ["delightful", "accessible", "performant", "beautiful"];
 const emailAddress = "kgomotsomathombo@gmail.com";
@@ -196,6 +197,8 @@ const experience = [
     period: "2025 - Present",
     year: "2025",
     logo: "/experience/mictseta-online.png",
+    theme: "Structured learning",
+    accent: "gradient-pink-bg",
     points: [
       "Combine academic knowledge with practical software engineering experience.",
       "Develop deeper understanding of SDLC, programming principles, and systems analysis.",
@@ -343,13 +346,13 @@ const aboutDetails = [
   { icon: Trophy, label: "Hackathon wins", value: "2x 2nd Place", detail: "UCT Fintech Winter School + Telkom Hackathon" },
 ];
 
-function PageIntro({ eyebrow, title, copy }: { eyebrow: string; title: string; copy: string }) {
+function PageIntro({ eyebrow, title, copy, compact = false }: { eyebrow: string; title: string; copy: string; compact?: boolean }) {
   return (
     <Reveal>
-      <div className="mx-auto mb-10 max-w-4xl text-center md:mb-14">
+      <div className={`mx-auto max-w-4xl text-center ${compact ? "mb-6 md:mb-8" : "mb-10 md:mb-14"}`}>
         <span className="text-sm font-semibold uppercase tracking-[0.2em] text-hotpink">{eyebrow}</span>
-        <h1 className="mt-3 font-display text-4xl font-bold leading-tight md:text-6xl">{title}</h1>
-        <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-muted-foreground md:text-lg">{copy}</p>
+        <h1 className={`mt-3 font-display font-bold leading-tight ${compact ? "text-3xl md:text-5xl" : "text-4xl md:text-6xl"}`}>{title}</h1>
+        <p className={`mx-auto max-w-2xl text-muted-foreground ${compact ? "mt-2 text-sm leading-6 md:text-base" : "mt-4 text-base leading-8 md:text-lg"}`}>{copy}</p>
       </div>
     </Reveal>
   );
@@ -744,29 +747,49 @@ function SkillsPage() {
   );
 }
 
-function Dukie({ talking = false, className = "" }: { talking?: boolean; className?: string }) {
-  return <motion.div className={`relative ${className}`} animate={talking ? { y: [0, -7, 0], rotate: [-2, 2, -2] } : { rotate: [-6, 6, -6], x: [-3, 3, -3] }} transition={{ duration: talking ? 2.2 : 1.1, repeat: Infinity, ease: "easeInOut" }}>
-    {talking && <motion.div className="absolute -right-20 -top-8 rounded-2xl rounded-bl-sm bg-white px-3 py-2 text-xs font-bold text-hotpink shadow-xl" animate={{ scale: [0.95, 1.04, 0.95] }} transition={{ duration: 1.4, repeat: Infinity }}>Quack! Let’s grow ✨</motion.div>}
-    <svg viewBox="0 0 120 110" className="h-full w-full drop-shadow-xl" aria-label="Dukie, the pink timeline duck"><ellipse cx="59" cy="78" rx="39" ry="25" fill="#f472b6"/><circle cx="72" cy="42" r="27" fill="#fb8bc1"/><path d="M92 44l25 9-24 10Z" fill="#f59e0b"/><circle cx="79" cy="36" r="4" fill="#111827"/><circle cx="80" cy="35" r="1.3" fill="white"/><path d="M42 76q-25-15-31 8 23 12 40 3" fill="#ec4899"/><path d="M43 97l-11 10M74 98l10 9" stroke="#f59e0b" strokeWidth="5" strokeLinecap="round"/>{talking && <motion.path d="M91 55q8 5 15 0" stroke="#9d174d" strokeWidth="3" fill="none" animate={{ d: ["M91 55q8 2 15 0", "M91 55q8 10 15 0", "M91 55q8 2 15 0"] }} transition={{ duration: 0.5, repeat: Infinity }}/>}</svg>
-  </motion.div>;
-}
-
 function ExperiencePage() {
   const timelineRef = useRef<HTMLElement>(null);
+  const duckVideoRef = useRef<HTMLVideoElement>(null);
+  const [isExploring, setIsExploring] = useState(false);
   const { scrollYProgress: timelineProgress } = useScroll({ target: timelineRef, offset: ["start center", "end center"] });
-  const duckTop = useTransform(timelineProgress, [0, 1], ["2%", "91%"]);
+  const smoothTimelineProgress = useSpring(timelineProgress, { stiffness: 120, damping: 28, mass: 0.35 });
+  const duckTop = useTransform(smoothTimelineProgress, [0, 1], ["3%", "94%"]);
+  const handleExplore = () => {
+    if (!isExploring) setIsExploring(true);
+  };
+  const handleDuckFinished = () => {
+    timelineRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
   return <PageShell>
-    <PageIntro eyebrow="Experience" title="Five chapters. One growing story." copy="A timeline shaped by product delivery, learning, mentoring, marketing, gaming, and the people I have supported along the way." />
-    <section className="gradient-hero-bg glow-shadow relative mb-14 overflow-hidden rounded-3xl p-6 text-white md:p-10">
+    <PageIntro compact eyebrow="Experience" title="Five chapters. One growing story." copy="A timeline shaped by product delivery, learning, mentoring, marketing, gaming, and the people I have supported along the way." />
+    <section className="gradient-hero-bg glow-shadow relative mb-10 overflow-hidden rounded-3xl p-4 text-white md:p-6">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.3),transparent_38%)]" />
-      <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_18rem]">
-        <div><span className="text-xs font-bold uppercase tracking-[.2em] text-white/75">Career snapshot</span><h2 className="mt-3 max-w-2xl font-display text-3xl font-bold md:text-5xl">Building, supporting and learning with heart.</h2><div className="mt-7 grid gap-3 sm:grid-cols-3">{[{k:"5",v:"Experience chapters"},{k:"3+",v:"Years of experience"},{k:"2023",v:"Journey started"}].map(stat=><div key={stat.v} className="rounded-2xl bg-white/12 p-4 backdrop-blur"><div className="font-display text-3xl font-bold">{stat.k}</div><div className="mt-1 text-sm text-white/75">{stat.v}</div></div>)}</div></div>
-        <div className="mx-auto w-44 md:w-52"><Dukie talking /></div>
+      <div className="relative grid items-center gap-5 lg:grid-cols-[1fr_22rem]">
+        <div><span className="text-xs font-bold uppercase tracking-[.2em] text-white/75">Career snapshot</span><h2 className="mt-2 max-w-2xl font-display text-2xl font-bold md:text-4xl">Building, supporting and learning with heart.</h2><div className="mt-4 grid max-w-xl gap-2 sm:grid-cols-3">{[{k:"5",v:"Experience chapters"},{k:"3+",v:"Years of experience"},{k:"2023",v:"Journey started"}].map(stat=><div key={stat.v} className="rounded-xl bg-white/12 px-3 py-2 backdrop-blur"><div className="font-display text-2xl font-bold">{stat.k}</div><div className="mt-0.5 text-xs text-white/75">{stat.v}</div></div>)}</div></div>
+        <div className="relative mx-auto w-full max-w-sm">
+          <div className="relative overflow-hidden rounded-3xl border border-white/30 bg-black/20 p-2 shadow-2xl backdrop-blur-sm">
+            <video
+              ref={duckVideoRef}
+              key={isExploring ? "flying-duck" : "talking-duck"}
+              src={isExploring ? "/experience/duck-flying.mp4" : "/experience/talking-duckie.mp4"}
+              autoPlay
+              muted
+              playsInline
+              loop={!isExploring}
+              onEnded={isExploring ? handleDuckFinished : undefined}
+              className="aspect-video w-full rounded-2xl object-cover"
+              aria-label={isExploring ? "Dukie flying toward the experience timeline" : "Talking Dukie inviting you to explore the timeline"}
+            />
+            {!isExploring && <div className="absolute left-4 top-4 max-w-[10rem] rounded-xl rounded-bl-sm bg-white px-2.5 py-2 text-xs font-bold leading-4 text-hotpink shadow-xl">Would you like to see Motso's Timeline?</div>}
+          </div>
+          {!isExploring && <button type="button" onClick={handleExplore} className="gradient-pink-bg group mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-white shadow-xl transition hover:-translate-y-1 hover:brightness-110">Explore <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></button>}
+          {isExploring && <div className="mt-3 text-center text-xs font-semibold text-white/75">Dukie is flying to your timeline…</div>}
+        </div>
       </div>
     </section>
     <section ref={timelineRef} className="relative mx-auto max-w-6xl">
       <div className="absolute bottom-0 left-7 top-0 w-1 rounded-full bg-linear-to-b from-hotpink via-violet to-teal md:left-1/2 md:-translate-x-1/2" />
-      <motion.div style={{ top: duckTop }} className="pointer-events-none absolute left-1 z-30 w-14 md:left-1/2 md:w-16 md:-translate-x-1/2"><Dukie /></motion.div>
+      <motion.div style={{ top: duckTop }} className="pointer-events-none absolute left-7 z-10 w-20 -translate-x-1/2 -translate-y-1/2 md:left-1/2 md:w-28"><WalkingDuck /></motion.div>
       <div className="space-y-9 md:space-y-12">{[...experience].sort((a,b)=>Number(b.year)-Number(a.year)).map((item,index)=><Reveal key={`${item.org}-${item.role}`} delay={index*.05}><div className={`relative pl-20 md:pl-0 ${index%2===0?"md:pr-[calc(50%+3.5rem)]":"md:pl-[calc(50%+3.5rem)]"}`}>
         <div className="absolute left-0 top-6 z-20 grid h-14 w-14 place-items-center rounded-2xl bg-card p-1.5 shadow-xl md:left-1/2 md:-translate-x-1/2"><span className="gradient-hero-bg grid h-full w-full place-items-center rounded-xl px-1 text-xs font-black text-white">{item.year}</span></div>
         <motion.article whileHover={{ y:-6, rotate:index%2===0?-.4:.4 }} className="glass card-shadow relative overflow-hidden rounded-3xl border border-border p-6 md:p-7"><div className="gradient-hero-bg absolute -right-16 -top-16 h-40 w-40 opacity-15 blur-3xl"/><div className="relative flex gap-4"><div className="grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-2xl bg-white p-1 shadow-md ring-1 ring-white/70"><img src={item.logo} alt={`${item.org} logo`} className="h-full w-full object-contain"/></div><div><div className="text-xs font-bold uppercase tracking-[.16em] text-hotpink">{item.period}</div><h2 className="mt-1 font-display text-xl font-bold md:text-2xl">{item.role}</h2><div className="mt-1 text-sm font-semibold text-muted-foreground">{item.org}</div></div></div><ul className="relative mt-5 space-y-2.5 text-sm leading-6 text-muted-foreground">{item.points.map(point=><li key={point} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hotpink"/><span>{point}</span></li>)}</ul></motion.article>

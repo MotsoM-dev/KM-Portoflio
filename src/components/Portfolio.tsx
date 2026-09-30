@@ -13,13 +13,10 @@ import {
   Code2,
   Database,
   Download,
-  ExternalLink,
   FileText,
   Github,
   GitBranch,
-  Globe2,
   GraduationCap,
-  Images,
   Linkedin,
   Mail,
   MapPin,
@@ -27,7 +24,6 @@ import {
   Moon,
   Palette,
   Phone,
-  PlayCircle,
   Smartphone,
   Sparkles,
   Sun,
@@ -40,6 +36,8 @@ import Cursor from "./Cursor";
 import FlipCard from "./FlipCard";
 import MovingBackground from "./MovingBackground";
 import Particles from "./Particles";
+import WalkingDuck from "./WalkingDuck";
+import { HoverEffect } from "./ui/card-hover-effect";
 
 const words = ["delightful", "accessible", "performant", "beautiful"];
 const emailAddress = "kgomotsomathombo@gmail.com";
@@ -170,6 +168,8 @@ const experience = [
     role: "Frontend & Mobile App Developer",
     org: "Appimate",
     period: "2025 - Present",
+    year: "2025",
+    logo: "/experience/appimate-official.png",
     points: [
       "Design and develop responsive web applications and cross-platform mobile apps.",
       "Turn UI/UX concepts into scalable, production-ready frontend experiences.",
@@ -185,6 +185,7 @@ const experience = [
     role: "Administration Support",
     org: "iLitha Gaming",
     period: "2026",
+    year: "2026",
     theme: "Operations",
     accent: "gradient-cool-bg",
     logo: "/company-logos/ilitha.png",
@@ -203,6 +204,10 @@ const experience = [
     role: "Systems Development Learner",
     org: "MICTSETA Learnership",
     period: "2025 - Present",
+    year: "2025",
+    logo: "/experience/mictseta-online.png",
+    theme: "Structured learning",
+    accent: "gradient-pink-bg",
     points: [
       "Combine academic knowledge with practical software engineering experience.",
       "Develop deeper understanding of SDLC, programming principles, and systems analysis.",
@@ -218,6 +223,8 @@ const experience = [
     role: "Information Systems Tutor",
     org: "University of Fort Hare",
     period: "2024 - Present",
+    year: "2024",
+    logo: "/experience/ufh-online.png",
     points: [
       "Support undergraduate students across Information Systems modules.",
       "Simplify technical concepts into practical, easy-to-understand explanations.",
@@ -267,13 +274,13 @@ const aboutDetails = [
   { icon: Trophy, label: "Hackathon wins", value: "2x 2nd Place", detail: "UCT Fintech Winter School + Telkom Hackathon" },
 ];
 
-function PageIntro({ eyebrow, title, copy }: { eyebrow: string; title: string; copy: string }) {
+function PageIntro({ eyebrow, title, copy, compact = false }: { eyebrow: string; title: string; copy: string; compact?: boolean }) {
   return (
     <Reveal>
-      <div className="mx-auto mb-10 max-w-4xl text-center md:mb-14">
+      <div className={`mx-auto max-w-4xl text-center ${compact ? "mb-6 md:mb-8" : "mb-10 md:mb-14"}`}>
         <span className="text-sm font-semibold uppercase tracking-[0.2em] text-hotpink">{eyebrow}</span>
-        <h1 className="mt-3 font-display text-4xl font-bold leading-tight md:text-6xl">{title}</h1>
-        <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-muted-foreground md:text-lg">{copy}</p>
+        <h1 className={`mt-3 font-display font-bold leading-tight ${compact ? "text-3xl md:text-5xl" : "text-4xl md:text-6xl"}`}>{title}</h1>
+        <p className={`mx-auto max-w-2xl text-muted-foreground ${compact ? "mt-2 text-sm leading-6 md:text-base" : "mt-4 text-base leading-8 md:text-lg"}`}>{copy}</p>
       </div>
     </Reveal>
   );
@@ -492,7 +499,7 @@ function HomePage() {
               </a>
             </div>
           </div>
-        </motion.div>
+        </Reveal>
 
         <Reveal delay={0.12}>
           <div className="grid gap-5">
@@ -528,9 +535,9 @@ function HomePage() {
               ))}
             </div>
           </div>
-        </motion.div>
+        </Reveal>
       </div>
-    </main>
+    </PageShell>
   );
 }
 
@@ -653,122 +660,54 @@ function SkillsPage() {
 }
 
 function ExperiencePage() {
-  return (
-    <PageShell>
-      <PageIntro
-        eyebrow="Experience"
-        title="Where I've been building."
-        copy="A blend of industry work, structured learning, teaching, and competitive product-building experience."
-      />
-
-      <Reveal>
-        <motion.section
-          whileHover={{ y: -5 }}
-          className="gradient-hero-bg glow-shadow relative z-20 mb-12 overflow-hidden rounded-2xl p-8 text-primary-foreground md:p-10"
-        >
-          <motion.div
-            aria-hidden="true"
-            className="absolute -right-20 -top-24 h-64 w-64 rounded-full bg-white/20 blur-3xl"
-            animate={{ scale: [1, 1.12, 1], rotate: [0, 18, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            aria-hidden="true"
-            className="absolute -bottom-28 left-8 h-64 w-64 rounded-full bg-white/15 blur-3xl"
-            animate={{ x: [0, 16, 0], y: [0, -12, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <div className="relative grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
-            <div>
-              <Trophy className="h-10 w-10" />
-              <h2 className="mt-5 font-display text-3xl font-bold md:text-5xl">Building across product, learning, and impact.</h2>
-              <p className="mt-4 max-w-2xl leading-8 text-primary-foreground/85">
-                My experience combines real delivery at Appimate, structured systems development training, university tutoring,
-                and hackathon pressure where ideas have to become usable quickly.
-              </p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {["Frontend & mobile delivery", "Systems development learnership", "University tutoring", "2x hackathon 2nd place wins"].map((item) => (
-                <div key={item} className="flex items-center gap-3 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-semibold backdrop-blur">
-                  <span className="h-2 w-2 rounded-full bg-white" /> {item}
-                </div>
-              ))}
-            </div>
+  const timelineRef = useRef<HTMLElement>(null);
+  const duckVideoRef = useRef<HTMLVideoElement>(null);
+  const [isExploring, setIsExploring] = useState(false);
+  const { scrollYProgress: timelineProgress } = useScroll({ target: timelineRef, offset: ["start center", "end center"] });
+  const smoothTimelineProgress = useSpring(timelineProgress, { stiffness: 120, damping: 28, mass: 0.35 });
+  const duckTop = useTransform(smoothTimelineProgress, [0, 1], ["3%", "94%"]);
+  const handleExplore = () => {
+    if (!isExploring) setIsExploring(true);
+  };
+  const handleDuckFinished = () => {
+    timelineRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  return <PageShell>
+    <PageIntro compact eyebrow="Experience" title="Five chapters. One growing story." copy="A timeline shaped by product delivery, learning, mentoring, marketing, gaming, and the people I have supported along the way." />
+    <section className="gradient-hero-bg glow-shadow relative mb-10 overflow-hidden rounded-3xl p-4 text-white md:p-6">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.3),transparent_38%)]" />
+      <div className="relative grid items-center gap-5 lg:grid-cols-[1fr_22rem]">
+        <div><span className="text-xs font-bold uppercase tracking-[.2em] text-white/75">Career snapshot</span><h2 className="mt-2 max-w-2xl font-display text-2xl font-bold md:text-4xl">Building, supporting and learning with heart.</h2><div className="mt-4 grid max-w-xl gap-2 sm:grid-cols-3">{[{k:"5",v:"Experience chapters"},{k:"3+",v:"Years of experience"},{k:"2023",v:"Journey started"}].map(stat=><div key={stat.v} className="rounded-xl bg-white/12 px-3 py-2 backdrop-blur"><div className="font-display text-2xl font-bold">{stat.k}</div><div className="mt-0.5 text-xs text-white/75">{stat.v}</div></div>)}</div></div>
+        <div className="relative mx-auto w-full max-w-sm">
+          <div className="relative overflow-hidden rounded-3xl border border-white/30 bg-black/20 p-2 shadow-2xl backdrop-blur-sm">
+            <video
+              ref={duckVideoRef}
+              key={isExploring ? "flying-duck" : "talking-duck"}
+              src={isExploring ? "/experience/duck-flying.mp4" : "/experience/talking-duckie.mp4"}
+              autoPlay
+              muted
+              playsInline
+              loop={!isExploring}
+              onEnded={isExploring ? handleDuckFinished : undefined}
+              className="aspect-video w-full rounded-2xl object-cover"
+              aria-label={isExploring ? "Dukie flying toward the experience timeline" : "Talking Dukie inviting you to explore the timeline"}
+            />
+            {!isExploring && <div className="absolute left-4 top-4 max-w-[10rem] rounded-xl rounded-bl-sm bg-white px-2.5 py-2 text-xs font-bold leading-4 text-hotpink shadow-xl">Would you like to see Motso's Timeline?</div>}
           </div>
-        </motion.section>
-      </Reveal>
-
-      <section className="relative z-10 mx-auto max-w-5xl">
-        <div className="absolute bottom-0 left-6 top-0 w-px bg-linear-to-b from-hotpink via-violet to-teal md:left-1/2" />
-        <div className="space-y-8 md:space-y-10">
-          {experience.map((item, index) => {
-            const Icon = item.role.includes("Tutor") ? GraduationCap : item.role.includes("Learner") ? GitBranch : Briefcase;
-            return (
-              <Reveal key={item.role} delay={index * 0.08}>
-                <div className={`relative z-10 pl-16 md:pl-0 ${index % 2 === 0 ? "md:pr-[calc(50%+3rem)]" : "md:pl-[calc(50%+3rem)]"}`}>
-                  <motion.div
-                    animate={{ scale: [1, 1.08, 1], rotate: [0, 4, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
-                    className="gradient-cool-bg absolute left-0 top-6 z-20 grid h-12 w-12 place-items-center rounded-2xl text-white shadow-lg md:left-1/2 md:-translate-x-1/2"
-                  >
-                    <Icon className="h-5 w-5" />
-                  </motion.div>
-
-                  <motion.article
-                    whileHover={{ y: -6, scale: 1.01 }}
-                    className="glass card-shadow group relative min-h-112 overflow-hidden rounded-2xl border border-border p-6 md:min-h-104 md:p-7"
-                  >
-                    <div className="gradient-hero-bg absolute -right-12 -top-12 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity group-hover:opacity-40" />
-                    <div className="relative z-10 transition-all duration-300 ease-out md:group-hover:-translate-y-8 md:group-hover:opacity-0">
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <span className="rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-hotpink">
-                          {item.period}
-                        </span>
-                        <span className="rounded-full bg-hotpink/10 px-3 py-1 text-xs font-semibold text-hotpink">0{index + 1}</span>
-                      </div>
-                      <h2 className="mt-4 font-display text-2xl font-semibold">{item.role}</h2>
-                      <div className="mt-1 text-sm font-medium text-muted-foreground">{item.org}</div>
-                      <ul className="mt-5 space-y-3 text-sm leading-6 text-muted-foreground">
-                        {item.points.map((point) => (
-                          <li key={point} className="flex gap-3">
-                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hotpink" />
-                            <span>{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-hotpink md:hidden">
-                        More detail
-                      </div>
-                    </div>
-
-                    <div className="mt-5 space-y-4 text-sm leading-7 text-muted-foreground md:hidden">
-                      {item.details.map((detail) => (
-                        <p key={detail}>{detail}</p>
-                      ))}
-                    </div>
-
-                    <div className="pointer-events-auto absolute inset-0 hidden translate-y-full flex-col overflow-y-auto border-t border-border bg-card p-6 opacity-0 shadow-2xl backdrop-blur-xl transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:flex">
-                      <div className="mb-3 flex items-center justify-between gap-3">
-                        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-hotpink">Role detail</span>
-                        <span className="rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-muted-foreground">Hover reveal</span>
-                      </div>
-                      <h3 className="font-display text-2xl font-semibold text-foreground">{item.role}</h3>
-                      <div className="mt-1 text-sm font-medium text-muted-foreground">{item.org} | {item.period}</div>
-                      <div className="mt-5 space-y-4 text-sm leading-7 text-muted-foreground">
-                        {item.details.map((detail) => (
-                          <p key={detail}>{detail}</p>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.article>
-                </div>
-              </Reveal>
-            );
-          })}
+          {!isExploring && <button type="button" onClick={handleExplore} className="gradient-pink-bg group mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-white shadow-xl transition hover:-translate-y-1 hover:brightness-110">Explore <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></button>}
+          {isExploring && <div className="mt-3 text-center text-xs font-semibold text-white/75">Dukie is flying to your timeline…</div>}
         </div>
-      </section>
-    </PageShell>
-  );
+      </div>
+    </section>
+    <section ref={timelineRef} className="relative mx-auto max-w-6xl">
+      <div className="absolute bottom-0 left-7 top-0 w-1 rounded-full bg-linear-to-b from-hotpink via-violet to-teal md:left-1/2 md:-translate-x-1/2" />
+      <motion.div style={{ top: duckTop }} className="pointer-events-none absolute left-7 z-10 w-16 -translate-x-1/2 -translate-y-1/2 md:left-1/2 md:w-20"><WalkingDuck /></motion.div>
+      <div className="space-y-9 md:space-y-12">{[...experience].sort((a,b)=>Number(b.year)-Number(a.year)).map((item,index)=><Reveal key={`${item.org}-${item.role}`} delay={index*.05}><div className={`relative pl-20 md:pl-0 ${index%2===0?"md:pr-[calc(50%+3.5rem)]":"md:pl-[calc(50%+3.5rem)]"}`}>
+        <div className="absolute left-0 top-6 z-20 grid h-14 w-14 place-items-center rounded-2xl bg-card p-1.5 shadow-xl md:left-1/2 md:-translate-x-1/2"><span className="gradient-hero-bg grid h-full w-full place-items-center rounded-xl px-1 text-xs font-black text-white">{item.year}</span></div>
+        <motion.article whileHover={{ y:-6, rotate:index%2===0?-.4:.4 }} className="glass card-shadow relative overflow-hidden rounded-3xl border border-border p-6 md:p-7"><div className="gradient-hero-bg absolute -right-16 -top-16 h-40 w-40 opacity-15 blur-3xl"/><div className="relative flex gap-4"><div className="grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-2xl bg-white p-1 shadow-md ring-1 ring-white/70"><img src={item.logo} alt={`${item.org} logo`} className="h-full w-full object-contain"/></div><div><div className="text-xs font-bold uppercase tracking-[.16em] text-hotpink">{item.period}</div><h2 className="mt-1 font-display text-xl font-bold md:text-2xl">{item.role}</h2><div className="mt-1 text-sm font-semibold text-muted-foreground">{item.org}</div></div></div><ul className="relative mt-5 space-y-2.5 text-sm leading-6 text-muted-foreground">{item.points.map(point=><li key={point} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hotpink"/><span>{point}</span></li>)}</ul></motion.article>
+      </div></Reveal>)}</div>
+    </section>
+  </PageShell>;
 }
 function ProjectsPage() {
   const projectItems = projects.map((project) => ({

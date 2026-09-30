@@ -44,6 +44,28 @@ type FeedSettings = { tags: string[]; interests: string[] };
 const defaultInterests = ['Mobile development', 'Web development', 'FinTech', 'Blockchain', 'Cybersecurity', 'UX', 'UI'];
 const defaultTags = ['#MobileDev', '#WebDev', '#FinTech', '#Blockchain', '#Cybersecurity', '#UX', '#UI'];
 const defaultSettings: FeedSettings = { tags: defaultTags, interests: defaultInterests };
+const LOCAL_POSTS_KEY = 'motso-feed-posts';
+const LOCAL_SETTINGS_KEY = 'motso-feed-settings';
+
+function readLocalPosts(): VisualPost[] {
+  try {
+    return JSON.parse(localStorage.getItem(LOCAL_POSTS_KEY) || '[]') as VisualPost[];
+  } catch {
+    return [];
+  }
+}
+
+function writeLocalPosts(posts: VisualPost[]) {
+  localStorage.setItem(LOCAL_POSTS_KEY, JSON.stringify(posts));
+}
+
+function readLocalSettings(): FeedSettings {
+  try {
+    return JSON.parse(localStorage.getItem(LOCAL_SETTINGS_KEY) || JSON.stringify(defaultSettings)) as FeedSettings;
+  } catch {
+    return defaultSettings;
+  }
+}
 
 const interestIcons = [Smartphone, Code2, Sparkles, Layers, ShieldCheck, Palette, Zap];
 const interestGradients = ['gradient-hero-bg', 'gradient-cool-bg', 'gradient-pink-bg'];
@@ -223,7 +245,7 @@ export default function Blog() {
 
   const fetchPosts = async () => {
     if (!supabase) {
-      setPosts([]);
+      setPosts(readLocalPosts());
       return;
     }
 
@@ -243,7 +265,7 @@ export default function Blog() {
 
   const fetchSettings = async () => {
     if (!supabase) {
-      setSettings(defaultSettings);
+      setSettings(readLocalSettings());
       return;
     }
 
@@ -315,12 +337,18 @@ export default function Blog() {
   };
 
   const uploadMediaFile = async (file: File): Promise<BlogMedia> => {
-    if (!supabase) {
-      throw new Error('Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to enable uploads.');
-    }
-
     const error = getMediaValidationError(file);
     if (error) throw new Error(error);
+
+    if (!supabase) {
+      const src = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(new Error('Could not read this media file.'));
+        reader.readAsDataURL(file);
+      });
+      return { src, name: file.name, kind: file.type.startsWith('video/') ? 'video' : 'image' };
+    }
 
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
@@ -364,15 +392,18 @@ export default function Blog() {
 
   const addPost = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!supabase) {
-      setMediaError(supabaseUnavailableMessage);
-      return;
-    }
-
     const caption = draftCaption.trim();
     if (!caption) return;
     if (!supabase) {
       setMediaError('Supabase is not configured. Add the public Supabase environment variables before publishing posts.');
+      return;
+    }
+
+    if (!supabase) {
+      const localPost: VisualPost = { id: crypto.randomUUID(), caption, tags: parseTagList(draftTags), createdAt: new Date().toISOString(), media: draftMedia };
+      writeLocalPosts([localPost, ...readLocalPosts()]);
+      setDraftCaption(''); setDraftTags(''); setDraftMedia([]); setMediaError('');
+      await fetchPosts();
       return;
     }
 
@@ -408,15 +439,17 @@ export default function Blog() {
 
   const saveEditedPost = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!supabase) {
-      setEditMediaError(supabaseUnavailableMessage);
-      return;
-    }
-
     const caption = editCaption.trim();
     if (!editingPostId || !caption) return;
     if (!supabase) {
       setEditMediaError('Supabase is not configured. Add the public Supabase environment variables before saving posts.');
+      return;
+    }
+
+    if (!supabase) {
+      writeLocalPosts(readLocalPosts().map((post) => post.id === editingPostId ? { ...post, caption, tags: parseTagList(editTags), media: editMedia } : post));
+      cancelEditing();
+      await fetchPosts();
       return;
     }
 
@@ -436,7 +469,10 @@ export default function Blog() {
 
   const saveSettings = async (updatedSettings: FeedSettings) => {
     setSettings(updatedSettings);
-    if (!supabase) return;
+    if (!supabase) {
+      localStorage.setItem(LOCAL_SETTINGS_KEY, JSON.stringify(updatedSettings));
+      return;
+    }
 
     const { error } = await supabase.from('feed_settings').upsert(
       { name: SETTINGS_ROW_NAME, tags: updatedSettings.tags, interests: updatedSettings.interests },
@@ -489,11 +525,6 @@ export default function Blog() {
 
   const confirmDeletePost = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!supabase) {
-      setDeleteError(supabaseUnavailableMessage);
-      return;
-    }
-
     if (!deleteTarget) return;
     const hash = await hashText(deletePassword);
     if (hash !== ADMIN_PASSWORD_HASH) {
@@ -501,10 +532,11 @@ export default function Blog() {
       return;
     }
     if (!supabase) {
-      setDeleteError('Supabase is not configured. Add the public Supabase environment variables before deleting posts.');
+      writeLocalPosts(readLocalPosts().filter((post) => post.id !== deleteTarget.id));
+      cancelDelete();
+      await fetchPosts();
       return;
     }
-
     await supabase.from('posts').delete().eq('id', deleteTarget.id);
     cancelDelete();
     await fetchPosts();

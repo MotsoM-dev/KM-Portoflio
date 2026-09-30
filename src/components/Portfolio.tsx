@@ -260,6 +260,38 @@ const experience = [
     ],
   },
 ];
+const experienceMeta: Record<string, { chapter: string; focus: string; impact: string; tools: string[] }> = {
+  "Appimate": {
+    chapter: "01",
+    focus: "Product delivery",
+    impact: "Turning product ideas into responsive, production-ready experiences for real users.",
+    tools: ["React", "Mobile UI", "Agile"],
+  },
+  "MICTSETA Learnership": {
+    chapter: "02",
+    focus: "Engineering foundations",
+    impact: "Building the systems thinking, debugging discipline, and technical depth behind confident delivery.",
+    tools: ["SDLC", "Systems analysis", "Databases"],
+  },
+  "University of Fort Hare": {
+    chapter: "03",
+    focus: "Knowledge & mentorship",
+    impact: "Helping the next generation make complex Information Systems concepts feel practical and achievable.",
+    tools: ["Mentoring", "Communication", "Problem solving"],
+  },
+  "TechShield Connect": {
+    chapter: "04",
+    focus: "Build + brand",
+    impact: "Connecting mobile product thinking with social storytelling, audience growth, and community presence.",
+    tools: ["Mobile", "Content", "Marketing"],
+  },
+  "iLitha Gaming": {
+    chapter: "05",
+    focus: "People & operations",
+    impact: "Keeping registrations, records, and event workflows calm, clear, and ready for every participant.",
+    tools: ["Coordination", "Admin", "Support"],
+  },
+};
 const projects = [
   {
     name: "Imbewu — The Seed",
@@ -759,11 +791,11 @@ function ExperiencePage() {
     timelineRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   return <PageShell>
-    <PageIntro compact eyebrow="Experience" title="Five chapters. One growing story." copy="A timeline shaped by product delivery, learning, mentoring, marketing, gaming, and the people I have supported along the way." />
+    <PageIntro compact eyebrow="Experience / the journey so far" title="Five chapters. One growing story." copy="From first build to real-world delivery, every chapter has added a new layer: craft, context, confidence, and care." />
     <section className="gradient-hero-bg glow-shadow relative mb-10 overflow-hidden rounded-3xl p-4 text-white md:p-6">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.3),transparent_38%)]" />
       <div className="relative grid items-center gap-5 lg:grid-cols-[1fr_22rem]">
-        <div><span className="text-xs font-bold uppercase tracking-[.2em] text-white/75">Career snapshot</span><h2 className="mt-2 max-w-2xl font-display text-2xl font-bold md:text-4xl">Building, supporting and learning with heart.</h2><div className="mt-4 grid max-w-xl gap-2 sm:grid-cols-3">{[{k:"5",v:"Experience chapters"},{k:"3+",v:"Years of experience"},{k:"2023",v:"Journey started"}].map(stat=><div key={stat.v} className="rounded-xl bg-white/12 px-3 py-2 backdrop-blur"><div className="font-display text-2xl font-bold">{stat.k}</div><div className="mt-0.5 text-xs text-white/75">{stat.v}</div></div>)}</div></div>
+        <div><span className="text-xs font-bold uppercase tracking-[.2em] text-white/75">Career snapshot</span><h2 className="mt-2 max-w-2xl font-display text-2xl font-bold md:text-4xl">Building, supporting and learning with heart.</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-white/80 md:text-base">A living record of how I move from ideas to impact — balancing product delivery, technical growth, mentorship, marketing, and the people behind every outcome.</p><div className="mt-5 grid max-w-xl gap-2 sm:grid-cols-3">{[{k:"5",v:"Experience chapters"},{k:"3+",v:"Years of experience"},{k:"2023",v:"Journey started"}].map(stat=><div key={stat.v} className="rounded-xl bg-white/12 px-3 py-3 backdrop-blur"><div className="font-display text-2xl font-bold">{stat.k}</div><div className="mt-0.5 text-xs text-white/75">{stat.v}</div></div>)}</div></div>
         <div className="relative mx-auto w-full max-w-sm">
           <div className="relative overflow-hidden rounded-3xl border border-white/30 bg-black/20 p-2 shadow-2xl backdrop-blur-sm">
             <video
@@ -786,12 +818,13 @@ function ExperiencePage() {
       </div>
     </section>
     <section ref={timelineRef} className="relative mx-auto max-w-6xl">
+      <div className="mb-10 grid gap-5 md:grid-cols-[1fr_auto] md:items-end"><div><span className="text-xs font-bold uppercase tracking-[.22em] text-hotpink">Career arc</span><h2 className="mt-2 font-display text-3xl font-bold md:text-4xl">A timeline with momentum.</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground md:text-base">Each chapter is different by design. Together they show the full shape of my work: I build, I explain, I organise, and I keep growing.</p></div><div className="glass rounded-2xl border border-border px-4 py-3 text-sm text-muted-foreground md:max-w-xs"><span className="font-semibold text-foreground">Scroll the line</span><br />Dukie marks the journey while the chapters open up the detail.</div></div>
       <div className="absolute bottom-0 left-7 top-0 w-1 rounded-full bg-linear-to-b from-hotpink via-violet to-teal md:left-1/2 md:-translate-x-1/2" />
       <motion.div style={{ top: duckTop }} className="pointer-events-none absolute left-7 z-10 w-12 -translate-x-1/2 -translate-y-1/2 md:left-1/2 md:w-14"><WalkingDuck /></motion.div>
-      <div className="space-y-9 md:space-y-12">{[...experience].sort((a,b)=>Number(b.year)-Number(a.year)).map((item,index)=><Reveal key={`${item.org}-${item.role}`} delay={index*.05}><div className={`relative pl-20 md:pl-0 ${index%2===0?"md:pr-[calc(50%+3.5rem)]":"md:pl-[calc(50%+3.5rem)]"}`}>
+      <div className="space-y-9 md:space-y-12">{[...experience].sort((a,b)=>Number(b.year)-Number(a.year)).map((item,index)=>{ const meta = experienceMeta[item.org]; return <Reveal key={`${item.org}-${item.role}`} delay={index*.05}><div className={`relative pl-20 md:pl-0 ${index%2===0?"md:pr-[calc(50%+3.5rem)]":"md:pl-[calc(50%+3.5rem)]"}`}>
         <div className="absolute left-0 top-6 z-20 grid h-14 w-14 place-items-center rounded-2xl bg-card p-1.5 shadow-xl md:left-1/2 md:-translate-x-1/2"><span className="gradient-hero-bg grid h-full w-full place-items-center rounded-xl px-1 text-xs font-black text-white">{item.year}</span></div>
-        <motion.article whileHover={{ y:-6, rotate:index%2===0?-.4:.4 }} className="glass card-shadow relative overflow-hidden rounded-3xl border border-border p-6 md:p-7"><div className="gradient-hero-bg absolute -right-16 -top-16 h-40 w-40 opacity-15 blur-3xl"/><div className="relative flex gap-4"><div className="grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-2xl bg-white p-0.5 shadow-md ring-1 ring-white/70"><img src={item.logo} alt={`${item.org} logo`} className="h-full w-full object-contain"/></div><div><div className="text-xs font-bold uppercase tracking-[.16em] text-hotpink">{item.period}</div><h2 className="mt-1 font-display text-xl font-bold md:text-2xl">{item.role}</h2><div className="mt-1 text-sm font-semibold text-muted-foreground">{item.org}</div></div></div><ul className="relative mt-5 space-y-2.5 text-sm leading-6 text-muted-foreground">{item.points.map(point=><li key={point} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hotpink"/><span>{point}</span></li>)}</ul></motion.article>
-      </div></Reveal>)}</div>
+        <motion.article whileHover={{ y:-6, rotate:index%2===0?-.4:.4 }} className="glass card-shadow relative overflow-hidden rounded-3xl border border-border p-6 md:p-7"><div className="gradient-hero-bg absolute -right-16 -top-16 h-40 w-40 opacity-15 blur-3xl"/><div className="relative flex gap-4"><div className="grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-2xl bg-white p-0.5 shadow-md ring-1 ring-white/70"><img src={item.logo} alt={`${item.org} logo`} className="h-full w-full object-contain"/></div><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><span className="text-xs font-black uppercase tracking-[.18em] text-hotpink">Chapter {meta.chapter}</span><span className="rounded-full bg-muted px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{meta.focus}</span></div><div className="mt-2 text-xs font-bold uppercase tracking-[.16em] text-muted-foreground">{item.period}</div><h2 className="mt-1 font-display text-xl font-bold md:text-2xl">{item.role}</h2><div className="mt-1 text-sm font-semibold text-muted-foreground">{item.org}</div></div></div><div className="relative mt-5 rounded-2xl bg-muted/60 p-4"><div className="text-xs font-bold uppercase tracking-[.16em] text-hotpink">The through-line</div><p className="mt-2 text-sm font-medium leading-6 text-foreground">{meta.impact}</p></div><ul className="relative mt-5 space-y-2.5 text-sm leading-6 text-muted-foreground">{item.points.map(point=><li key={point} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hotpink"/><span>{point}</span></li>)}</ul><div className="relative mt-5 border-t border-border pt-5"><p className="text-sm leading-6 text-muted-foreground">{item.details[0]}</p><div className="mt-4 flex flex-wrap gap-2">{meta.tools.map(tool=><span key={tool} className="rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">{tool}</span>)}</div></div></motion.article>
+      </div></Reveal>})}</div>
     </section>
   </PageShell>;
 }

@@ -829,6 +829,7 @@ function ExperiencePage() {
 }
 function ProjectsPage() {
   const [activeCategory, setActiveCategory] = useState<"mobile" | "website" | "webapp">("mobile");
+  const [expandedProjects, setExpandedProjects] = useState<Record<string, boolean>>({});
   const visibleProjects = projects.filter((project) => project.category === activeCategory).sort((a, b) => a.order - b.order);
   const filters = [
     { value: "mobile" as const, label: "Mobile apps", count: projects.filter((project) => project.category === "mobile").length },
@@ -859,6 +860,8 @@ function ProjectsPage() {
         {visibleProjects.map((project, index) => {
           const isMobile = project.category === "mobile";
           const hasVideo = "videoSrc" in project;
+          const isLongDescription = project.desc.length > 260;
+          const isDescriptionExpanded = Boolean(expandedProjects[project.name]);
           return (
             <motion.article layout key={project.name} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: index * 0.06 }} className="glass card-shadow group overflow-hidden rounded-3xl border border-border">
               <div className={`grid ${index % 2 === 1 ? "lg:grid-cols-[0.9fr_1.1fr]" : "lg:grid-cols-[1.1fr_0.9fr]"}`}>
@@ -912,7 +915,8 @@ function ProjectsPage() {
                   </div>
                   <div className="mt-5 text-sm font-semibold text-muted-foreground">{project.tag}</div>
                   <h2 className="mt-2 font-display text-3xl font-bold leading-tight md:text-4xl">{project.name}</h2>
-                  <p className="mt-5 text-base leading-8 text-muted-foreground">{project.desc}</p>
+                  <p className={`mt-5 text-base leading-8 text-muted-foreground ${isLongDescription && !isDescriptionExpanded ? "line-clamp-5 md:line-clamp-none" : ""}`}>{project.desc}</p>
+                  {isLongDescription && <button type="button" aria-expanded={isDescriptionExpanded} onClick={() => setExpandedProjects((current) => ({ ...current, [project.name]: !isDescriptionExpanded }))} className="mt-3 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-hotpink transition-colors hover:text-violet md:hidden">{isDescriptionExpanded ? "Read less" : "Read more"}<ChevronDown className={`h-4 w-4 transition-transform ${isDescriptionExpanded ? "rotate-180" : ""}`} /></button>}
                   <div className="mt-6 flex flex-wrap gap-2">{project.stack.map((tech) => <span key={tech} className="rounded-full border border-border bg-background/70 px-3 py-1.5 text-xs font-semibold text-muted-foreground">{tech}</span>)}</div>
                   <a href={project.href} target="_blank" rel="noreferrer" className="group/link mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background transition hover:bg-hotpink hover:text-white">{"liveLabel" in project ? project.liveLabel : "View project"} <ExternalLink className="h-4 w-4 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" /></a>
                 </div>

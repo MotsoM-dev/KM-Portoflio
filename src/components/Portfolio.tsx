@@ -818,7 +818,6 @@ function ExperiencePage() {
       </div>
     </section>
     <section ref={timelineRef} className="relative mx-auto max-w-6xl">
-      <div className="mb-10 grid gap-5 md:grid-cols-[1fr_auto] md:items-end"><div><span className="text-xs font-bold uppercase tracking-[.22em] text-hotpink">Career arc</span><h2 className="mt-2 font-display text-3xl font-bold md:text-4xl">A timeline with momentum.</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground md:text-base">Each chapter is different by design. Together they show the full shape of my work: I build, I explain, I organise, and I keep growing.</p></div><div className="glass rounded-2xl border border-border px-4 py-3 text-sm text-muted-foreground md:max-w-xs"><span className="font-semibold text-foreground">Scroll the line</span><br />Dukie marks the journey while the chapters open up the detail.</div></div>
       <div className="absolute bottom-0 left-7 top-0 w-1 rounded-full bg-linear-to-b from-hotpink via-violet to-teal md:left-1/2 md:-translate-x-1/2" />
       <motion.div style={{ top: duckTop }} className="pointer-events-none absolute left-7 z-10 w-12 -translate-x-1/2 -translate-y-1/2 md:left-1/2 md:w-14"><WalkingDuck /></motion.div>
       <div className="space-y-9 md:space-y-12">{[...experience].sort((a,b)=>Number(b.year)-Number(a.year)).map((item,index)=>{ const meta = experienceMeta[item.org]; return <Reveal key={`${item.org}-${item.role}`} delay={index*.05}><div className={`relative pl-20 md:pl-0 ${index%2===0?"md:pr-[calc(50%+3.5rem)]":"md:pl-[calc(50%+3.5rem)]"}`}>

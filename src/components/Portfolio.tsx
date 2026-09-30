@@ -161,6 +161,51 @@ const skills = [
   { icon: Sparkles, title: "Soft skills", items: ["Tutoring", "Documentation", "Collaboration", "Problem solving"] },
 ];
 
+const coreSkillLevels = [
+  {
+    icon: Code2,
+    title: "Frontend Development",
+    level: 94,
+    description: "React, Next.js, HTML, CSS, JavaScript, and polished responsive interfaces.",
+    accent: "gradient-hero-bg",
+  },
+  {
+    icon: Smartphone,
+    title: "Mobile App Development",
+    level: 88,
+    description: "Cross-platform app flows, mobile UI thinking, React Native, and Xamarin exposure.",
+    accent: "gradient-cool-bg",
+  },
+  {
+    icon: Palette,
+    title: "UI/UX Design",
+    level: 84,
+    description: "Wireframes, prototypes, usability, visual polish, and user-first layout decisions.",
+    accent: "gradient-pink-bg",
+  },
+  {
+    icon: Database,
+    title: "Data & Backend",
+    level: 78,
+    description: "SQL, Supabase, REST APIs, Python, C# basics, and structured data thinking.",
+    accent: "gradient-cool-bg",
+  },
+  {
+    icon: GitBranch,
+    title: "Git & Delivery",
+    level: 86,
+    description: "GitHub workflows, debugging, agile collaboration, and production-minded delivery.",
+    accent: "gradient-hero-bg",
+  },
+  {
+    icon: Sparkles,
+    title: "Communication",
+    level: 91,
+    description: "Tutoring, documentation, teamwork, mentoring, and clear technical explanation.",
+    accent: "gradient-pink-bg",
+  },
+];
+
 const experience = [
   {
     role: "Frontend & Mobile App Developer",
@@ -261,6 +306,8 @@ const projects: Array<{
   desc: string;
   stack: string[];
   category: ProjectCategory;
+  video?: string;
+  link?: string;
   featured?: boolean;
 }> = [
   {
@@ -284,6 +331,8 @@ const projects: Array<{
     desc: "Front-end and issue submission form that lets rural schools report infrastructure issues for faster resolution.",
     stack: ["HTML", "CSS", "JavaScript"],
     category: "Websites",
+    video: "/project-media/edufix-human-rights-hackathon.mp4",
+    link: "https://edufix.lovable.app/",
   },
   {
     name: "Telkom10x - Network Support Portal",
@@ -322,8 +371,8 @@ const projectCategories: Array<{
 const certs = ["UCT Fintech Winter School Hackathon Certificate", "Microsoft AI Fluency", "IBM Python for Data Science", "FNB App Academy - Full-Stack exposure"];
 
 const aboutDetails = [
-  { icon: MapPin, label: "Based in", value: "South Africa", detail: "Eastern Cape & Gauteng" },
-  { icon: GraduationCap, label: "Studying", value: "BCom Honours", detail: "Information Systems @ UFH" },
+  { icon: MapPin, label: "Based in", value: "Gauteng", detail: "South Africa" },
+  { icon: GraduationCap, label: "Highest qualification", value: "NQF Level 8", detail: "Honours in Information Systems @ UFH" },
   { icon: Briefcase, label: "Currently", value: "Appimate", detail: "Frontend & Mobile Developer" },
   { icon: Trophy, label: "Hackathon wins", value: "2x 2nd Place", detail: "UCT Fintech Winter School + Telkom Hackathon" },
 ];
@@ -600,7 +649,7 @@ function HomePage() {
 }
 
 const aboutParagraphs = [
-  "I'm a Frontend and Mobile App Developer from South Africa currently completing a BCom Honours in Information Systems. My passion lies at the intersection of technology, creativity, and problem-solving, where clean code meets thoughtful design to create products that make a genuine impact.",
+  "I'm a Frontend and Mobile App Developer based in Gauteng, South Africa, with an NQF Level 8 Honours in Information Systems. My passion lies at the intersection of technology, creativity, and problem-solving, where clean code meets thoughtful design to create products that make a genuine impact.",
   "Beyond writing code, I'm driven by curiosity. Whether I'm exploring cloud technologies, cybersecurity, artificial intelligence, or emerging software trends, I'm constantly investing in becoming a stronger engineer. I believe great developers never stop learning, and every project is an opportunity to improve both technically and creatively.",
   "My experience spans industry development, systems development training, university tutoring, and collaborative hackathons, giving me the ability to communicate technical ideas clearly, adapt quickly, and thrive in fast-paced environments. I enjoy working with diverse teams, solving complex problems, and building software that delivers measurable value.",
   "What truly defines me is my mindset. I approach challenges with discipline, ownership, and a commitment to excellence. I'm not simply looking to write code. I'm looking to contribute to products that improve people's lives, collaborate with ambitious teams across the world, and continue growing into a software engineer capable of leading impactful projects.",
@@ -659,9 +708,83 @@ function SkillsPage() {
     <PageShell>
       <PageIntro
         eyebrow="Core skills"
-        title="A stack I keep sharpening."
-        copy="My work sits where frontend craft, mobile thinking, product design, and clear communication meet."
+        title="Skills with momentum."
+        copy="Animated core strengths across frontend craft, mobile thinking, design, delivery, and communication."
       />
+      <Reveal>
+        <section className="relative overflow-hidden rounded-2xl border border-border bg-card/55 p-5 shadow-[0_26px_90px_-52px_color-mix(in_oklab,var(--color-hotpink)_70%,transparent)] md:p-8">
+          <div className="relative z-10 mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-hotpink">Motion profile</span>
+              <h2 className="mt-2 font-display text-2xl font-semibold md:text-3xl">Core skill progress</h2>
+            </div>
+            <p className="max-w-xl text-sm leading-6 text-muted-foreground">
+              Each bar fills as it comes into view, showing the strengths I keep building through real projects,
+              hackathons, tutoring, and industry work.
+            </p>
+          </div>
+
+          <div className="relative z-10 grid gap-4 lg:grid-cols-2">
+            {coreSkillLevels.map((skill, index) => {
+              const Icon = skill.icon;
+
+              return (
+                <motion.article
+                  key={skill.title}
+                  initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: false, amount: 0.35 }}
+                  transition={{ duration: 0.5, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
+                  className="group rounded-2xl border border-border bg-background/55 p-5 transition-all hover:-translate-y-1 hover:border-hotpink/45 hover:bg-background/75"
+                >
+                  <div className="mb-4 flex items-start justify-between gap-4">
+                    <div className="flex gap-3">
+                      <span className={`${skill.accent} grid h-11 w-11 shrink-0 place-items-center rounded-xl text-white shadow-glow`}>
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <div>
+                        <h3 className="font-display text-lg font-semibold">{skill.title}</h3>
+                        <p className="mt-1 text-sm leading-6 text-muted-foreground">{skill.description}</p>
+                      </div>
+                    </div>
+                    <span className="rounded-full border border-hotpink/30 bg-hotpink/10 px-3 py-1 text-sm font-bold text-hotpink">
+                      {skill.level}%
+                    </span>
+                  </div>
+
+                  <div className="relative h-4 overflow-hidden rounded-full border border-border bg-card shadow-inner">
+                    <motion.div
+                      className={`${skill.accent} relative h-full overflow-hidden rounded-full`}
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${skill.level}%` }}
+                      viewport={{ once: false, amount: 0.7 }}
+                      transition={{ duration: 1.05, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <motion.span
+                        aria-hidden="true"
+                        className="absolute inset-y-0 left-0 w-16 bg-white/35 blur-md"
+                        animate={{ x: ["-120%", "260%"] }}
+                        transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 0.6, ease: "easeInOut" }}
+                      />
+                    </motion.div>
+                  </div>
+                </motion.article>
+              );
+            })}
+          </div>
+        </section>
+      </Reveal>
+      <Reveal delay={0.1}>
+        <div className="mb-5 mt-12 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-hotpink">Toolkit</span>
+            <h2 className="mt-2 font-display text-2xl font-semibold">Technologies I work with.</h2>
+          </div>
+          <p className="max-w-xl text-sm leading-6 text-muted-foreground">
+            A practical mix of tools, frameworks, and collaboration skills I use to build useful digital products.
+          </p>
+        </div>
+      </Reveal>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {skills.map((skill, index) => (
           <Reveal key={skill.title} delay={index * 0.05}>
@@ -1084,7 +1207,30 @@ function ProjectsPage() {
                       </div>
 
                       <h3 className="mt-5 font-display text-2xl font-semibold leading-tight md:text-3xl">{project.name}</h3>
+                      {project.video && (
+                        <div className="mt-5 overflow-hidden rounded-xl border border-border bg-black shadow-[0_18px_50px_-28px_rgba(0,0,0,0.7)]">
+                          <video
+                            src={project.video}
+                            controls
+                            muted
+                            playsInline
+                            preload="metadata"
+                            className="aspect-video w-full bg-black object-cover"
+                            aria-label={`${project.name} demo video`}
+                          />
+                        </div>
+                      )}
                       <p className="mt-3 flex-1 leading-7 text-muted-foreground">{project.desc}</p>
+                      {project.link && (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-5 inline-flex w-fit items-center gap-2 rounded-full border border-hotpink/35 bg-hotpink/10 px-4 py-2 text-sm font-semibold text-hotpink transition-all hover:-translate-y-0.5 hover:border-hotpink hover:bg-hotpink hover:text-white"
+                        >
+                          Open live website <ArrowRight className="h-4 w-4" />
+                        </a>
+                      )}
 
                       <div className="mt-6">
                         <div className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-hotpink">Tech stack</div>
@@ -1111,7 +1257,7 @@ function ProjectsPage() {
   );
 }
 const coverLetterParagraphs = [
-  "Thank you for taking the time to visit my portfolio. I'm a Frontend and Mobile App Developer currently completing my BCom Honours in Information Systems while gaining industry experience at Appimate and through a MICTSETA Systems Development Learnership. I enjoy turning ideas into responsive web applications and cross-platform mobile experiences that are intuitive, scalable, and built with users in mind.",
+  "Thank you for taking the time to visit my portfolio. I'm a Frontend and Mobile App Developer with an NQF Level 8 Honours in Information Systems while gaining industry experience at Appimate and through a MICTSETA Systems Development Learnership. I enjoy turning ideas into responsive web applications and cross-platform mobile experiences that are intuitive, scalable, and built with users in mind.",
 
   "Working in Agile product teams has taught me how to collaborate across design, backend, and QA while managing priorities and delivering production-ready features through disciplined Git/GitHub workflows. I build with React, Next.js, TypeScript, React Native, HTML, CSS, and modern development tools, always focusing on writing clean, maintainable code that creates real value. Alongside development, two years of tutoring Information Systems strengthened my communication skills and my ability to explain technical concepts clearly, making collaboration with both technical and non-technical teams natural.",
 

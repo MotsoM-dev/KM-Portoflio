@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff2d92"/><stop offset="1" stop-color="#6d28d9"/></linearGradient></defs>
+  <rect width="240" height="240" rx="52" fill="#090914"/><path d="M58 84c6-20 22-31 42-31h40c20 0 36 11 42 31l13 48c6 24-20 39-36 21l-16-18H97l-16 18c-16 18-42 3-36-21l13-48Z" fill="url(#g)"/><path d="M85 91v27M72 104h26" stroke="#fff" stroke-width="9" stroke-linecap="round"/><circle cx="155" cy="96" r="7" fill="#fff"/><circle cx="170" cy="112" r="7" fill="#fff"/><text x="120" y="196" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="25" fill="#fff">iLITHA</text><text x="120" y="218" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" letter-spacing="4" fill="#ff2d92">GAMING</text>
+</svg>

@@ -28,7 +28,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { CardBody, CardContainer, CardItem } from './ui/3d-card';
-import { supabase } from '../lib/supabase';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
 const SETTINGS_ROW_NAME = 'default';
 const ADMIN_KEY = 'motsom-dev-blog-admin';
@@ -194,6 +194,7 @@ function MediaPreviewGrid({ media, onRemove }: { media: BlogMedia[]; onRemove: (
 }
 
 export default function Blog() {
+  const supabaseUnavailableMessage = 'Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to enable live blog updates.';
   const [posts, setPosts] = useState<VisualPost[]>([]);
   const [settings, setSettings] = useState<FeedSettings>(defaultSettings);
   const [adminOpen, setAdminOpen] = useState(false);
@@ -221,6 +222,11 @@ export default function Blog() {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchPosts = async () => {
+    if (!supabase) {
+      setPosts([]);
+      return;
+    }
+
     const { data, error } = await supabase
       .from('posts')
       .select('*, post_media(*)')
@@ -236,6 +242,11 @@ export default function Blog() {
   };
 
   const fetchSettings = async () => {
+    if (!supabase) {
+      setSettings(defaultSettings);
+      return;
+    }
+
     const { data, error } = await supabase
       .from('feed_settings')
       .select('tags, interests')
@@ -304,6 +315,8 @@ export default function Blog() {
   };
 
   const uploadMediaFile = async (file: File): Promise<BlogMedia> => {
+    if (!supabase) throw new Error(supabaseUnavailableMessage);
+
     const error = getMediaValidationError(file);
     if (error) throw new Error(error);
 
@@ -349,6 +362,11 @@ export default function Blog() {
 
   const addPost = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!supabase) {
+      setMediaError(supabaseUnavailableMessage);
+      return;
+    }
+
     const caption = draftCaption.trim();
     if (!caption) return;
 
@@ -384,6 +402,11 @@ export default function Blog() {
 
   const saveEditedPost = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!supabase) {
+      setEditMediaError(supabaseUnavailableMessage);
+      return;
+    }
+
     const caption = editCaption.trim();
     if (!editingPostId || !caption) return;
 
@@ -403,6 +426,8 @@ export default function Blog() {
 
   const saveSettings = async (updatedSettings: FeedSettings) => {
     setSettings(updatedSettings);
+    if (!supabase) return;
+
     const { error } = await supabase.from('feed_settings').upsert(
       { name: SETTINGS_ROW_NAME, tags: updatedSettings.tags, interests: updatedSettings.interests },
       { onConflict: 'name' }
@@ -454,6 +479,11 @@ export default function Blog() {
 
   const confirmDeletePost = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!supabase) {
+      setDeleteError(supabaseUnavailableMessage);
+      return;
+    }
+
     if (!deleteTarget) return;
     const hash = await hashText(deletePassword);
     if (hash !== ADMIN_PASSWORD_HASH) {
@@ -486,12 +516,14 @@ export default function Blog() {
   };
   
   useEffect(() => {
-  supabase.from('posts').select('count', { count: 'exact', head: true })
-    .then(({ error }) => {
-      if (error) console.error('Supabase connection error:', error);
-      else console.log('Supabase connected successfully');
-    });
-}, []);
+    if (!supabase) return;
+
+    supabase.from('posts').select('count', { count: 'exact', head: true })
+      .then(({ error }) => {
+        if (error) console.error('Supabase connection error:', error);
+        else console.log('Supabase connected successfully');
+      });
+  }, []);
 
   return (
     <main className='mx-auto min-h-screen w-full max-w-7xl px-4 pb-20 pt-28 md:px-8 md:pt-32'>
@@ -807,6 +839,11 @@ export default function Blog() {
                   <span className='inline-flex items-center gap-2 text-sm font-medium text-muted-foreground'><Sparkles className='h-4 w-4 text-hotpink' /> Logged in as Kgomotso.</span>
                   <button type='button' onClick={logout} className='inline-flex items-center gap-2 rounded-full border border-border px-3 py-2 text-xs font-semibold hover:border-hotpink hover:bg-muted'><LogOut className='h-4 w-4' /> Log out</button>
                 </div>
+                {!isSupabaseConfigured && (
+                  <p className='rounded-2xl border border-hotpink/30 bg-hotpink/10 p-4 text-sm leading-6 text-muted-foreground'>
+                    {supabaseUnavailableMessage}
+                  </p>
+                )}
 
                 <section className='grid gap-4 rounded-3xl border border-border bg-background/60 p-4'>
                   <div>

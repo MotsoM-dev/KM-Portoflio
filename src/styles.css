@@ -119,6 +119,13 @@ body {
   -webkit-font-smoothing: antialiased;
   cursor: none;
 }
+
+@media (pointer: coarse) {
+  html,
+  body {
+    cursor: auto;
+  }
+}
 h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
 
 @utility gradient-text {

@@ -382,9 +382,9 @@ const aboutDetails = [
 function PageIntro({ eyebrow, title, copy, compact = false }: { eyebrow: string; title: string; copy: string; compact?: boolean }) {
   return (
     <Reveal>
-      <div className={`mx-auto max-w-4xl text-center ${compact ? "mb-6 md:mb-8" : "mb-10 md:mb-14"}`}>
+      <div className={`mx-auto max-w-4xl text-center ${compact ? "mb-6 md:mb-8" : "mb-8 sm:mb-10 md:mb-14"}`}>
         <span className="text-sm font-semibold uppercase tracking-[0.2em] text-hotpink">{eyebrow}</span>
-        <h1 className={`mt-3 font-display font-bold leading-tight ${compact ? "text-3xl md:text-5xl" : "text-4xl md:text-6xl"}`}>{title}</h1>
+        <h1 className={`mt-3 font-display font-bold leading-tight ${compact ? "text-3xl sm:text-4xl md:text-5xl" : "text-3xl sm:text-4xl md:text-6xl"}`}>{title}</h1>
         <p className={`mx-auto max-w-2xl text-muted-foreground ${compact ? "mt-2 text-sm leading-6 md:text-base" : "mt-4 text-base leading-8 md:text-lg"}`}>{copy}</p>
       </div>
     </Reveal>
@@ -392,7 +392,7 @@ function PageIntro({ eyebrow, title, copy, compact = false }: { eyebrow: string;
 }
 
 function PageShell({ children }: { children: ReactNode }) {
-  return <main className="mx-auto min-h-screen w-full max-w-7xl px-4 pb-20 pt-28 md:px-8 md:pt-32">{children}</main>;
+  return <main className="mx-auto min-h-screen w-full max-w-7xl px-4 pb-16 pt-28 sm:px-6 md:px-8 md:pb-20 md:pt-32">{children}</main>;
 }
 
 function ContactRow({
@@ -537,7 +537,7 @@ function HomePage() {
   ];
 
   return (
-    <main className="relative mx-auto min-h-screen w-full max-w-7xl px-4 pb-10 pt-24 md:px-8 md:pt-28 lg:h-svh lg:min-h-0 lg:overflow-hidden lg:pb-4 lg:pt-20">
+    <main className="relative mx-auto min-h-screen w-full max-w-7xl px-4 pb-10 pt-24 sm:px-6 md:px-8 md:pt-28 lg:h-svh lg:min-h-0 lg:overflow-hidden lg:pb-4 lg:pt-20">
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[72vh] overflow-hidden">
         <Particles
           particleCount={180}
@@ -564,7 +564,7 @@ function HomePage() {
               </span>
               2x 2nd Place Hackathon Winner
             </span>
-            <h1 className="font-display text-5xl font-bold leading-[1.05] md:text-7xl lg:text-6xl xl:text-7xl 2xl:text-8xl">
+            <h1 className="font-display text-4xl font-bold leading-[1.05] sm:text-5xl md:text-7xl lg:text-6xl xl:text-7xl 2xl:text-8xl">
               Hi, I'm <span className="gradient-text">Kgomotso</span>.
               <br />I build{" "}
               <span className="relative inline-grid align-baseline">
@@ -662,7 +662,7 @@ function AboutPage() {
       />
       <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
         <Reveal>
-          <div className="glass card-shadow h-full rounded-2xl border border-border p-8 leading-8 text-muted-foreground md:p-10">
+          <div className="glass card-shadow h-full rounded-2xl border border-border p-5 leading-8 text-muted-foreground sm:p-8 md:p-10">
             <h2 className="font-display text-2xl font-semibold text-foreground">I'm Kgomotso Mathombo.</h2>
             <div className="relative mt-5">
               <div className="space-y-4">
@@ -705,7 +705,7 @@ function SkillsPage() {
         copy="My work sits where frontend craft, mobile thinking, product design, and clear communication meet."
       />
 
-      <section className="glass card-shadow relative overflow-hidden rounded-3xl border border-border p-6 md:p-9">
+      <section className="glass card-shadow relative overflow-hidden rounded-3xl border border-border p-5 sm:p-6 md:p-9">
         <div className="gradient-hero-bg pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full opacity-15 blur-3xl" />
         <div className="relative grid gap-x-10 gap-y-7 md:grid-cols-2">
           {coreSkills.map((skill, index) => (
@@ -792,10 +792,10 @@ function ExperiencePage() {
   };
   return <PageShell>
     <PageIntro compact eyebrow="Experience / the journey so far" title="Five chapters. One growing story." copy="From first build to real-world delivery, every chapter has added a new layer: craft, context, confidence, and care." />
-    <section className="gradient-hero-bg glow-shadow relative mb-10 overflow-hidden rounded-3xl p-4 text-white md:p-6">
+    <section className="gradient-hero-bg glow-shadow relative mb-10 overflow-hidden rounded-3xl p-4 text-white sm:p-5 md:p-6">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.3),transparent_38%)]" />
       <div className="relative grid items-center gap-5 lg:grid-cols-[1fr_22rem]">
-        <div><span className="text-xs font-bold uppercase tracking-[.2em] text-white/75">Career snapshot</span><h2 className="mt-2 max-w-2xl font-display text-2xl font-bold md:text-4xl">Building, supporting and learning with heart.</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-white/80 md:text-base">A living record of how I move from ideas to impact — balancing product delivery, technical growth, mentorship, marketing, and the people behind every outcome.</p><div className="mt-5 grid max-w-xl gap-2 sm:grid-cols-3">{[{k:"5",v:"Experience chapters"},{k:"3+",v:"Years of experience"},{k:"2023",v:"Journey started"}].map(stat=><div key={stat.v} className="rounded-xl bg-white/12 px-3 py-3 backdrop-blur"><div className="font-display text-2xl font-bold">{stat.k}</div><div className="mt-0.5 text-xs text-white/75">{stat.v}</div></div>)}</div></div>
+        <div><span className="text-xs font-bold uppercase tracking-[.2em] text-white/75">Career snapshot</span><h2 className="mt-2 max-w-2xl font-display text-2xl font-bold md:text-4xl">Building, supporting and learning with heart.</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-white/80 md:text-base">A living record of how I move from ideas to impact — balancing product delivery, technical growth, mentorship, marketing, and the people behind every outcome.</p><div className="mt-5 grid max-w-xl grid-cols-3 gap-2">{[{k:"5",v:"Experience chapters"},{k:"3+",v:"Years of experience"},{k:"2023",v:"Journey started"}].map(stat=><div key={stat.v} className="rounded-xl bg-white/12 px-2 py-3 text-center backdrop-blur sm:px-3"><div className="font-display text-2xl font-bold">{stat.k}</div><div className="mt-0.5 text-[10px] leading-4 text-white/75 sm:text-xs">{stat.v}</div></div>)}</div></div>
         <div className="relative mx-auto w-full max-w-sm">
           <div className="relative overflow-hidden rounded-3xl border border-white/30 bg-black/20 p-2 shadow-2xl backdrop-blur-sm">
             <video
@@ -823,7 +823,7 @@ function ExperiencePage() {
       <motion.div style={{ top: duckTop }} className="pointer-events-none absolute left-7 z-10 w-12 -translate-x-1/2 -translate-y-1/2 md:left-1/2 md:w-14"><WalkingDuck /></motion.div>
       <div className="space-y-9 md:space-y-12">{[...experience].sort((a,b)=>Number(b.year)-Number(a.year)).map((item,index)=>{ const meta = experienceMeta[item.org]; return <Reveal key={`${item.org}-${item.role}`} delay={index*.05}><div className={`relative pl-20 md:pl-0 ${index%2===0?"md:pr-[calc(50%+3.5rem)]":"md:pl-[calc(50%+3.5rem)]"}`}>
         <div className="absolute left-0 top-6 z-20 grid h-14 w-14 place-items-center rounded-2xl bg-card p-1.5 shadow-xl md:left-1/2 md:-translate-x-1/2"><span className="gradient-hero-bg grid h-full w-full place-items-center rounded-xl px-1 text-xs font-black text-white">{item.year}</span></div>
-        <motion.article whileHover={{ y:-6, rotate:index%2===0?-.4:.4 }} className="glass card-shadow relative overflow-hidden rounded-3xl border border-border p-6 md:p-7"><div className="gradient-hero-bg absolute -right-16 -top-16 h-40 w-40 opacity-15 blur-3xl"/><div className="relative flex gap-4"><div className="grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-2xl bg-white p-0.5 shadow-md ring-1 ring-white/70"><img src={item.logo} alt={`${item.org} logo`} className="h-full w-full object-contain"/></div><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><span className="text-xs font-black uppercase tracking-[.18em] text-hotpink">Chapter {meta.chapter}</span><span className="rounded-full bg-muted px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{meta.focus}</span></div><div className="mt-2 text-xs font-bold uppercase tracking-[.16em] text-muted-foreground">{item.period}</div><h2 className="mt-1 font-display text-xl font-bold md:text-2xl">{item.role}</h2><div className="mt-1 text-sm font-semibold text-muted-foreground">{item.org}</div></div></div><div className="relative mt-5 rounded-2xl bg-muted/60 p-4"><div className="text-xs font-bold uppercase tracking-[.16em] text-hotpink">The through-line</div><p className="mt-2 text-sm font-medium leading-6 text-foreground">{meta.impact}</p></div><ul className="relative mt-5 space-y-2.5 text-sm leading-6 text-muted-foreground">{item.points.map(point=><li key={point} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hotpink"/><span>{point}</span></li>)}</ul><div className="relative mt-5 border-t border-border pt-5"><p className="text-sm leading-6 text-muted-foreground">{item.details[0]}</p><div className="mt-4 flex flex-wrap gap-2">{meta.tools.map(tool=><span key={tool} className="rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">{tool}</span>)}</div></div></motion.article>
+        <motion.article whileHover={{ y:-6, rotate:index%2===0?-.4:.4 }} className="glass card-shadow relative overflow-hidden rounded-3xl border border-border p-4 sm:p-6 md:p-7"><div className="gradient-hero-bg absolute -right-16 -top-16 h-40 w-40 opacity-15 blur-3xl"/><div className="relative flex gap-3 sm:gap-4"><div className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-2xl bg-white p-0.5 shadow-md ring-1 ring-white/70 sm:h-20 sm:w-20"><img src={item.logo} alt={`${item.org} logo`} className="h-full w-full object-contain"/></div><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><span className="text-xs font-black uppercase tracking-[.18em] text-hotpink">Chapter {meta.chapter}</span><span className="rounded-full bg-muted px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{meta.focus}</span></div><div className="mt-2 text-xs font-bold uppercase tracking-[.16em] text-muted-foreground">{item.period}</div><h2 className="mt-1 font-display text-lg font-bold sm:text-xl md:text-2xl">{item.role}</h2><div className="mt-1 text-sm font-semibold text-muted-foreground">{item.org}</div></div></div><div className="relative mt-5 rounded-2xl bg-muted/60 p-4"><div className="text-xs font-bold uppercase tracking-[.16em] text-hotpink">The through-line</div><p className="mt-2 text-sm font-medium leading-6 text-foreground">{meta.impact}</p></div><ul className="relative mt-5 space-y-2.5 text-sm leading-6 text-muted-foreground">{item.points.map(point=><li key={point} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hotpink"/><span>{point}</span></li>)}</ul><div className="relative mt-5 border-t border-border pt-5"><p className="text-sm leading-6 text-muted-foreground">{item.details[0]}</p><div className="mt-4 flex flex-wrap gap-2">{meta.tools.map(tool=><span key={tool} className="rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">{tool}</span>)}</div></div></motion.article>
       </div></Reveal>})}</div>
     </section>
   </PageShell>;
@@ -848,9 +848,9 @@ function ProjectsPage() {
       <div className="sticky top-20 z-20 mb-8 flex justify-center md:top-24">
         <div className="glass grid w-full max-w-lg grid-cols-3 gap-1 rounded-full border border-border p-1.5 shadow-lg">
           {filters.map((filter) => (
-            <button key={filter.value} type="button" aria-pressed={activeCategory === filter.value} onClick={() => setActiveCategory(filter.value)} className={`relative inline-flex min-w-0 items-center justify-center gap-1 rounded-full px-2 py-2 text-xs font-semibold transition sm:gap-2 sm:px-4 sm:text-sm ${activeCategory === filter.value ? "text-white" : "text-muted-foreground hover:text-foreground"}`}>
+            <button key={filter.value} type="button" aria-pressed={activeCategory === filter.value} onClick={() => setActiveCategory(filter.value)} className={`relative inline-flex min-w-0 items-center justify-center gap-1 rounded-full px-1.5 py-2 text-[11px] font-semibold transition sm:gap-2 sm:px-4 sm:text-sm ${activeCategory === filter.value ? "text-white" : "text-muted-foreground hover:text-foreground"}`}>
               {activeCategory === filter.value && <motion.span layoutId="project-category-slider" className="gradient-hero-bg absolute inset-0 rounded-full shadow-glow" transition={{ type: "spring", stiffness: 380, damping: 32 }} />}
-              <span className="relative z-10">{filter.label}</span><span className={`relative z-10 grid h-5 min-w-5 place-items-center rounded-full px-1 text-[10px] ${activeCategory === filter.value ? "bg-white/20" : "bg-muted"}`}>{filter.count}</span>
+              <span className="relative z-10 whitespace-nowrap">{filter.label}</span><span className={`relative z-10 grid h-5 min-w-5 place-items-center rounded-full px-1 text-[10px] ${activeCategory === filter.value ? "bg-white/20" : "bg-muted"}`}>{filter.count}</span>
             </button>
           ))}
         </div>
@@ -962,7 +962,7 @@ function ContactPage() {
     <PageShell>
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <Reveal>
-          <article className="glass card-shadow h-full rounded-2xl border border-border p-8 md:p-10">
+            <article className="glass card-shadow h-full rounded-2xl border border-border p-5 sm:p-8 md:p-10">
             <div className="mb-6 flex items-center gap-3">
               <div className="gradient-cool-bg grid h-11 w-11 shrink-0 place-items-center rounded-xl text-white">
                 <FileText className="h-5 w-5" />
@@ -1010,7 +1010,7 @@ function ContactPage() {
         </Reveal>
 
         <Reveal delay={0.08}>
-          <section className="gradient-hero-bg glow-shadow relative h-full overflow-hidden rounded-2xl p-8 text-white md:p-10">
+          <section className="gradient-hero-bg glow-shadow relative h-full overflow-hidden rounded-2xl p-5 sm:p-8 md:p-10">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.28),transparent_48%)]" />
             <div className="relative">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]">

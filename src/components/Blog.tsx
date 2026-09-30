@@ -315,7 +315,9 @@ export default function Blog() {
   };
 
   const uploadMediaFile = async (file: File): Promise<BlogMedia> => {
-    if (!supabase) throw new Error(supabaseUnavailableMessage);
+    if (!supabase) {
+      throw new Error('Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to enable uploads.');
+    }
 
     const error = getMediaValidationError(file);
     if (error) throw new Error(error);
@@ -369,6 +371,10 @@ export default function Blog() {
 
     const caption = draftCaption.trim();
     if (!caption) return;
+    if (!supabase) {
+      setMediaError('Supabase is not configured. Add the public Supabase environment variables before publishing posts.');
+      return;
+    }
 
     setIsLoading(true);
     const { data: post, error: postError } = await supabase.from('posts').insert({ caption, tags: parseTagList(draftTags) }).select().single();
@@ -409,6 +415,10 @@ export default function Blog() {
 
     const caption = editCaption.trim();
     if (!editingPostId || !caption) return;
+    if (!supabase) {
+      setEditMediaError('Supabase is not configured. Add the public Supabase environment variables before saving posts.');
+      return;
+    }
 
     setIsLoading(true);
     await supabase.from('posts').update({ caption, tags: parseTagList(editTags) }).eq('id', editingPostId);
@@ -490,6 +500,11 @@ export default function Blog() {
       setDeleteError('Password did not match. Post was not deleted.');
       return;
     }
+    if (!supabase) {
+      setDeleteError('Supabase is not configured. Add the public Supabase environment variables before deleting posts.');
+      return;
+    }
+
     await supabase.from('posts').delete().eq('id', deleteTarget.id);
     cancelDelete();
     await fetchPosts();
@@ -517,6 +532,10 @@ export default function Blog() {
   
   useEffect(() => {
     if (!supabase) return;
+    if (!isSupabaseConfigured || !supabase) {
+      console.info('Supabase is not configured; blog feed is using local defaults.');
+      return;
+    }
 
     supabase.from('posts').select('count', { count: 'exact', head: true })
       .then(({ error }) => {

@@ -590,6 +590,14 @@ function HomePage() {
                 Get in touch
               </Link>
             </div>
+            <div aria-label="Social links" className="flex items-center gap-2">
+              {socialLinks.map(({ label, href, icon: Icon }) => (
+                <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} className="group/social relative grid h-11 w-11 place-items-center rounded-full text-muted-foreground transition-all hover:-translate-y-1 hover:text-white focus-visible:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-hotpink">
+                  <span aria-hidden="true" className="gradient-hero-bg absolute inset-0 rounded-full opacity-0 shadow-glow transition-opacity group-hover/social:opacity-100 group-focus-visible/social:opacity-100" />
+                  <Icon className="relative h-6 w-6" />
+                </a>
+              ))}
+            </div>
           </div>
         </motion.div>
 
@@ -629,14 +637,6 @@ function HomePage() {
           </div>
         </motion.div>
       </div>
-      <aside aria-label="Social links" className="absolute bottom-5 right-4 z-20 flex gap-2 lg:bottom-auto lg:right-5 lg:top-1/2 lg:-translate-y-1/2 lg:flex-col">
-        {socialLinks.map(({ label, href, icon: Icon }) => (
-          <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} className="group/social relative grid h-11 w-11 place-items-center rounded-full text-muted-foreground transition-all hover:-translate-y-1 hover:text-white focus-visible:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-hotpink">
-            <span aria-hidden="true" className="gradient-hero-bg absolute inset-0 rounded-full opacity-0 shadow-glow transition-opacity group-hover/social:opacity-100 group-focus-visible/social:opacity-100" />
-            <Icon className="relative h-6 w-6" />
-          </a>
-        ))}
-      </aside>
     </main>
   );
 }

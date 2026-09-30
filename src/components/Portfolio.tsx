@@ -13,10 +13,13 @@ import {
   Code2,
   Database,
   Download,
+  ExternalLink,
   FileText,
   Github,
   GitBranch,
+  Globe2,
   GraduationCap,
+  Images,
   Linkedin,
   Mail,
   MapPin,
@@ -24,6 +27,7 @@ import {
   Moon,
   Palette,
   Phone,
+  PlayCircle,
   Smartphone,
   Sparkles,
   Sun,
@@ -37,7 +41,6 @@ import FlipCard from "./FlipCard";
 import MovingBackground from "./MovingBackground";
 import Particles from "./Particles";
 import WalkingDuck from "./WalkingDuck";
-import { HoverEffect } from "./ui/card-hover-effect";
 
 const words = ["delightful", "accessible", "performant", "beautiful"];
 const emailAddress = "kgomotsomathombo@gmail.com";
@@ -163,6 +166,13 @@ const skills = [
   { icon: Sparkles, title: "Soft skills", items: ["Tutoring", "Documentation", "Collaboration", "Problem solving"] },
 ];
 
+const coreSkills = [
+  { name: "Frontend development", level: 92, detail: "React · Next.js · TypeScript" },
+  { name: "Mobile development", level: 86, detail: "React Native · Cross-platform UI" },
+  { name: "UI/UX implementation", level: 88, detail: "Figma · Responsive systems" },
+  { name: "Backend & data", level: 76, detail: "Supabase · SQL · REST APIs" },
+];
+
 const experience = [
   {
     role: "Frontend & Mobile App Developer",
@@ -179,25 +189,6 @@ const experience = [
     details: [
       "As a Frontend and Mobile App Developer, I contribute to the design and development of responsive web and cross-platform mobile applications that prioritize performance, usability, and clean user experiences. Working closely with designers and backend developers, I transform UI/UX concepts into scalable, production-ready applications using modern frontend technologies.",
       "My role extends beyond writing code. I actively participate in agile development processes, collaborate during code reviews, troubleshoot technical challenges, and continuously seek opportunities to improve application quality and user satisfaction. This experience has strengthened my ability to work in fast-paced development environments while maintaining high standards of code quality and teamwork.",
-    ],
-  },
-  {
-    role: "Administration Support",
-    org: "iLitha Gaming",
-    period: "2026",
-    year: "2026",
-    theme: "Operations",
-    accent: "gradient-cool-bg",
-    logo: "/company-logos/ilitha.png",
-    points: [
-      "Managed registration workflows for players, participants, and gaming activities.",
-      "Handled day-to-day administration for a growing gaming company.",
-      "Kept records organized so events, onboarding, and internal operations could run smoothly.",
-      "Supported communication and coordination between the business and its community.",
-    ],
-    details: [
-      "At iLitha Gaming, I supported the administrative side of the company by managing registrations, organizing records, and helping keep operational processes clear and reliable. The work strengthened my attention to detail, communication, and ability to support a fast-moving entertainment and gaming environment.",
-      "This role gave me practical experience in business administration, user onboarding, and the behind-the-scenes systems that help a company serve its community consistently.",
     ],
   },
   {
@@ -236,33 +227,114 @@ const experience = [
       "This experience has significantly strengthened my communication, leadership, and mentoring abilities. It has taught me how to explain technical concepts clearly to different audiences, provide constructive guidance, and foster collaborative learning, skills that translate directly into effective teamwork within software development environments.",
     ],
   },
+  {
+    role: "Mobile Developer & Social Media Marketing",
+    org: "TechShield Connect",
+    period: "2023 - 2026",
+    year: "2023",
+    logo: "/experience/techshield.jpg",
+    points: [
+      "Contributed to mobile product development and user-focused interface delivery.",
+      "Created and coordinated social media content that strengthened digital visibility.",
+      "Connected product storytelling with practical marketing and community engagement.",
+    ],
+    details: [
+      "At TechShield Connect I worked across mobile development and social media marketing, bringing technical delivery and audience communication together. I supported app experiences while helping the brand present its work clearly and consistently online.",
+      "The role strengthened my ability to switch between product thinking, implementation, campaign support, content coordination, and direct collaboration with a growing team.",
+    ],
+  },
+  {
+    role: "Administration Support",
+    org: "iLitha Gaming",
+    period: "2026",
+    year: "2026",
+    logo: "/experience/ilitha-gaming-vibrant.png",
+    points: [
+      "Managed participant registration and accurate event administration.",
+      "Supported day-to-day gaming company operations and attendee coordination.",
+      "Kept records, communication, and event workflows organised and accessible.",
+    ],
+    details: [
+      "At iLitha Gaming I provide administration support for registrations and operational workflows. My work helps participants move smoothly through gaming activities while giving the team reliable, well-organised information.",
+      "This chapter adds event coordination, record management, customer support, and detail-focused administration to my broader digital product experience.",
+    ],
+  },
 ];
 const projects = [
   {
     name: "Imbewu — The Seed",
     tag: "2026 - 2nd Place Fintech Hackathon",
-    desc: "Won 2nd place with a marketplace concept that helps MSMEs and funders discover each other, connect, and build funding relationships through a trusted network.",
-    stack: ["React", "Mobile development", "HTML", "CSS", "JavaScript"],
-    featured: true,
+    order: 2,
+    desc: "Created for the UCT Fintech Winter School Hackathon, Imbewu is a fintech ecosystem connecting investors with SMEs seeking funding. It brings together an investment marketplace, Open Banking, AI-powered business tools, and transparent performance reporting—giving investors ongoing visibility while helping entrepreneurs grow sustainably. The platform responds directly to the funding gap facing SMEs across the Eastern Cape and South Africa, and earned our team second place at the hackathon.",
+    stack: ["React", "Mobile development", "Open Banking", "AI tools", "FinTech"],
+    category: "mobile" as const,
+    videoSrc: "/projects/imbewu-the-seed.mp4",
+    href: "https://github.com/MotsoM-dev/Imbewu-invest",
+    collaboration: "UCT Fintech team project",
+    isHackathon: true,
+    featured: false,
   },
   {
-    name: "FutureTrack",
-    tag: "2025 - Web Education",
-    desc: "Web platform of past papers, study resources, career exploration, and a university eligibility checker for South African Grade 10-12 learners.",
-    stack: ["HTML", "JavaScript", "CSS", "C#"],
+    name: "SpeedLoans",
+    tag: "2026 - Web application - FinTech",
+    order: 5,
+    desc: "A fast, fully digital lending experience that helps people apply for a loan in about seven minutes—without office visits, collateral, unnecessary paperwork, or drawn-out registration. Approved funds are paid directly into the applicant's bank account or card, turning an often stressful process into a clear, accessible online journey. I collaborated with the project team to help shape and deliver this streamlined web experience.",
+    stack: ["Web development", "Responsive UI", "FinTech", "Digital applications"],
+    category: "webapp" as const,
+    videoSrc: "/projects/speedloans.mp4",
+    href: "https://speedloans.co.za",
+    collaboration: "Collaborative project",
+    isHackathon: false,
   },
   {
-    name: "Cortex Hub - Human Rights Hackathon",
-    tag: "2025 - Civic Tech Hackathon",
-    desc: "Front-end and issue submission form that lets rural schools report infrastructure issues for faster resolution.",
-    stack: ["HTML", "CSS", "JavaScript"],
+    name: "Clearview Crescent Lodge",
+    tag: "2026 - Hospitality website - East London",
+    order: 4,
+    desc: "A warm, polished guest-house website created to turn a stay in Beacon Bay into an inviting digital experience. The site highlights Clearview's five luxury bedrooms, self-catering guest cottage, swimming pool and entertainment area while making it easy for visitors to explore the accommodation and plan a comfortable East London stay.",
+    stack: ["Hospitality website", "Responsive design", "Guest experience", "Visual storytelling"],
+    category: "website" as const,
+    videoSrc: "/projects/clearview-guest-house.mp4",
+    href: "https://visiteasterncape.co.za/listings/clearview-crescent-lodge/",
+    isHackathon: false,
+  },
+  {
+    name: "The Cortex Hub — Human Rights Hackathon",
+    tag: "2024 - Civic Tech Hackathon",
+    order: 6,
+    desc: "EduFix, created for The Cortex Hub's Human Rights Hackathon in 2024, is a civic technology web app that gives rural schools a clear, accessible way to report infrastructure problems and bring urgent learning-environment issues to the people who can resolve them.",
+    stack: ["HTML", "CSS", "JavaScript", "Civic technology"],
+    category: "webapp" as const,
+    videoSrc: "/projects/edufix.mp4",
+    href: "https://edufix.lovable.app/",
+    liveLabel: "Open live website",
+    isHackathon: true,
   },
   {
     name: "Telkom10x - Network Support Portal",
     tag: "2025 - 2nd Place Telkom Hackathon",
-    order: 2,
+    order: 3,
     desc: "Won 2nd place for a self-service network support portal concept with an AI assistant and community forum, focused on practical front-end flows for faster troubleshooting.",
-    stack: ["HTML", "CSS", "JavaScript"],
+    stack: ["Mobile development", "AI assistant", "Community support", "Frontend UX"],
+    category: "mobile" as const,
+    videoSrc: "/projects/telkom10x-network-support.mp4",
+    href: "https://github.com/MotsoM-dev?tab=repositories&q=network",
+    collaboration: "Telkom hackathon team project",
+    isHackathon: true,
+    featured: true,
+  },
+  {
+    name: "iLifa Mobile App",
+    tag: "2026 - Geekulcha Annual Hackathon",
+    order: 1,
+    desc: "iLifa is a heritage-first discovery app that turns the story of a place into a pathway toward experiencing and supporting the local economy around it. Visitors can explore historical photographs and selected 3D reconstructions, hear community stories in original languages, and understand the difference between lived memory, supporting evidence, and unresolved accounts. An AI History Guide supports thoughtful discovery, while Explore Nearby connects visitors with local restaurants, markets, guides, cultural experiences, and activities. Curated heritage trails and premium 3D/VR experiences extend the journey from Story → Place → Explore Nearby → Experience.",
+    stack: ["React Native", "Heritage discovery", "AI History Guide", "Community stories", "3D/VR experiences"],
+    category: "mobile" as const,
+    videoSrc: "/projects/geekulcha-annual-hackathon-2026.mp4",
+    href: "https://drive.google.com/file/d/1fvwnt1SD809E4GXK0LQwPm-0lYPmDtP5/view",
+    liveLabel: "Watch pitch video",
+    collaboration: "Geekulcha hackathon team project",
+    isHackathon: true,
+    featured: true,
   },
 ];
 const certs = ["UCT Fintech Winter School Hackathon Certificate", "Microsoft AI Fluency", "IBM Python for Data Science", "FNB App Academy - Full-Stack exposure"];
@@ -425,15 +497,20 @@ function Header({ theme, toggle }: { theme: "light" | "dark"; toggle: () => void
 function HomePage() {
   const typedWord = useTypewriter(words);
   const featuredProject = projects[0];
+  const socialLinks = [
+    { label: "GitHub", href: "https://github.com/MotsoM-dev", icon: Github },
+    { label: "LinkedIn", href: "https://linkedin.com/in/kgomotso-mathombo-a848a5386", icon: Linkedin },
+    { label: "Email", href: gmailComposeUrl, icon: Mail },
+  ];
 
   return (
-    <PageShell>
+    <main className="relative mx-auto min-h-screen w-full max-w-7xl px-4 pb-10 pt-24 md:px-8 md:pt-28 lg:h-svh lg:min-h-0 lg:overflow-hidden lg:pb-4 lg:pt-20">
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[72vh] overflow-hidden">
         <Particles
-          particleCount={140}
+          particleCount={180}
           particleSpread={12}
           speed={0.08}
-          particleBaseSize={120}
+          particleBaseSize={140}
           moveParticlesOnHover={true}
           particleHoverFactor={1.45}
           alphaParticles={true}
@@ -444,9 +521,9 @@ function HomePage() {
           className="h-full w-full"
         />
       </div>
-      <div className="grid min-h-[calc(100vh-8rem)] items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-        <Reveal>
-          <div className="flex flex-col items-start gap-6">
+      <div className="grid min-h-[calc(100vh-8rem)] items-center gap-8 lg:h-full lg:min-h-0 lg:grid-cols-[1.08fr_0.92fr] lg:gap-7">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <div className="flex flex-col items-start gap-4 xl:gap-5">
             <span className="glass inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 text-xs font-medium">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-hotpink opacity-75" />
@@ -454,7 +531,7 @@ function HomePage() {
               </span>
               2x 2nd Place Hackathon Winner
             </span>
-            <h1 className="font-display text-5xl font-bold leading-[1.05] md:text-7xl lg:text-8xl">
+            <h1 className="font-display text-5xl font-bold leading-[1.05] md:text-7xl lg:text-6xl xl:text-7xl 2xl:text-8xl">
               Hi, I'm <span className="gradient-text">Kgomotso</span>.
               <br />I build{" "}
               <span className="relative inline-grid align-baseline">
@@ -463,49 +540,31 @@ function HomePage() {
               </span>{" "}
               web & mobile apps.
             </h1>
-            <p className="max-w-2xl text-lg leading-8 text-muted-foreground md:text-xl">
-               <span className="font-semibold text-foreground">Frontend & Mobile App Developer</span>, BCom
-              Honours Information Systems student, and hackathon-tested builder focused on useful products with clean
-              interfaces.
+            <p className="max-w-2xl text-base leading-7 text-muted-foreground md:text-lg md:leading-8 xl:text-xl">
+              <span className="font-semibold text-foreground">Frontend & Mobile App Developer</span> with an NQF Level 8 Honours qualification in Information Systems, and a hackathon-tested builder focused on useful products with clean interfaces.
             </p>
-            <div className="flex flex-wrap gap-2.5">
+            <div className="flex flex-wrap gap-3">
               <Link
                 href="/projects"
-                className="gradient-hero-bg glow-shadow group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform hover:scale-105 md:px-6 md:py-3 md:text-base"
+                className="gradient-hero-bg glow-shadow group inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-primary-foreground transition-transform hover:scale-105"
               >
                 See my work <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium transition-colors hover:bg-muted md:px-6 md:py-3 md:text-base"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 font-medium transition-colors hover:bg-muted"
               >
                 Get in touch
               </Link>
             </div>
-            <div className="flex items-center gap-5 text-muted-foreground">
-              <a href="https://github.com/MotsoM-dev" target="_blank" rel="noreferrer" className="transition-colors hover:text-hotpink">
-                <Github className="h-5 w-5" />
-              </a>
-              <a
-                href="https://linkedin.com/in/kgomotso-mathombo-a848a5386"
-                target="_blank"
-                rel="noreferrer"
-                className="transition-colors hover:text-hotpink"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a href={gmailComposeUrl} target="_blank" rel="noreferrer" className="transition-colors hover:text-hotpink">
-                <Mail className="h-5 w-5" />
-              </a>
-            </div>
           </div>
-        </Reveal>
+        </motion.div>
 
-        <Reveal delay={0.12}>
-          <div className="grid gap-5">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.12 }}>
+          <div className="grid gap-4 xl:gap-5">
             <motion.article
               whileHover={{ y: -6 }}
-              className="glass card-shadow relative overflow-hidden rounded-2xl border border-border p-6 md:p-8"
+              className="glass card-shadow relative overflow-hidden rounded-2xl border border-border p-5 xl:p-7"
             >
               <div className="gradient-cool-bg absolute -right-20 -top-20 h-52 w-52 rounded-full opacity-35 blur-3xl" />
               <div className="relative flex items-start gap-4">
@@ -514,8 +573,8 @@ function HomePage() {
                 </div>
                 <div>
                   <div className="text-xs font-semibold uppercase tracking-[0.2em] text-hotpink">Recent win</div>
-                  <h2 className="mt-2 font-display text-2xl font-bold">{featuredProject.name}</h2>
-                  <p className="mt-3 leading-7 text-muted-foreground">{featuredProject.desc}</p>
+                  <h2 className="mt-2 font-display text-xl font-bold xl:text-2xl">{featuredProject.name}</h2>
+                  <p className="mt-2 line-clamp-4 text-sm leading-6 text-muted-foreground xl:mt-3 xl:text-base xl:leading-7">{featuredProject.desc}</p>
                 </div>
               </div>
             </motion.article>
@@ -527,7 +586,7 @@ function HomePage() {
                 { k: "3", v: "Hackathons" },
               ].map((stat, index) => (
                 <Reveal key={stat.v} delay={index * 0.05}>
-                  <div className="glass card-shadow rounded-2xl border border-border p-5 text-center">
+                  <div className="glass card-shadow rounded-2xl border border-border p-3 text-center xl:p-5">
                     <div className="gradient-text font-display text-3xl font-bold">{stat.k}</div>
                     <div className="mt-1 text-sm text-muted-foreground">{stat.v}</div>
                   </div>
@@ -535,14 +594,22 @@ function HomePage() {
               ))}
             </div>
           </div>
-        </Reveal>
+        </motion.div>
       </div>
-    </PageShell>
+      <aside aria-label="Social links" className="absolute bottom-5 right-4 z-20 flex gap-2 lg:bottom-auto lg:right-5 lg:top-1/2 lg:-translate-y-1/2 lg:flex-col">
+        {socialLinks.map(({ label, href, icon: Icon }) => (
+          <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} className="group/social relative grid h-11 w-11 place-items-center rounded-full text-muted-foreground transition-all hover:-translate-y-1 hover:text-white focus-visible:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-hotpink">
+            <span aria-hidden="true" className="gradient-hero-bg absolute inset-0 rounded-full opacity-0 shadow-glow transition-opacity group-hover/social:opacity-100 group-focus-visible/social:opacity-100" />
+            <Icon className="relative h-6 w-6" />
+          </a>
+        ))}
+      </aside>
+    </main>
   );
 }
 
 const aboutParagraphs = [
-  "I'm a Frontend and Mobile App Developer from South Africa currently completing a BCom Honours in Information Systems. My passion lies at the intersection of technology, creativity, and problem-solving, where clean code meets thoughtful design to create products that make a genuine impact.",
+  "I'm a Frontend and Mobile App Developer based in Gauteng, South Africa, with an NQF Level 8 Honours qualification in Information Systems from the University of Fort Hare. My passion lies at the intersection of technology, creativity, and problem-solving, where clean code meets thoughtful design to create products that make a genuine impact.",
   "Beyond writing code, I'm driven by curiosity. Whether I'm exploring cloud technologies, cybersecurity, artificial intelligence, or emerging software trends, I'm constantly investing in becoming a stronger engineer. I believe great developers never stop learning, and every project is an opportunity to improve both technically and creatively.",
   "My experience spans industry development, systems development training, university tutoring, and collaborative hackathons, giving me the ability to communicate technical ideas clearly, adapt quickly, and thrive in fast-paced environments. I enjoy working with diverse teams, solving complex problems, and building software that delivers measurable value.",
   "What truly defines me is my mindset. I approach challenges with discipline, ownership, and a commitment to excellence. I'm not simply looking to write code. I'm looking to contribute to products that improve people's lives, collaborate with ambitious teams across the world, and continue growing into a software engineer capable of leading impactful projects.",
@@ -604,6 +671,24 @@ function SkillsPage() {
         title="A stack I keep sharpening."
         copy="My work sits where frontend craft, mobile thinking, product design, and clear communication meet."
       />
+
+      <section className="glass card-shadow relative overflow-hidden rounded-3xl border border-border p-6 md:p-9">
+        <div className="gradient-hero-bg pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full opacity-15 blur-3xl" />
+        <div className="relative grid gap-x-10 gap-y-7 md:grid-cols-2">
+          {coreSkills.map((skill, index) => (
+            <motion.div key={skill.name} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.1 + index * 0.1 }}>
+              <div className="mb-2 flex items-end justify-between gap-4"><div><h2 className="font-display text-lg font-semibold">{skill.name}</h2><p className="mt-1 text-xs text-muted-foreground">{skill.detail}</p></div><span className="font-display text-xl font-bold text-hotpink">{skill.level}%</span></div>
+              <div className="relative h-3 overflow-hidden rounded-full bg-muted shadow-inner">
+                <motion.div className="gradient-hero-bg relative h-full origin-left overflow-hidden rounded-full" initial={{ scaleX: 0 }} animate={{ scaleX: skill.level / 100 }} transition={{ duration: 1.15, delay: 0.2 + index * 0.12, ease: [0.22, 1, 0.36, 1] }}>
+                  <motion.span className="absolute inset-y-0 w-24 bg-linear-to-r from-transparent via-white/55 to-transparent" animate={{ x: ["-120%", "520%"] }} transition={{ duration: 2.2, delay: 0.8 + index * 0.12, repeat: Infinity, repeatDelay: 1.4, ease: "easeInOut" }} />
+                </motion.div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <div className="mb-5 mt-12"><span className="text-xs font-semibold uppercase tracking-[0.18em] text-hotpink">Toolkit</span><h2 className="mt-2 font-display text-2xl font-semibold">The tools behind the progress.</h2></div>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {skills.map((skill, index) => (
           <Reveal key={skill.title} delay={index * 0.05}>
@@ -692,7 +777,7 @@ function ExperiencePage() {
               className="aspect-video w-full rounded-2xl object-cover"
               aria-label={isExploring ? "Dukie flying toward the experience timeline" : "Talking Dukie inviting you to explore the timeline"}
             />
-            {!isExploring && <div className="absolute left-4 top-4 max-w-[10rem] rounded-xl rounded-bl-sm bg-white px-2.5 py-2 text-xs font-bold leading-4 text-hotpink shadow-xl">Would you like to see Motso's Timeline?</div>}
+            {!isExploring && <div className="absolute left-4 top-4 max-w-40 rounded-xl rounded-bl-sm bg-white px-2.5 py-2 text-xs font-bold leading-4 text-hotpink shadow-xl">Would you like to see Motso's Timeline?</div>}
           </div>
           {!isExploring && <button type="button" onClick={handleExplore} className="gradient-pink-bg group mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-white shadow-xl transition hover:-translate-y-1 hover:brightness-110">Explore <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></button>}
           {isExploring && <div className="mt-3 text-center text-xs font-semibold text-white/75">Dukie is flying to your timeline…</div>}
@@ -701,43 +786,113 @@ function ExperiencePage() {
     </section>
     <section ref={timelineRef} className="relative mx-auto max-w-6xl">
       <div className="absolute bottom-0 left-7 top-0 w-1 rounded-full bg-linear-to-b from-hotpink via-violet to-teal md:left-1/2 md:-translate-x-1/2" />
-      <motion.div style={{ top: duckTop }} className="pointer-events-none absolute left-7 z-10 w-16 -translate-x-1/2 -translate-y-1/2 md:left-1/2 md:w-20"><WalkingDuck /></motion.div>
+      <motion.div style={{ top: duckTop }} className="pointer-events-none absolute left-7 z-10 w-12 -translate-x-1/2 -translate-y-1/2 md:left-1/2 md:w-14"><WalkingDuck /></motion.div>
       <div className="space-y-9 md:space-y-12">{[...experience].sort((a,b)=>Number(b.year)-Number(a.year)).map((item,index)=><Reveal key={`${item.org}-${item.role}`} delay={index*.05}><div className={`relative pl-20 md:pl-0 ${index%2===0?"md:pr-[calc(50%+3.5rem)]":"md:pl-[calc(50%+3.5rem)]"}`}>
         <div className="absolute left-0 top-6 z-20 grid h-14 w-14 place-items-center rounded-2xl bg-card p-1.5 shadow-xl md:left-1/2 md:-translate-x-1/2"><span className="gradient-hero-bg grid h-full w-full place-items-center rounded-xl px-1 text-xs font-black text-white">{item.year}</span></div>
-        <motion.article whileHover={{ y:-6, rotate:index%2===0?-.4:.4 }} className="glass card-shadow relative overflow-hidden rounded-3xl border border-border p-6 md:p-7"><div className="gradient-hero-bg absolute -right-16 -top-16 h-40 w-40 opacity-15 blur-3xl"/><div className="relative flex gap-4"><div className="grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-2xl bg-white p-1 shadow-md ring-1 ring-white/70"><img src={item.logo} alt={`${item.org} logo`} className="h-full w-full object-contain"/></div><div><div className="text-xs font-bold uppercase tracking-[.16em] text-hotpink">{item.period}</div><h2 className="mt-1 font-display text-xl font-bold md:text-2xl">{item.role}</h2><div className="mt-1 text-sm font-semibold text-muted-foreground">{item.org}</div></div></div><ul className="relative mt-5 space-y-2.5 text-sm leading-6 text-muted-foreground">{item.points.map(point=><li key={point} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hotpink"/><span>{point}</span></li>)}</ul></motion.article>
+        <motion.article whileHover={{ y:-6, rotate:index%2===0?-.4:.4 }} className="glass card-shadow relative overflow-hidden rounded-3xl border border-border p-6 md:p-7"><div className="gradient-hero-bg absolute -right-16 -top-16 h-40 w-40 opacity-15 blur-3xl"/><div className="relative flex gap-4"><div className="grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-2xl bg-white p-0.5 shadow-md ring-1 ring-white/70"><img src={item.logo} alt={`${item.org} logo`} className="h-full w-full object-contain"/></div><div><div className="text-xs font-bold uppercase tracking-[.16em] text-hotpink">{item.period}</div><h2 className="mt-1 font-display text-xl font-bold md:text-2xl">{item.role}</h2><div className="mt-1 text-sm font-semibold text-muted-foreground">{item.org}</div></div></div><ul className="relative mt-5 space-y-2.5 text-sm leading-6 text-muted-foreground">{item.points.map(point=><li key={point} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hotpink"/><span>{point}</span></li>)}</ul></motion.article>
       </div></Reveal>)}</div>
     </section>
   </PageShell>;
 }
 function ProjectsPage() {
-  const projectItems = projects.map((project) => ({
-    title: project.name,
-    description: project.desc,
-    tag: project.tag,
-    stack: project.stack,
-    featured: project.featured,
-    icon: project.featured ? <Trophy className="h-4 w-4 text-hotpink transition-colors group-hover/card:text-white" /> : <Code2 className="h-4 w-4 text-hotpink transition-colors group-hover/card:text-white" />,
-  }));
+  const [activeCategory, setActiveCategory] = useState<"mobile" | "website" | "webapp">("mobile");
+  const visibleProjects = projects.filter((project) => project.category === activeCategory).sort((a, b) => a.order - b.order);
+  const filters = [
+    { value: "mobile" as const, label: "Mobile apps", count: projects.filter((project) => project.category === "mobile").length },
+    { value: "website" as const, label: "Websites", count: projects.filter((project) => project.category === "website").length },
+    { value: "webapp" as const, label: "Web apps", count: projects.filter((project) => project.category === "webapp").length },
+  ];
 
   return (
     <PageShell>
       <PageIntro
-        eyebrow="Selected projects"
-        title="Things I've shipped, prototyped, and pitched."
-        copy="A portfolio of practical interfaces, civic ideas, mobile workflows, and fintech problem-solving."
+        eyebrow="Project library"
+        title="Built for the web. Designed for mobile."
+        copy="Explore product stories, interface previews, technologies, and the thinking behind each build."
       />
-      <Reveal>
-        <section className="relative overflow-hidden rounded-3xl border border-border bg-card/35 p-3 md:p-5">
-          <div className="gradient-hero-bg pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full opacity-15 blur-3xl" />
-          <div className="gradient-cool-bg pointer-events-none absolute -bottom-28 left-8 h-72 w-72 rounded-full opacity-15 blur-3xl" />
-          <HoverEffect items={projectItems} className="relative z-10" />
-        </section>
-      </Reveal>
+
+      <div className="sticky top-20 z-20 mb-8 flex justify-center md:top-24">
+        <div className="glass grid w-full max-w-lg grid-cols-3 gap-1 rounded-full border border-border p-1.5 shadow-lg">
+          {filters.map((filter) => (
+            <button key={filter.value} type="button" aria-pressed={activeCategory === filter.value} onClick={() => setActiveCategory(filter.value)} className={`relative inline-flex min-w-0 items-center justify-center gap-1 rounded-full px-2 py-2 text-xs font-semibold transition sm:gap-2 sm:px-4 sm:text-sm ${activeCategory === filter.value ? "text-white" : "text-muted-foreground hover:text-foreground"}`}>
+              {activeCategory === filter.value && <motion.span layoutId="project-category-slider" className="gradient-hero-bg absolute inset-0 rounded-full shadow-glow" transition={{ type: "spring", stiffness: 380, damping: 32 }} />}
+              <span className="relative z-10">{filter.label}</span><span className={`relative z-10 grid h-5 min-w-5 place-items-center rounded-full px-1 text-[10px] ${activeCategory === filter.value ? "bg-white/20" : "bg-muted"}`}>{filter.count}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <motion.section layout className="grid gap-7">
+        {visibleProjects.map((project, index) => {
+          const isMobile = project.category === "mobile";
+          const hasVideo = "videoSrc" in project;
+          return (
+            <motion.article layout key={project.name} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: index * 0.06 }} className="glass card-shadow group overflow-hidden rounded-3xl border border-border">
+              <div className={`grid ${index % 2 === 1 ? "lg:grid-cols-[0.9fr_1.1fr]" : "lg:grid-cols-[1.1fr_0.9fr]"}`}>
+                <div className={`relative min-h-80 overflow-hidden bg-muted p-5 md:min-h-104 md:p-8 ${index % 2 === 1 ? "lg:order-2" : ""}`}>
+                  <div className={`absolute inset-0 opacity-90 ${index % 3 === 0 ? "gradient-hero-bg" : index % 3 === 1 ? "gradient-cool-bg" : "gradient-pink-bg"}`} />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.25),transparent_30%),radial-gradient(circle_at_80%_80%,rgba(255,255,255,0.18),transparent_32%)]" />
+
+                  {hasVideo && isMobile ? (
+                    <div className="relative flex h-full min-h-128 items-center justify-center py-6">
+                      <motion.div aria-hidden="true" className="gradient-hero-bg absolute h-72 w-72 rounded-full opacity-45 blur-3xl" animate={{ scale: [0.9, 1.14, 0.9], rotate: [0, 90, 180] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
+                      <motion.div aria-hidden="true" className="absolute h-80 w-80 rounded-full border border-white/25" animate={{ scale: [0.86, 1.08, 0.86], opacity: [0.2, 0.65, 0.2] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />
+                      <motion.div className="relative z-10 w-60 rounded-[3.5rem] bg-linear-to-b from-slate-700 via-slate-950 to-black p-2 shadow-[0_35px_80px_-22px_rgba(0,0,0,0.85)] md:w-68" animate={{ y: [0, -8, 0], rotate: [-1.5, 1, -1.5] }} whileHover={{ y: -12, rotate: 0, scale: 1.045 }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
+                        <span className="absolute -left-1 top-24 h-12 w-1 rounded-l-full bg-slate-700" /><span className="absolute -left-1 top-40 h-16 w-1 rounded-l-full bg-slate-700" /><span className="absolute -right-1 top-32 h-20 w-1 rounded-r-full bg-slate-700" />
+                        <div className="relative aspect-9/18.5 overflow-hidden rounded-[3rem] bg-black ring-1 ring-white/15">
+                          <video src={project.videoSrc} controls autoPlay loop muted playsInline preload="metadata" className="h-full w-full bg-black object-cover">Your browser does not support the mobile project video.</video>
+                          <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-linear-to-r from-white/12 to-transparent opacity-60" />
+                          <div className="pointer-events-none absolute left-1/2 top-2 h-6 w-24 -translate-x-1/2 rounded-full bg-slate-950 shadow-md"><span className="absolute right-3 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-slate-700" /></div>
+                        </div>
+                      </motion.div>
+                      <motion.div aria-hidden="true" className="glass absolute left-0 top-16 z-20 rounded-full px-3 py-2 text-xs font-semibold text-white shadow-lg md:left-4" animate={{ y: [0, -10, 0] }} transition={{ duration: 4.2, repeat: Infinity }}>AI-powered tools</motion.div>
+                      <motion.div aria-hidden="true" className="glass absolute bottom-20 right-0 z-20 rounded-full px-3 py-2 text-xs font-semibold text-white shadow-lg md:right-3" animate={{ y: [0, 10, 0] }} transition={{ duration: 4.8, repeat: Infinity }}>{project.name.startsWith("Imbewu") ? "Open Banking" : "Smart support"}</motion.div>
+                      <div className="pointer-events-none absolute bottom-2 right-1 z-20 flex items-center gap-2 rounded-full bg-black/45 px-3 py-2 text-xs font-semibold text-white backdrop-blur-xl"><PlayCircle className="h-4 w-4 animate-pulse" /> Mobile walkthrough</div>
+                    </div>
+                  ) : hasVideo ? (
+                    <div className="relative flex h-full items-center justify-center">
+                      <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl bg-slate-950 shadow-2xl transition duration-500 group-hover:-translate-y-1 group-hover:scale-[1.01]">
+                        <div className="flex h-9 items-center gap-1.5 border-b border-white/10 px-3"><span className="h-2.5 w-2.5 rounded-full bg-red-400" /><span className="h-2.5 w-2.5 rounded-full bg-amber-400" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-400" /><div className="ml-3 h-4 flex-1 rounded-full bg-white/10" /></div>
+                        <video src={project.videoSrc} controls autoPlay loop muted playsInline preload="metadata" className="aspect-video w-full bg-black object-contain">Your browser does not support this project video.</video>
+                      </div>
+                    </div>
+                  ) : isMobile ? (
+                    <div className="relative mx-auto flex h-full max-w-sm items-center justify-center">
+                      <div className="relative w-52 rotate-[-4deg] rounded-[2.8rem] border-[7px] border-slate-950 bg-white p-2 shadow-2xl transition duration-500 group-hover:-rotate-1 group-hover:scale-105 md:w-60">
+                        <div className="aspect-9/17 overflow-hidden rounded-[2rem] bg-slate-950 p-4 text-white"><div className="mx-auto h-1.5 w-14 rounded-full bg-white/20" /><div className="mt-8 text-xs font-semibold uppercase tracking-[0.18em] text-teal">Learning companion</div><div className="mt-3 font-display text-2xl font-bold">Plan. Learn. Progress.</div><div className="mt-6 grid gap-2">{["Past papers", "Career paths", "Eligibility"].map((label) => <div key={label} className="rounded-xl bg-white/10 px-3 py-2 text-xs">{label}</div>)}</div></div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="relative flex h-full items-center justify-center">
+                      <div className="w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl transition duration-500 group-hover:-translate-y-2 group-hover:scale-[1.02] dark:bg-slate-900"><div className="flex h-9 items-center gap-1.5 border-b border-black/10 px-3 dark:border-white/10"><span className="h-2.5 w-2.5 rounded-full bg-red-400" /><span className="h-2.5 w-2.5 rounded-full bg-amber-400" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-400" /></div><div className="aspect-video p-5"><div className="gradient-hero-bg h-2/5 rounded-xl p-4 text-white"><div className="font-display text-xl font-bold">Project preview</div></div><div className="mt-4 grid grid-cols-3 gap-3">{[0, 1, 2].map((item) => <div key={item} className="aspect-4/3 rounded-lg bg-black/5 dark:bg-white/10" />)}</div></div></div>
+                      <div className="absolute bottom-1 right-1 flex items-center gap-2 rounded-full bg-white/20 px-3 py-2 text-xs font-semibold text-white backdrop-blur-xl"><Images className="h-4 w-4" /> Screenshot gallery</div>
+                    </div>
+                  )}
+                </div>
+
+                <div className={`flex flex-col justify-center p-6 md:p-10 lg:p-12 ${index % 2 === 1 ? "lg:order-1" : ""}`}>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="inline-flex items-center gap-2 rounded-full bg-hotpink/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-hotpink">{isMobile ? <Smartphone className="h-4 w-4" /> : <Globe2 className="h-4 w-4" />}{isMobile ? "Mobile app" : project.category === "website" ? "Website" : "Web app"}</span>
+                    {project.isHackathon && <span className="inline-flex items-center gap-1.5 rounded-full bg-violet/10 px-3 py-1.5 text-xs font-semibold text-violet"><Trophy className="h-3.5 w-3.5" /> Hackathon</span>}
+                    {project.featured && <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/15 px-3 py-1.5 text-xs font-semibold text-amber-500"><Trophy className="h-3.5 w-3.5" /> Award winner</span>}
+                    {"collaboration" in project && <span className="inline-flex items-center gap-1.5 rounded-full bg-teal/10 px-3 py-1.5 text-xs font-semibold text-teal"><GitBranch className="h-3.5 w-3.5" /> {project.collaboration}</span>}
+                  </div>
+                  <div className="mt-5 text-sm font-semibold text-muted-foreground">{project.tag}</div>
+                  <h2 className="mt-2 font-display text-3xl font-bold leading-tight md:text-4xl">{project.name}</h2>
+                  <p className="mt-5 text-base leading-8 text-muted-foreground">{project.desc}</p>
+                  <div className="mt-6 flex flex-wrap gap-2">{project.stack.map((tech) => <span key={tech} className="rounded-full border border-border bg-background/70 px-3 py-1.5 text-xs font-semibold text-muted-foreground">{tech}</span>)}</div>
+                  <a href={project.href} target="_blank" rel="noreferrer" className="group/link mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background transition hover:bg-hotpink hover:text-white">{"liveLabel" in project ? project.liveLabel : "View project"} <ExternalLink className="h-4 w-4 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" /></a>
+                </div>
+              </div>
+            </motion.article>
+          );
+        })}
+      </motion.section>
     </PageShell>
   );
 }
 const coverLetterParagraphs = [
-  "Thank you for taking the time to visit my portfolio. I'm a Frontend and Mobile App Developer currently completing my BCom Honours in Information Systems while gaining industry experience at Appimate and through a MICTSETA Systems Development Learnership. I enjoy turning ideas into responsive web applications and cross-platform mobile experiences that are intuitive, scalable, and built with users in mind.",
+  "Thank you for taking the time to visit my portfolio. I'm a Frontend and Mobile App Developer with a completed NQF Level 8 Honours in Information Systems from the University of Fort Hare, alongside industry experience at Appimate and through a MICTSETA Systems Development Learnership. I enjoy turning ideas into responsive web applications and cross-platform mobile experiences that are intuitive, scalable, and built with users in mind.",
 
   "Working in Agile product teams has taught me how to collaborate across design, backend, and QA while managing priorities and delivering production-ready features through disciplined Git/GitHub workflows. I build with React, Next.js, TypeScript, React Native, HTML, CSS, and modern development tools, always focusing on writing clean, maintainable code that creates real value. Alongside development, two years of tutoring Information Systems strengthened my communication skills and my ability to explain technical concepts clearly, making collaboration with both technical and non-technical teams natural.",
 

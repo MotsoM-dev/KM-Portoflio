@@ -395,11 +395,6 @@ export default function Blog() {
     const caption = draftCaption.trim();
     if (!caption) return;
     if (!supabase) {
-      setMediaError('Supabase is not configured. Add the public Supabase environment variables before publishing posts.');
-      return;
-    }
-
-    if (!supabase) {
       const localPost: VisualPost = { id: crypto.randomUUID(), caption, tags: parseTagList(draftTags), createdAt: new Date().toISOString(), media: draftMedia };
       writeLocalPosts([localPost, ...readLocalPosts()]);
       setDraftCaption(''); setDraftTags(''); setDraftMedia([]); setMediaError('');
@@ -441,11 +436,6 @@ export default function Blog() {
     event.preventDefault();
     const caption = editCaption.trim();
     if (!editingPostId || !caption) return;
-    if (!supabase) {
-      setEditMediaError('Supabase is not configured. Add the public Supabase environment variables before saving posts.');
-      return;
-    }
-
     if (!supabase) {
       writeLocalPosts(readLocalPosts().map((post) => post.id === editingPostId ? { ...post, caption, tags: parseTagList(editTags), media: editMedia } : post));
       cancelEditing();

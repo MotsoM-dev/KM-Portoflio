@@ -295,6 +295,7 @@ const projects = [
     category: "website" as const,
     videoSrc: "/projects/clearview-guest-house.mp4",
     href: "https://visiteasterncape.co.za/listings/clearview-crescent-lodge/",
+    collaboration: "Collaborative project",
     isHackathon: false,
   },
   {

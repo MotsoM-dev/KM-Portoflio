@@ -573,20 +573,22 @@ export default function Blog() {
   }, []);
 
   return (
-    <main className='mx-auto min-h-screen w-full max-w-7xl px-4 pb-20 pt-28 md:px-8 md:pt-32'>
-      <motion.section initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} className='glass card-shadow relative overflow-hidden rounded-3xl border border-border p-6 md:p-10'>
+    <main className='mx-auto min-h-screen w-full max-w-7xl px-4 pb-16 pt-28 sm:px-6 md:px-8 md:pb-20 md:pt-32'>
+      <motion.section initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} className='glass card-shadow relative overflow-hidden rounded-3xl border border-border p-5 sm:p-7 md:p-10'>
         <motion.div aria-hidden='true' className='gradient-hero-bg absolute -right-28 -top-32 h-80 w-80 rounded-full opacity-25 blur-3xl' animate={{ scale: [1, 1.15, 1], rotate: [0, 18, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }} />
         <motion.div aria-hidden='true' className='gradient-cool-bg absolute -bottom-32 left-8 h-72 w-72 rounded-full opacity-20 blur-3xl' animate={{ x: [0, 24, 0], y: [0, -18, 0] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} />
         <div className='relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_25rem] lg:items-end'>
-          <div>
+          <div className='relative'>
             <span className='inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-hotpink'><Sparkles className='h-4 w-4' /> MotsoM Feed</span>
-            <h1 className='mt-5 max-w-3xl font-display text-4xl font-bold leading-tight md:text-6xl'>Visual notes from the build.</h1>
+            <div className='mt-5 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.24em] text-muted-foreground'><span className='h-px w-8 bg-hotpink' /> Build log / 2026</div>
+            <h1 className='mt-3 max-w-3xl font-display text-4xl font-bold leading-[1.02] sm:text-5xl md:text-6xl'>Visual notes from the build<span className='gradient-text'>.</span></h1>
             <p className='mt-5 max-w-2xl text-base leading-8 text-muted-foreground md:text-lg'>A polished blog space for pictures, videos, captions, hashtags, and the product ideas I am exploring across mobile, web, fintech, security, and design.</p>
             <div className='mt-6 flex flex-wrap gap-2'>
               {activeTags.map((tag) => <span key={tag} className='rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-muted-foreground'>{tag}</span>)}
             </div>
           </div>
-          <div className='relative rounded-3xl border border-border bg-background/65 p-5 backdrop-blur'>
+          <div className='relative rounded-3xl border border-border bg-background/65 p-5 backdrop-blur sm:p-6'>
+            <div className='mb-5 flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground'><span>Creator profile</span><span className='rounded-full bg-hotpink/10 px-2 py-1 text-hotpink'>Live</span></div>
             <div className='flex items-center gap-4'>
               <Avatar size='lg' />
               <div>
@@ -595,9 +597,16 @@ export default function Blog() {
               </div>
             </div>
             <p className='mt-4 text-sm leading-7 text-muted-foreground'>A creator feed for what I am learning, shipping, testing, and thinking about while building digital products.</p>
+            <div className='mt-5 rounded-2xl bg-muted/60 p-3 text-xs leading-5 text-muted-foreground'><span className='font-semibold text-foreground'>Currently exploring</span><br />{interests[0]} · interface experiments · product stories</div>
           </div>
         </div>
       </motion.section>
+
+      <div className='mt-4 grid grid-cols-3 gap-2 sm:gap-3'>
+        {[{ value: posts.length, label: 'Published notes' }, { value: interests.length, label: 'Build signals' }, { value: posts.reduce((total, post) => total + post.media.length, 0), label: 'Media moments' }].map((stat) => (
+          <div key={stat.label} className='glass rounded-2xl border border-border px-3 py-3 text-center sm:px-4'><div className='gradient-text font-display text-xl font-bold sm:text-2xl'>{stat.value}</div><div className='mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:text-xs'>{stat.label}</div></div>
+        ))}
+      </div>
 
       <section className='mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem]'>
         <div className='min-w-0 space-y-6'>
@@ -670,6 +679,7 @@ export default function Blog() {
                         <CardItem translateZ={70} className='relative block w-full'>
                           <div className='relative aspect-4/3 w-full overflow-hidden rounded-t-3xl bg-muted'>
                             <MediaCollage media={post.media} caption={post.caption} index={index} />
+                            <div className='absolute left-4 top-4 grid h-9 w-9 place-items-center rounded-full border border-white/25 bg-black/30 font-display text-xs font-bold text-white backdrop-blur'>0{index + 1}</div>
                             <div className='absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 to-transparent p-4'>
                               <div className='flex flex-wrap items-center justify-between gap-2'>
                                 <div className='inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur'>

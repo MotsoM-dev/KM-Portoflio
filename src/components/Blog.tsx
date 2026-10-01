@@ -585,16 +585,16 @@ export default function Blog() {
   }, []);
 
   return (
-    <main className='mx-auto min-h-screen w-full max-w-7xl px-4 pb-16 pt-28 sm:px-6 md:px-8 md:pb-20 md:pt-32'>
-      <motion.section initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} className='glass card-shadow relative overflow-hidden rounded-3xl border border-border p-5 sm:p-7 md:p-10'>
+    <main className='blog-page mx-auto min-h-screen w-full max-w-7xl px-4 pb-16 pt-28 sm:px-6 md:px-8 md:pb-20 md:pt-32'>
+      <motion.section initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} className='blog-hero glass card-shadow relative overflow-hidden rounded-3xl border border-border p-5 sm:p-7 md:p-10'>
         <motion.div aria-hidden='true' className='gradient-hero-bg absolute -right-28 -top-32 h-80 w-80 rounded-full opacity-25 blur-3xl' animate={{ scale: [1, 1.15, 1], rotate: [0, 18, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }} />
         <motion.div aria-hidden='true' className='gradient-cool-bg absolute -bottom-32 left-8 h-72 w-72 rounded-full opacity-20 blur-3xl' animate={{ x: [0, 24, 0], y: [0, -18, 0] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} />
         <div className='relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_25rem] lg:items-end'>
           <div className='relative'>
             <span className='inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-hotpink'><Sparkles className='h-4 w-4' /> MotsoM Feed</span>
             <div className='mt-5 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.24em] text-muted-foreground'><span className='h-px w-8 bg-hotpink' /> Build log / 2026</div>
-            <h1 className='mt-3 max-w-3xl font-display text-4xl font-bold leading-[1.02] sm:text-5xl md:text-6xl'>Visual notes from the build<span className='gradient-text'>.</span></h1>
-            <p className='mt-5 max-w-2xl text-base leading-8 text-muted-foreground md:text-lg'>A polished blog space for pictures, videos, captions, hashtags, and the product ideas I am exploring across mobile, web, fintech, security, and design.</p>
+            <h1 className='blog-hero-title mt-3 max-w-3xl font-display text-4xl font-bold leading-[1.02] sm:text-5xl md:text-6xl'>A living studio for ideas<span className='gradient-text'>.</span></h1>
+            <p className='mt-5 max-w-2xl text-base leading-8 text-muted-foreground md:text-lg'>Behind-the-build notes, visual experiments, and product stories from the intersection of technology, culture, and thoughtful design.</p>
             <div className='mt-6 flex flex-wrap gap-2'>
               {activeTags.map((tag) => <span key={tag} className='rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-muted-foreground'>{tag}</span>)}
             </div>
@@ -625,15 +625,15 @@ export default function Blog() {
         </div>
       </motion.section>
 
-      <div className='mt-4 grid grid-cols-3 gap-2 sm:gap-3'>
+      <div className='blog-stats mt-4 grid grid-cols-3 gap-2 sm:gap-3'>
         {[{ value: posts.length, label: 'Published notes' }, { value: interests.length, label: 'Build signals' }, { value: posts.reduce((total, post) => total + post.media.length, 0), label: 'Media moments' }].map((stat) => (
-          <div key={stat.label} className='glass rounded-2xl border border-border px-3 py-3 text-center sm:px-4'><div className='gradient-text font-display text-xl font-bold sm:text-2xl'>{stat.value}</div><div className='mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:text-xs'>{stat.label}</div></div>
+          <div key={stat.label} className='blog-stat glass rounded-2xl border border-border px-3 py-3 text-center sm:px-4'><div className='gradient-text font-display text-xl font-bold sm:text-2xl'>{stat.value}</div><div className='mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:text-xs'>{stat.label}</div></div>
         ))}
       </div>
 
-      <section className='mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem]'>
+      <section className='blog-layout mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem]'>
         <div className='min-w-0 space-y-6'>
-          <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.08 }} className='glass card-shadow overflow-hidden rounded-3xl border border-border'>
+          <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.08 }} className='blog-compass glass card-shadow overflow-hidden rounded-3xl border border-border'>
             <div className='border-b border-border p-5 md:p-6'>
               <div className='flex items-center gap-4'>
                 <Avatar />
@@ -670,7 +670,7 @@ export default function Blog() {
               <p className='mx-auto mt-2 max-w-md leading-7 text-muted-foreground'>New media and captions will appear here as the creator feed grows.</p>
             </div>
           ) : (
-            <section className='grid gap-7 xl:grid-cols-2' aria-label='Visual blog posts'>
+            <section className='blog-feed grid gap-7 xl:grid-cols-2' aria-label='Visual blog posts'>
               {posts.map((post, index) => {
                 const postTags = post.tags.length > 0 ? post.tags : activeTags.slice(0, 3);
                 const hasVideo = post.media.some((item) => item.kind === 'video');
@@ -690,7 +690,7 @@ export default function Blog() {
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.06, duration: 0.45 }}
-                    className='min-w-0 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-hotpink focus-visible:ring-offset-4 focus-visible:ring-offset-background'
+                    className='blog-post min-w-0 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-hotpink focus-visible:ring-offset-4 focus-visible:ring-offset-background'
                   >
                     <CardContainer containerClassName='w-full py-0' className='w-full'>
                       <CardBody className='group/card relative h-full min-h-128 w-full max-w-none overflow-hidden rounded-3xl border border-border bg-card/95 p-0 card-shadow'>
@@ -780,8 +780,8 @@ export default function Blog() {
           )}
         </div>
 
-        <aside className='space-y-5 lg:sticky lg:top-28 lg:self-start'>
-          <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} className='glass card-shadow rounded-3xl border border-border p-5'>
+        <aside className='blog-sidebar space-y-5 lg:sticky lg:top-28 lg:self-start'>
+          <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} className='blog-sidebar-card glass card-shadow rounded-3xl border border-border p-5'>
             <div className='flex items-center justify-between gap-3'>
               <div>
                 <div className='text-xs font-semibold uppercase tracking-[0.18em] text-hotpink'>Feed mode</div>
@@ -793,7 +793,7 @@ export default function Blog() {
           </motion.div>
 
           {featuredPost && (
-            <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.14 }} className='gradient-hero-bg glow-shadow overflow-hidden rounded-3xl p-5 text-white'>
+            <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.14 }} className='blog-feature gradient-hero-bg glow-shadow overflow-hidden rounded-3xl p-5 text-white'>
               <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/80'><Sparkles className='h-4 w-4' /> Latest visual</div>
               <p className='mt-4 text-sm leading-7 text-white/85'>{featuredPost.caption}</p>
               <div className='mt-4 flex flex-wrap gap-2'>
@@ -802,7 +802,7 @@ export default function Blog() {
             </motion.div>
           )}
 
-          <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className='glass rounded-3xl border border-border p-5'>
+          <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className='blog-sidebar-card glass rounded-3xl border border-border p-5'>
             <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-hotpink'><Hash className='h-4 w-4' /> Feed tags</div>
             <div className='mt-4 flex flex-wrap gap-2'>
               {activeTags.map((tag) => <span key={`sidebar-${tag}`} className='rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-medium text-muted-foreground'>{tag}</span>)}

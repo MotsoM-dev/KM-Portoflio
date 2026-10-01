@@ -33,8 +33,10 @@ import { isSupabaseConfigured, supabase } from '../lib/supabase';
 const SETTINGS_ROW_NAME = 'default';
 const ADMIN_KEY = 'motsom-dev-blog-admin';
 const ADMIN_PASSWORD_HASH = '3c7bff9a336ba17f715cbffd291cfdad52f33e4887c164a0a368ba429555b160';
-const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
-const MAX_VIDEO_BYTES = 8 * 1024 * 1024;
+// Supabase Storage handles these files remotely; the limits prevent accidental
+// browser-memory uploads while still allowing high-quality portfolio media.
+const MAX_IMAGE_BYTES = 15 * 1024 * 1024;
+const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 const MAX_MEDIA_FILES = 6;
 
 type BlogMedia = { src: string; name: string; kind: 'image' | 'video' };
@@ -109,8 +111,8 @@ function normalizePostFromSupabase(raw: any): VisualPost {
 
 function getMediaValidationError(file: File) {
   if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) return 'Please choose image or video files only.';
-  if (file.type.startsWith('image/') && file.size > MAX_IMAGE_BYTES) return 'Images must be under 2 MB so they can save locally.';
-  if (file.type.startsWith('video/') && file.size > MAX_VIDEO_BYTES) return 'Videos must be under 8 MB so they can save locally.';
+  if (file.type.startsWith('image/') && file.size > MAX_IMAGE_BYTES) return 'Images must be under 15 MB.';
+  if (file.type.startsWith('video/') && file.size > MAX_VIDEO_BYTES) return 'Videos must be under 100 MB.';
   return '';
 }
 
@@ -350,10 +352,14 @@ export default function Blog() {
       return { src, name: file.name, kind: file.type.startsWith('video/') ? 'video' : 'image' };
     }
 
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+    const fileExt = file.name.split('.').pop()?.toLowerCase() || 'bin';
+    const fileName = `posts/${crypto.randomUUID()}.${fileExt}`;
 
-    const { error: uploadError } = await supabase.storage.from('blog-media').upload(fileName, file, { upsert: true });
+    const { error: uploadError } = await supabase.storage.from('blog-media').upload(fileName, file, {
+      cacheControl: '31536000',
+      contentType: file.type,
+      upsert: false,
+    });
     if (uploadError) throw uploadError;
 
     const { data: { publicUrl } } = supabase.storage.from('blog-media').getPublicUrl(fileName);
@@ -927,7 +933,7 @@ export default function Blog() {
                         <div className='gradient-cool-bg grid h-11 w-11 place-items-center rounded-2xl text-white'><UploadCloud className='h-5 w-5' /></div>
                         <div>
                           <div className='text-sm font-semibold text-foreground'>Add more media</div>
-                          <div className='text-xs text-muted-foreground'>Up to {MAX_MEDIA_FILES} files. Images under 2 MB, videos under 8 MB.</div>
+                          <div className='text-xs text-muted-foreground'>Up to {MAX_MEDIA_FILES} files. Images under 15 MB, videos under 100 MB.</div>
                         </div>
                       </div>
                     </label>
@@ -952,7 +958,7 @@ export default function Blog() {
                         <div className='gradient-cool-bg grid h-11 w-11 place-items-center rounded-2xl text-white'><UploadCloud className='h-5 w-5' /></div>
                         <div>
                           <div className='text-sm font-semibold text-foreground'>Add pictures or videos</div>
-                          <div className='text-xs text-muted-foreground'>Up to {MAX_MEDIA_FILES} files. Images under 2 MB, videos under 8 MB.</div>
+                          <div className='text-xs text-muted-foreground'>Up to {MAX_MEDIA_FILES} files. Images under 15 MB, videos under 100 MB.</div>
                         </div>
                       </div>
                     </label>

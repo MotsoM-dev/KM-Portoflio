@@ -530,6 +530,15 @@ function Header({ theme, toggle }: { theme: "light" | "dark"; toggle: () => void
 function HomePage() {
   const typedWord = useTypewriter(words);
   const featuredProject = projects[0];
+  const projectCount = projects.length;
+  const hackathonCount = projects.filter((project) => project.isHackathon).length;
+  const experienceYears = `${Math.max(1, new Date().getFullYear() - 2023)}+`;
+  const homeStats = [
+    { k: experienceYears, v: "Years of experience" },
+    { k: String(projectCount), v: "Projects" },
+    { k: String(hackathonCount), v: "Hackathon projects" },
+    { k: "2+", v: "Years tutoring" },
+  ];
   const socialLinks = [
     { label: "GitHub", href: "https://github.com/MotsoM-dev", icon: Github },
     { label: "LinkedIn", href: "https://linkedin.com/in/kgomotso-mathombo-a848a5386", icon: Linkedin },
@@ -619,15 +628,10 @@ function HomePage() {
                 </div>
               </div>
             </motion.article>
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { k: "2x", v: "2nd place hackathon wins" },
-                { k: "4", v: "Featured projects" },
-                { k: "2+", v: "Years tutoring" },
-                { k: "3", v: "Hackathons" },
-              ].map((stat, index) => (
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              {homeStats.map((stat, index) => (
                 <Reveal key={stat.v} delay={index * 0.05}>
-                  <div className="glass card-shadow rounded-2xl border border-border p-3 text-center xl:p-5">
+                  <div className="glass card-shadow flex min-h-24 flex-col justify-center rounded-2xl border border-border p-3 text-center sm:min-h-28 sm:p-5">
                     <div className="gradient-text font-display text-3xl font-bold">{stat.k}</div>
                     <div className="mt-1 text-sm text-muted-foreground">{stat.v}</div>
                   </div>

@@ -57,3 +57,39 @@ create policy "Allow anon delete feed_settings" on public.feed_settings for dele
 create index if not exists idx_post_media_post_id on post_media(post_id);
 create index if not exists idx_posts_created_at on posts(created_at desc);
 create index if not exists idx_feed_settings_name on feed_settings(name);
+
+-- Public media storage keeps uploaded images and videos available on every
+-- device instead of embedding large base64 files in browser local storage.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'blog-media',
+  'blog-media',
+  true,
+  104857600,
+  array['image/*', 'video/*']::text[]
+)
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists "Allow public read blog media" on storage.objects;
+create policy "Allow public read blog media"
+  on storage.objects for select
+  using (bucket_id = 'blog-media');
+
+drop policy if exists "Allow anon upload blog media" on storage.objects;
+create policy "Allow anon upload blog media"
+  on storage.objects for insert
+  with check (bucket_id = 'blog-media' and auth.role() = 'anon');
+
+drop policy if exists "Allow anon update blog media" on storage.objects;
+create policy "Allow anon update blog media"
+  on storage.objects for update
+  using (bucket_id = 'blog-media' and auth.role() = 'anon')
+  with check (bucket_id = 'blog-media' and auth.role() = 'anon');
+
+drop policy if exists "Allow anon delete blog media" on storage.objects;
+create policy "Allow anon delete blog media"
+  on storage.objects for delete
+  using (bucket_id = 'blog-media' and auth.role() = 'anon');

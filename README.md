@@ -40,3 +40,11 @@ Then run the app again.
 npm.cmd run build
 npm.cmd run start
 ```
+
+## Blog media storage
+
+To make Blog posts and large images/videos available across devices, create a
+`.env.local` file from `.env.example`, add the Supabase project URL and anon
+key, then run `supabase-schema.sql` in the Supabase SQL editor. The schema
+creates the `blog-media` public Storage bucket (up to 100 MB per file) and the
+policies required for the portfolio feed to read and upload media.

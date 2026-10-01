@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import {
   AtSign,
+  ArrowRight,
   Camera,
   ChevronLeft,
   ChevronRight,
@@ -116,11 +117,11 @@ function getMediaValidationError(file: File) {
   return '';
 }
 
-function Avatar({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
+function Avatar({ size = 'md', imageSrc }: { size?: 'sm' | 'md' | 'lg'; imageSrc?: string }) {
   const sizes = { sm: 'h-9 w-9 text-xs', md: 'h-12 w-12 text-sm', lg: 'h-20 w-20 text-xl' };
   return (
     <div className={`gradient-hero-bg relative grid shrink-0 place-items-center rounded-2xl font-display font-bold text-white shadow-lg ${sizes[size]}`}>
-      <span>KM</span>
+      {imageSrc ? <img src={imageSrc} alt='Kgomotso Mathombo' className='h-full w-full rounded-2xl object-cover' /> : <span>KM</span>}
       <motion.span aria-hidden='true' className='absolute inset-0 rounded-2xl border border-white/50' animate={{ scale: [1, 1.24, 1], opacity: [0.4, 0, 0.4] }} transition={{ duration: 2.9, repeat: Infinity, ease: 'easeInOut' }} />
     </div>
   );
@@ -601,7 +602,7 @@ export default function Blog() {
           <div className='relative rounded-3xl border border-border bg-background/65 p-5 backdrop-blur sm:p-6'>
             <div className='mb-5 flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground'><span>Creator profile</span><span className='rounded-full bg-hotpink/10 px-2 py-1 text-hotpink'>Live</span></div>
             <div className='flex items-center gap-4'>
-              <Avatar size='lg' />
+              <Avatar size='lg' imageSrc='/creator-profile.jpeg' />
               <div>
                 <div className='font-display text-xl font-semibold'>Kgomotso Mathombo</div>
                 <div className='mt-1 flex items-center gap-1.5 text-sm text-muted-foreground'><AtSign className='h-3.5 w-3.5' /> MotsoM-Dev</div>
@@ -626,33 +627,28 @@ export default function Blog() {
               <div className='flex items-center gap-4'>
                 <Avatar />
                 <div className='min-w-0 flex-1'>
-                  <div className='flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-hotpink'><Hash className='h-4 w-4' /> Interest cards</div>
+                  <div className='flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-hotpink'><Hash className='h-4 w-4' /> Build compass</div>
                   <h2 className='mt-1 font-display text-2xl font-bold md:text-4xl'>What I build around.</h2>
                 </div>
               </div>
-              <p className='mt-4 max-w-2xl leading-7 text-muted-foreground'>The feed stays centered on the areas I care about most, with evolving tags and interest cards.</p>
+              <p className='mt-4 max-w-2xl leading-7 text-muted-foreground'>A living map of the ideas, technologies, and human problems that shape my work.</p>
             </div>
 
-            <div className='grid grid-cols-[repeat(auto-fit,minmax(8.5rem,1fr))] gap-2.5 p-4'>
+            <div className='grid gap-2.5 p-4 sm:grid-cols-2'>
               {interests.map((interest, index) => {
                 const Icon = interestIcons[index % interestIcons.length];
                 return (
-                  <motion.div key={`${interest}-${index}`} animate={{ y: [0, -3, 0] }} transition={{ duration: 3.2 + index * 0.12, repeat: Infinity, ease: 'easeInOut', delay: index * 0.06 }} whileHover={{ y: -6, scale: 1.04, rotate: index % 2 === 0 ? -1 : 1 }} className='group relative min-h-28 overflow-hidden rounded-xl border border-border bg-background/70 p-3 transition-colors hover:border-hotpink/70 hover:bg-card'>
-                    <div className={`${interestGradients[index % interestGradients.length]} absolute inset-0 opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-20`} />
-                    <motion.div aria-hidden='true' className='absolute -right-8 -top-8 h-16 w-16 rounded-full bg-hotpink/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
-                    <div className='relative grid h-full content-between gap-3'>
-                      <div className={`${interestGradients[index % interestGradients.length]} grid h-9 w-9 place-items-center rounded-xl text-white shadow-md transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110`}><Icon className='h-4 w-4' /></div>
-                      <div className='max-w-full wrap-anywhere font-display text-[0.82rem] font-semibold leading-tight'>{interest}</div>
-                    </div>
+                  <motion.div key={`${interest}-${index}`} whileHover={{ x: 4 }} className='group flex items-center gap-3 rounded-2xl border border-border bg-background/65 p-3 transition-colors hover:border-hotpink/60 hover:bg-card'>
+                    <div className={`${interestGradients[index % interestGradients.length]} grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white shadow-md transition-transform duration-300 group-hover:rotate-3`}><Icon className='h-4 w-4' /></div>
+                    <div className='min-w-0 flex-1'><div className='font-display text-sm font-semibold'>{interest}</div><div className='mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground'>Signal {String(index + 1).padStart(2, '0')}</div></div>
+                    <ArrowRight className='h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-hotpink' />
                   </motion.div>
                 );
               })}
             </div>
 
-            <div className='relative overflow-hidden border-t border-border px-5 py-3 md:px-6'>
-              <motion.div className='flex w-max gap-2' animate={{ x: ['0%', '-50%'] }} transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}>
-                {[...activeTags, ...activeTags].map((tag, index) => <span key={`${tag}-${index}`} className='rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-medium text-muted-foreground'>{tag}</span>)}
-              </motion.div>
+            <div className='border-t border-border px-5 py-4 md:px-6'>
+              <div className='flex flex-wrap items-center gap-2'><span className='mr-1 text-[10px] font-bold uppercase tracking-[0.18em] text-hotpink'>Keywords</span>{activeTags.map((tag) => <span key={tag} className='rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-medium text-muted-foreground'>{tag}</span>)}</div>
             </div>
           </motion.section>
 

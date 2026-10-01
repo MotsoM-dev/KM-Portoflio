@@ -209,6 +209,17 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
   color: transparent;
 }
 
+/* Keep the two hero columns visually balanced with the creator card. */
+.blog-hero .pc-card {
+  height: clamp(21rem, 41vw, 30rem);
+  max-height: 30rem;
+}
+
+.blog-hero .pc-card-wrapper {
+  max-width: 20rem;
+  margin-inline: auto;
+}
+
 .blog-stats {
   position: relative;
   z-index: 2;
@@ -278,7 +289,35 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
 }
 
 .blog-compass > div:first-child {
+  padding: 1rem 1.25rem;
   background: linear-gradient(110deg, rgba(255,255,255,.04), transparent 55%);
+}
+
+.blog-compass > div:first-child .h-12 {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.blog-compass > div:first-child h2 {
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+}
+
+.blog-compass > .grid {
+  gap: .5rem;
+  padding: .8rem 1rem;
+}
+
+.blog-compass > .grid .group {
+  padding: .6rem .7rem;
+}
+
+.blog-compass > .grid .group > div:first-child {
+  width: 2.15rem;
+  height: 2.15rem;
+}
+
+.blog-compass > .border-t {
+  padding: .75rem 1.25rem;
 }
 
 .blog-compass .group {
@@ -386,6 +425,15 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
 }
 
 @media (max-width: 767px) {
+  .blog-hero .pc-card {
+    height: min(62svh, 25rem);
+    max-height: 25rem;
+  }
+
+  .blog-hero .pc-card-wrapper {
+    max-width: 17.5rem;
+  }
+
   .blog-post-first { grid-column: auto; }
   .blog-post-first .group\/card { display: block; }
   .blog-post-first .group\/card > div:first-child { min-height: 0; }

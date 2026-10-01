@@ -10,12 +10,12 @@ import {
   Code2,
   Film,
   Hash,
-  ImageIcon,
   Layers,
   Lock,
   LogOut,
   Palette,
   PenLine,
+  Play,
   Plus,
   Save,
   Share2,
@@ -27,8 +27,6 @@ import {
   X,
   Zap,
 } from 'lucide-react';
-import { CardBody, CardContainer, CardItem } from './ui/3d-card';
-import ProfileCard from './ProfileCard';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
 const SETTINGS_ROW_NAME = 'default';
@@ -47,6 +45,7 @@ type FeedSettings = { tags: string[]; interests: string[] };
 const defaultInterests = ['Mobile development', 'Web development', 'FinTech', 'Blockchain', 'Cybersecurity', 'UX', 'UI'];
 const defaultTags = ['#MobileDev', '#WebDev', '#FinTech', '#Blockchain', '#Cybersecurity', '#UX', '#UI'];
 const defaultSettings: FeedSettings = { tags: defaultTags, interests: defaultInterests };
+const defaultVisualMedia: BlogMedia = { src: '/images/me-landing.png', name: 'MotsoM creative studio', kind: 'image' };
 const LOCAL_POSTS_KEY = 'motso-feed-posts';
 const LOCAL_SETTINGS_KEY = 'motso-feed-settings';
 
@@ -129,13 +128,14 @@ function Avatar({ size = 'md', imageSrc }: { size?: 'sm' | 'md' | 'lg'; imageSrc
 
 function DefaultVisual({ caption, index }: { caption: string; index: number }) {
   return (
-    <div className='gradient-cool-bg relative grid h-full min-h-18rem w-full overflow-hidden place-items-center text-white'>
+    <div className='relative h-full min-h-18rem w-full overflow-hidden bg-black text-white'>
+      <img src={defaultVisualMedia.src} alt={defaultVisualMedia.name} className='h-full w-full object-cover opacity-90 transition duration-700 group-hover:scale-105' />
+      <div className='absolute inset-0 bg-linear-to-t from-black/85 via-black/20 to-transparent' />
       <motion.div aria-hidden='true' className='absolute -left-1/4 top-0 h-full w-1/2 skew-x-12 bg-white/20 blur-2xl' animate={{ x: ['0%', '260%'] }} transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: index * 0.12 }} />
-      <motion.div aria-hidden='true' className='absolute right-8 top-8 h-28 w-28 rounded-full border border-white/20' animate={{ scale: [1, 1.18, 1], rotate: [0, 20, 0] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }} />
-      <div className='relative grid max-w-sm gap-4 px-7 text-center'>
-        <div className='mx-auto grid h-16 w-16 place-items-center rounded-3xl border border-white/30 bg-white/15 backdrop-blur'><Camera className='h-7 w-7' /></div>
-        <p className='font-display text-2xl font-bold leading-tight'>MotsoM Feed</p>
-        <p className='line-clamp-2 text-sm leading-6 text-white/80'>{caption}</p>
+      <div className='absolute bottom-5 left-5 right-5'>
+        <div className='mb-3 inline-grid h-11 w-11 place-items-center rounded-full border border-white/30 bg-white/15 backdrop-blur'><Camera className='h-5 w-5' /></div>
+        <p className='font-display text-xl font-bold leading-tight'>MotsoM Feed</p>
+        <p className='mt-1 line-clamp-2 text-sm leading-6 text-white/80'>{caption}</p>
       </div>
     </div>
   );
@@ -157,44 +157,7 @@ function MediaDisplay({ media, caption, index, controls = false, fit = 'cover' }
       />
     );
   }
-  return <img src={media.src} alt={caption} className={`h-full w-full ${fitClass} transition duration-500 group-hover/card:scale-105`} />;
-}
-
-function MediaCollage({ media, caption, index }: { media: BlogMedia[]; caption: string; index: number }) {
-  if (media.length === 0) return <DefaultVisual caption={caption} index={index} />;
-  if (media.length === 1) return <MediaDisplay media={media[0]} caption={caption} index={index} />;
-
-  const visibleMedia = media.slice(0, 4);
-  const extraCount = Math.max(media.length - 4, 0);
-  const cellBase = 'relative overflow-hidden rounded-2xl border border-white/10 bg-black shadow-lg shadow-black/20';
-  const renderCell = (item: BlogMedia, itemIndex: number, className = '') => (
-    <motion.div key={`${item.name}-${itemIndex}`} className={`${cellBase} ${className}`} whileHover={{ scale: 1.025 }} transition={{ duration: 0.22 }}>
-      <MediaDisplay media={item} caption={caption} index={index + itemIndex} />
-      <div className='absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-white/5 opacity-80' />
-      {item.kind === 'video' && (
-        <div className='absolute left-2 top-2 grid h-8 w-8 place-items-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur'>
-          <Film className='h-4 w-4' />
-        </div>
-      )}
-      {itemIndex === 3 && extraCount > 0 && (
-        <div className='absolute inset-0 grid place-items-center bg-black/50 text-white backdrop-blur-[2px]'>
-          <span className='rounded-full border border-white/25 bg-white/15 px-4 py-2 font-display text-lg font-semibold'>+{extraCount}</span>
-        </div>
-      )}
-    </motion.div>
-  );
-
-  if (media.length === 2) return <div className='grid h-full min-h-72 grid-cols-2 gap-2 bg-black p-2'>{visibleMedia.map((item, i) => renderCell(item, i, 'h-full'))}</div>;
-  if (media.length === 3) {
-    return (
-      <div className='grid h-full min-h-72 grid-cols-[1.2fr_0.8fr] grid-rows-2 gap-2 bg-black p-2'>
-        {renderCell(visibleMedia[0], 0, 'row-span-2')}
-        {renderCell(visibleMedia[1], 1)}
-        {renderCell(visibleMedia[2], 2)}
-      </div>
-    );
-  }
-  return <div className='grid h-full min-h-72 grid-cols-2 grid-rows-2 gap-2 bg-black p-2'>{visibleMedia.map((item, i) => renderCell(item, i))}</div>;
+  return <img src={media.src} alt={caption} className={`h-full w-full ${fitClass} transition duration-500 group-hover:scale-105`} />;
 }
 
 function MediaPreviewGrid({ media, onRemove }: { media: BlogMedia[]; onRemove: (index: number) => void }) {
@@ -243,7 +206,6 @@ export default function Blog() {
   const [sharedPostId, setSharedPostId] = useState('');
   const [viewerPostId, setViewerPostId] = useState('');
   const [viewerMediaIndex, setViewerMediaIndex] = useState(0);
-  const [expandedCaptionIds, setExpandedCaptionIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchPosts = async () => {
@@ -319,16 +281,20 @@ export default function Blog() {
   const viewerPost = posts.find((post) => post.id === viewerPostId);
   const viewerMediaCount = Math.max(viewerPost?.media.length ?? 0, 1);
   const viewerMedia = viewerPost?.media[viewerMediaIndex];
+  const heroMedia = featuredPost?.media[0] ?? defaultVisualMedia;
+  const isDefaultHeroMedia = heroMedia.src === defaultVisualMedia.src && heroMedia.kind === 'image';
+  const heroTags = featuredPost?.tags.length ? featuredPost.tags : activeTags.slice(0, 4);
+  const mediaMomentCount = posts.reduce((total, post) => total + post.media.length, 0);
+  const tileClassFor = (index: number) => {
+    if (index === 0) return 'blog-tile-featured';
+    if (index % 7 === 3) return 'blog-tile-wide';
+    if (index % 5 === 2) return 'blog-tile-tall';
+    return '';
+  };
 
   const closeAdmin = () => {
     setAdminOpen(false);
     window.history.replaceState(null, '', '/blog');
-  };
-
-  const toggleCaption = (postId: string) => {
-    setExpandedCaptionIds((current) =>
-      current.includes(postId) ? current.filter((item) => item !== postId) : [...current, postId]
-    );
   };
 
   const login = async (event: FormEvent<HTMLFormElement>) => {
@@ -585,292 +551,214 @@ export default function Blog() {
   }, []);
 
   return (
-    <main className='blog-page mx-auto min-h-screen w-full max-w-7xl px-4 pb-16 pt-28 sm:px-6 md:px-8 md:pb-20 md:pt-32'>
-      <motion.section initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} className='blog-hero glass card-shadow relative overflow-hidden rounded-3xl border border-border p-5 sm:p-7 md:p-10'>
-        <motion.div aria-hidden='true' className='gradient-hero-bg absolute -right-28 -top-32 h-80 w-80 rounded-full opacity-25 blur-3xl' animate={{ scale: [1, 1.15, 1], rotate: [0, 18, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }} />
-        <motion.div aria-hidden='true' className='gradient-cool-bg absolute -bottom-32 left-8 h-72 w-72 rounded-full opacity-20 blur-3xl' animate={{ x: [0, 24, 0], y: [0, -18, 0] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} />
-        <div className='relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_25rem] lg:items-end'>
-          <div className='relative'>
-            <span className='inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-hotpink'><Sparkles className='h-4 w-4' /> MotsoM Feed</span>
-            <div className='mt-5 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.24em] text-muted-foreground'><span className='h-px w-8 bg-hotpink' /> Build log / 2026</div>
-            <h1 className='blog-hero-title mt-3 max-w-3xl font-display text-4xl font-bold leading-[1.02] sm:text-5xl md:text-6xl'>A living studio for ideas<span className='gradient-text'>.</span></h1>
-            <p className='mt-5 max-w-2xl text-base leading-8 text-muted-foreground md:text-lg'>Behind-the-build notes, visual experiments, and product stories from the intersection of technology, culture, and thoughtful design.</p>
-            <div className='mt-6 flex flex-wrap gap-2'>
-              {activeTags.map((tag) => <span key={tag} className='rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-muted-foreground'>{tag}</span>)}
+    <main className='blog-page mx-auto min-h-screen w-full max-w-7xl px-4 pb-16 pt-24 sm:px-6 md:px-8 md:pb-20 md:pt-28'>
+      <motion.section initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} className='blog-board'>
+        <div className='blog-board-topbar'>
+          <div className='flex items-center gap-3'>
+            <div className='blog-brand-mark'>KM</div>
+            <div>
+              <div className='blog-topbar-eyebrow'>MotsoM Feed</div>
+              <div className='blog-topbar-title'>Build journal</div>
             </div>
           </div>
-          <div className='relative mx-auto w-full max-w-sm'>
-            <div className='mb-3 flex items-center justify-between px-1 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground'><span>Creator profile</span><span className='rounded-full bg-hotpink/10 px-2 py-1 text-hotpink'>Live</span></div>
-            <ProfileCard
-              name='Kgomotso Mathombo'
-              title='Frontend & Mobile Developer'
-              handle='motsoM-dev'
-              status='Building in public'
-              contactText='Contact me'
-              avatarUrl='/creator-profile.jpeg'
-              showUserInfo={false}
-              enableTilt
-              enableMobileTilt={false}
-              behindGlowColor='rgba(255, 79, 179, 0.67)'
-              behindGlowSize='50%'
-              iconUrl='/favicon-k.svg'
-              behindGlowEnabled
-              innerGradient='linear-gradient(145deg,#60496e8c 0%,#ff4fb344 52%,#71C4FF44 100%)'
-              miniAvatarUrl='/creator-profile.jpeg'
-              onContactClick={() => window.location.assign('/contact')}
-              className='w-full'
-            />
-            <div className='mt-3 rounded-2xl border border-border bg-background/65 p-3 text-xs leading-5 text-muted-foreground backdrop-blur'><span className='font-semibold text-foreground'>Currently exploring</span><br />{interests[0]} · interface experiments · product stories</div>
+          <div className='blog-topbar-actions'>
+            <span><Sparkles className='h-4 w-4' /></span>
+            <span><Hash className='h-4 w-4' /></span>
+            <span><Camera className='h-4 w-4' /></span>
           </div>
         </div>
-      </motion.section>
 
-      <div className='blog-stats mt-4 grid grid-cols-3 gap-2 sm:gap-3'>
-        {[{ value: posts.length, label: 'Published notes' }, { value: interests.length, label: 'Build signals' }, { value: posts.reduce((total, post) => total + post.media.length, 0), label: 'Media moments' }].map((stat) => (
-          <div key={stat.label} className='blog-stat glass rounded-2xl border border-border px-3 py-3 text-center sm:px-4'><div className='gradient-text font-display text-xl font-bold sm:text-2xl'>{stat.value}</div><div className='mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:text-xs'>{stat.label}</div></div>
-        ))}
-      </div>
-
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className='blog-signal-bar mt-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border px-4 py-3 sm:px-5'>
-        <div className='flex items-center gap-3'>
-          <span className='blog-live-dot' aria-hidden='true' />
-          <span className='text-xs font-bold uppercase tracking-[0.18em] text-foreground'>Live from the studio</span>
-          <span className='hidden text-xs text-muted-foreground sm:inline'>New ideas, imperfect drafts, useful lessons.</span>
-        </div>
-        <div className='flex flex-wrap gap-1.5'>
-          {activeTags.slice(0, 4).map((tag) => <span key={`signal-${tag}`} className='blog-signal-tag'>{tag}</span>)}
-        </div>
-      </motion.div>
-
-      <section className='blog-layout mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem]'>
-        <div className='min-w-0 space-y-6'>
-          <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.08 }} className='blog-compass glass card-shadow overflow-hidden rounded-3xl border border-border'>
-            <div className='border-b border-border p-5 md:p-6'>
-              <div className='flex items-center gap-4'>
-                <Avatar />
-                <div className='min-w-0 flex-1'>
-                  <div className='flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-hotpink'><Hash className='h-4 w-4' /> Build compass</div>
-                  <h2 className='mt-1 font-display text-2xl font-bold md:text-4xl'>What I build around.</h2>
+        <div className='blog-board-hero'>
+          <button type='button' disabled={!featuredPost} onClick={() => featuredPost && openViewer(featuredPost.id, 0)} className={`blog-hero-media group ${isDefaultHeroMedia ? 'blog-hero-media-portrait' : ''}`} aria-label={featuredPost ? 'Open latest blog media' : 'Blog hero image'}>
+            {isDefaultHeroMedia ? (
+              <div className='blog-portrait-scene'>
+                <img src={defaultVisualMedia.src} alt='' aria-hidden='true' className='blog-portrait-backdrop' />
+                <div className='blog-portrait-frame'>
+                  <img src={defaultVisualMedia.src} alt={defaultVisualMedia.name} className='blog-portrait-image' />
                 </div>
               </div>
-              <p className='mt-4 max-w-2xl leading-7 text-muted-foreground'>A living map of the ideas, technologies, and human problems that shape my work.</p>
+            ) : (
+              <MediaDisplay media={heroMedia} caption={featuredPost?.caption ?? 'MotsoM creative studio'} index={0} />
+            )}
+            <div className='blog-hero-scrim' />
+            <div className='blog-hero-copy'>
+              <span className='blog-kicker'>Creator feed / 2026</span>
+              <h1 className='blog-hero-title'>MotsoM Build Journal</h1>
+              <p>Visual notes, product experiments, hackathon memories, and the quiet lessons behind the work.</p>
+              <div className='blog-hero-meta'>
+                <span>{posts.length} notes</span>
+                <span>{mediaMomentCount} media moments</span>
+                <span>{interests.length} build signals</span>
+              </div>
             </div>
+            {heroMedia.kind === 'video' && <span className='blog-hero-play'><Play className='h-6 w-6 fill-current' /></span>}
+          </button>
 
-            <div className='grid gap-2.5 p-4 sm:grid-cols-2'>
+          <aside className='blog-board-profile'>
+            <Avatar size='lg' imageSrc='/creator-profile.jpeg' />
+            <div className='mt-4 text-center'>
+              <h2 className='blog-profile-name font-display text-xl font-semibold'>Kgomotso Mathombo</h2>
+              <p className='blog-profile-title mt-1 text-sm'>Frontend &amp; Mobile Developer</p>
+            </div>
+            <div className='blog-profile-divider' />
+            <div className='grid gap-2 text-sm'>
+              {['Visual notes', 'Build lessons', 'Project moments', 'Creative tech'].map((item, index) => (
+                <div key={item} className='blog-profile-link'>
+                  <span>0{index + 1}</span>
+                  <span>{item}</span>
+                  <ArrowRight className='h-3.5 w-3.5' />
+                </div>
+              ))}
+            </div>
+            <div className='blog-profile-search'>
+              <span>Search the vibe</span>
+              <Sparkles className='h-4 w-4' />
+            </div>
+          </aside>
+        </div>
+
+        <div className='blog-board-bottom'>
+          <div className='blog-stats blog-board-stats'>
+            {[{ value: posts.length, label: 'Published notes' }, { value: interests.length, label: 'Build signals' }, { value: mediaMomentCount, label: 'Media moments' }].map((stat) => (
+              <div key={stat.label} className='blog-stat'>
+                <div>{stat.value}</div>
+                <span>{stat.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.08 }} className='blog-compass blog-compass-compact'>
+            <div className='blog-compass-heading'>
+              <Avatar />
+              <div>
+                <div className='flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-hotpink'><Hash className='h-4 w-4' /> Build compass</div>
+                <h2 className='mt-1 font-display text-2xl font-bold'>What I build around.</h2>
+              </div>
+            </div>
+            <div className='blog-compass-strip'>
               {interests.map((interest, index) => {
                 const Icon = interestIcons[index % interestIcons.length];
                 return (
-                  <motion.div key={`${interest}-${index}`} whileHover={{ x: 4 }} className='group flex items-center gap-3 rounded-2xl border border-border bg-background/65 p-3 transition-colors hover:border-hotpink/60 hover:bg-card'>
-                    <div className={`${interestGradients[index % interestGradients.length]} grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white shadow-md transition-transform duration-300 group-hover:rotate-3`}><Icon className='h-4 w-4' /></div>
-                    <div className='min-w-0 flex-1'><div className='font-display text-sm font-semibold'>{interest}</div><div className='mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground'>Signal {String(index + 1).padStart(2, '0')}</div></div>
-                    <ArrowRight className='h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-hotpink' />
+                  <motion.div key={`${interest}-${index}`} whileHover={{ y: -3 }} className='blog-compass-chip'>
+                    <div className={`${interestGradients[index % interestGradients.length]} grid h-9 w-9 shrink-0 place-items-center rounded-xl text-white shadow-md`}><Icon className='h-4 w-4' /></div>
+                    <div className='min-w-0'>
+                      <div className='truncate font-display text-sm font-semibold'>{interest}</div>
+                      <div className='mt-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground'>Signal {String(index + 1).padStart(2, '0')}</div>
+                    </div>
                   </motion.div>
                 );
               })}
             </div>
-
-            <div className='border-t border-border px-5 py-4 md:px-6'>
-              <div className='flex flex-wrap items-center gap-2'><span className='mr-1 text-[10px] font-bold uppercase tracking-[0.18em] text-hotpink'>Keywords</span>{activeTags.map((tag) => <span key={tag} className='rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-medium text-muted-foreground'>{tag}</span>)}</div>
+            <div className='blog-keywords'>
+              {activeTags.map((tag) => <span key={tag}>{tag}</span>)}
             </div>
           </motion.section>
 
           {posts.length === 0 ? (
-            <div className='glass card-shadow rounded-3xl border border-border p-8 text-center'>
+            <div className='blog-empty-state'>
               <div className='gradient-cool-bg mx-auto grid h-14 w-14 place-items-center rounded-2xl text-white'><PenLine className='h-7 w-7' /></div>
               <h2 className='mt-4 font-display text-2xl font-semibold'>No visual posts yet.</h2>
               <p className='mx-auto mt-2 max-w-md leading-7 text-muted-foreground'>New media and captions will appear here as the creator feed grows.</p>
             </div>
           ) : (
             <section className='blog-feed' aria-label='Visual blog posts'>
-              <div className='blog-feed-heading mb-4 flex flex-wrap items-end justify-between gap-3'>
-                <div><div className='text-xs font-bold uppercase tracking-[0.2em] text-hotpink'>The archive</div><h2 className='mt-1 font-display text-3xl font-bold sm:text-4xl'>Field notes &amp; fragments</h2></div>
-                <span className='rounded-full border border-border bg-background/60 px-3 py-1.5 text-xs font-semibold text-muted-foreground'>{posts.length} {posts.length === 1 ? 'note' : 'notes'} in the feed</span>
+              <div className='blog-feed-heading'>
+                <div>
+                  <div className='text-xs font-bold uppercase tracking-[0.2em] text-hotpink'>The archive</div>
+                  <h2 className='mt-1 font-display text-3xl font-bold sm:text-4xl'>Tap a visual to open the story</h2>
+                </div>
+                <p>Cards stay clean. Captions appear inside the full rounded viewer.</p>
               </div>
-              <div className='grid gap-7 xl:grid-cols-2'>
-              {posts.map((post, index) => {
-                const postTags = post.tags.length > 0 ? post.tags : activeTags.slice(0, 3);
-                const hasVideo = post.media.some((item) => item.kind === 'video');
-                return (
-                  <motion.article
-                    id={post.id}
-                    key={post.id}
-                    role='button'
-                    tabIndex={0}
-                    onClick={() => openViewer(post.id, 0)}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        openViewer(post.id, 0);
-                      }
-                    }}
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.06, duration: 0.45 }}
-                    className={`blog-post min-w-0 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-hotpink focus-visible:ring-offset-4 focus-visible:ring-offset-background ${index === 0 ? 'blog-post-first' : ''}`}
-                  >
-                    <CardContainer containerClassName='w-full py-0' className='w-full'>
-                      <CardBody className='group/card relative h-full min-h-128 w-full max-w-none overflow-hidden rounded-3xl border border-border bg-card/95 p-0 card-shadow'>
-                        <CardItem translateZ={70} className='relative block w-full'>
-                          <div className='relative aspect-4/3 w-full overflow-hidden rounded-t-3xl bg-muted'>
-                            <MediaCollage media={post.media} caption={post.caption} index={index} />
-                            <div className='absolute left-4 top-4 grid h-9 w-9 place-items-center rounded-full border border-white/25 bg-black/30 font-display text-xs font-bold text-white backdrop-blur'>0{index + 1}</div>
-                            <div className='absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 to-transparent p-4'>
-                              <div className='flex flex-wrap items-center justify-between gap-2'>
-                                <div className='inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur'>
-                                  {hasVideo ? <Film className='h-3.5 w-3.5' /> : <Camera className='h-3.5 w-3.5' />} Media post
-                                </div>
-                                <div className='inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/25 px-3 py-1 text-xs font-semibold text-white backdrop-blur'>
-                                  {Math.max(post.media.length, 1)} item{Math.max(post.media.length, 1) === 1 ? '' : 's'}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </CardItem>
-
-                        <div className='grid gap-5 p-5 md:p-6'>
-                          <div className='flex items-center justify-between gap-4'>
-                            <CardItem translateZ={35} className='flex min-w-0 items-center gap-3'>
-                              <Avatar size='sm' />
-                              <div className='min-w-0'>
-                                <div className='font-display text-sm font-semibold'>Kgomotso Mathombo</div>
-                                <div className='mt-1 text-xs text-muted-foreground'>{formatDate(post.createdAt)}</div>
-                              </div>
-                            </CardItem>
-                            <CardItem translateZ={45} className='shrink-0'>
-                              <button type='button' onClick={(event) => { event.stopPropagation(); void sharePost(post.id); }} className='inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-3 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:border-hotpink hover:text-hotpink'>
-                                <Share2 className='h-3.5 w-3.5' /> {sharedPostId === post.id ? 'Copied' : 'Share'}
-                              </button>
-                            </CardItem>
-                          </div>
-
-                          <CardItem translateZ={55} className='block w-full'>
-                            <div className='text-base leading-8 text-foreground md:text-lg'>
-                              {expandedCaptionIds.includes(post.id) ? (
-                                <>
-                                  <p>{post.caption}</p>
-                                  <button
-                                    type='button'
-                                    onClick={(event) => {
-                                      event.stopPropagation();
-                                      toggleCaption(post.id);
-                                    }}
-                                    className='mt-3 inline-flex items-center gap-2 rounded-full border border-hotpink bg-hotpink/10 px-3 py-2 text-sm font-semibold text-hotpink transition hover:bg-hotpink/20'
-                                  >
-                                    Show less
-                                  </button>
-                                </>
-                              ) : (
-                                <>
-                                  <p className='line-clamp-3'>{post.caption}</p>
-                                  <button
-                                    type='button'
-                                    onClick={(event) => {
-                                      event.stopPropagation();
-                                      toggleCaption(post.id);
-                                    }}
-                                    className='mt-3 inline-flex items-center gap-2 rounded-full border border-hotpink bg-hotpink/10 px-3 py-2 text-sm font-semibold text-hotpink transition hover:bg-hotpink/20'
-                                  >
-                                    Read more
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          </CardItem>
-                          <CardItem translateZ={40} className='flex w-full flex-wrap gap-2'>
-                            {postTags.map((tag) => <span key={`${post.id}-${tag}`} className='rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-muted-foreground'>{tag}</span>)}
-                          </CardItem>
-
-                          {isAdmin && (
-                            <CardItem translateZ={50} className='flex w-full flex-wrap gap-2 border-t border-border pt-4'>
-                              <button type='button' onClick={(event) => { event.stopPropagation(); startEditing(post); }} className='inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-2 text-xs font-semibold text-muted-foreground hover:border-teal hover:text-teal'><PenLine className='h-3.5 w-3.5' /> Edit</button>
-                              <button type='button' onClick={(event) => { event.stopPropagation(); requestDeletePost(post.id); }} className='inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-2 text-xs font-semibold text-muted-foreground hover:border-hotpink hover:text-hotpink'><Trash2 className='h-3.5 w-3.5' /> Delete</button>
-                            </CardItem>
-                          )}
+              <div className='blog-post-grid'>
+                {posts.map((post, index) => {
+                  const postTags = post.tags.length > 0 ? post.tags : heroTags.slice(0, 3);
+                  const primaryMedia = post.media[0];
+                  const hasVideo = post.media.some((item) => item.kind === 'video');
+                  return (
+                    <motion.article
+                      id={post.id}
+                      key={post.id}
+                      initial={{ opacity: 0, y: 24 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05, duration: 0.45 }}
+                      className={`blog-post blog-board-tile ${tileClassFor(index)}`}
+                    >
+                      <button
+                        type='button'
+                        onClick={() => openViewer(post.id, 0)}
+                        className='blog-tile-button group'
+                        aria-label='Open blog media and caption'
+                      >
+                        <MediaDisplay media={primaryMedia} caption={post.caption} index={index} />
+                        <div className='blog-tile-shade' />
+                        <div className='blog-tile-topline'>
+                          <span>{hasVideo ? <Film className='h-3.5 w-3.5' /> : <Camera className='h-3.5 w-3.5' />} {hasVideo ? 'Video' : 'Photo'}</span>
+                          <span>{Math.max(post.media.length, 1)}</span>
                         </div>
-                      </CardBody>
-                    </CardContainer>
-                  </motion.article>
-                );
-              })}
+                        {hasVideo && <span className='blog-play-button'><Play className='h-5 w-5 fill-current' /></span>}
+                        <div className='blog-tile-footer'>
+                          <span>{formatDate(post.createdAt)}</span>
+                          <strong>{postTags[0] ?? '#MotsoM'}</strong>
+                        </div>
+                      </button>
+
+                      {isAdmin && (
+                        <div className='blog-tile-admin'>
+                          <button type='button' onClick={() => startEditing(post)}><PenLine className='h-3.5 w-3.5' /> Edit</button>
+                          <button type='button' onClick={() => requestDeletePost(post.id)}><Trash2 className='h-3.5 w-3.5' /> Delete</button>
+                        </div>
+                      )}
+                    </motion.article>
+                  );
+                })}
               </div>
             </section>
           )}
         </div>
-
-        <aside className='blog-sidebar space-y-5 lg:sticky lg:top-28 lg:self-start'>
-          <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} className='blog-sidebar-card glass card-shadow rounded-3xl border border-border p-5'>
-            <div className='flex items-center justify-between gap-3'>
-              <div>
-                <div className='text-xs font-semibold uppercase tracking-[0.18em] text-hotpink'>Feed mode</div>
-                <h2 className='mt-1 font-display text-xl font-semibold'>Media + caption</h2>
-              </div>
-              <motion.div animate={{ rotate: [0, 8, -8, 0], scale: [1, 1.08, 1] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} className='gradient-cool-bg grid h-11 w-11 place-items-center rounded-2xl text-white'><ImageIcon className='h-5 w-5' /></motion.div>
-            </div>
-            <p className='mt-4 text-sm leading-7 text-muted-foreground'>Each post can hold a small album of images and short videos. Tap a card to open the bigger media viewer.</p>
-          </motion.div>
-
-          {featuredPost && (
-            <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.14 }} className='blog-feature gradient-hero-bg glow-shadow overflow-hidden rounded-3xl p-5 text-white'>
-              <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/80'><Sparkles className='h-4 w-4' /> Latest visual</div>
-              <p className='mt-4 text-sm leading-7 text-white/85'>{featuredPost.caption}</p>
-              <div className='mt-4 flex flex-wrap gap-2'>
-                {(featuredPost.tags.length > 0 ? featuredPost.tags : activeTags.slice(0, 3)).map((tag) => <span key={`featured-${tag}`} className='rounded-full border border-white/20 bg-white/15 px-3 py-1 text-xs font-semibold text-white/90'>{tag}</span>)}
-              </div>
-            </motion.div>
-          )}
-
-          <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className='blog-sidebar-card glass rounded-3xl border border-border p-5'>
-            <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-hotpink'><Hash className='h-4 w-4' /> Feed tags</div>
-            <div className='mt-4 flex flex-wrap gap-2'>
-              {activeTags.map((tag) => <span key={`sidebar-${tag}`} className='rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-medium text-muted-foreground'>{tag}</span>)}
-            </div>
-          </motion.div>
-        </aside>
-      </section>
+      </motion.section>
 
       <AnimatePresence>
         {viewerPost && (
-          <div className='fixed inset-0 z-75 grid place-items-center bg-background/80 px-3 py-5 backdrop-blur-xl md:px-6' onClick={closeViewer}>
+          <div className='blog-viewer-backdrop' onClick={closeViewer}>
             <motion.section
               initial={{ opacity: 0, y: 24, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 16, scale: 0.96 }}
               transition={{ duration: 0.24 }}
               onClick={(event) => event.stopPropagation()}
-              className='relative max-h-[92vh] w-full max-w-6xl overflow-y-auto rounded-3xl border border-border bg-card p-3 card-shadow md:p-5'
+              className='blog-viewer-card'
               role='dialog'
               aria-modal='true'
               aria-label='Media viewer'
             >
-              <motion.div aria-hidden='true' className='gradient-hero-bg absolute -right-20 -top-24 h-56 w-56 rounded-full opacity-20 blur-3xl' animate={{ scale: [1, 1.12, 1], rotate: [0, 18, 0] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }} />
-              <div className='relative flex items-start justify-between gap-4 p-2 md:p-3'>
+              <div className='blog-viewer-header'>
                 <div className='flex min-w-0 items-center gap-3'>
                   <Avatar size='sm' />
                   <div className='min-w-0'>
-                    <div className='flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-hotpink'><Sparkles className='h-4 w-4' /> MotsoM media viewer</div>
-                    <h2 className='mt-1 line-clamp-1 font-display text-xl font-semibold md:text-2xl'>{formatDate(viewerPost.createdAt)}</h2>
+                    <div className='flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-hotpink'><Sparkles className='h-4 w-4' /> Open story</div>
+                    <h2 className='mt-1 line-clamp-1 font-display text-xl font-semibold text-white md:text-2xl'>{formatDate(viewerPost.createdAt)}</h2>
                   </div>
                 </div>
-                <button type='button' onClick={closeViewer} className='grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border bg-background/70 hover:border-hotpink hover:text-hotpink' aria-label='Close media viewer'><X className='h-4 w-4' /></button>
+                <button type='button' onClick={closeViewer} className='blog-viewer-close' aria-label='Close media viewer'><X className='h-4 w-4' /></button>
               </div>
 
-              <div className='relative overflow-hidden rounded-3xl border border-border bg-black'>
-                <div className='aspect-16/10 max-h-[68vh] min-h-72 w-full'>
+              <div className='blog-viewer-media'>
+                <div className='blog-viewer-media-frame'>
                   <MediaDisplay media={viewerMedia} caption={viewerPost.caption} index={viewerMediaIndex} controls fit='contain' />
                 </div>
                 {viewerMediaCount > 1 && (
                   <>
-                    <button type='button' onClick={() => moveViewer(-1)} className='absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-black/45 text-white backdrop-blur transition hover:bg-hotpink' aria-label='Previous media'><ChevronLeft className='h-5 w-5' /></button>
-                    <button type='button' onClick={() => moveViewer(1)} className='absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-black/45 text-white backdrop-blur transition hover:bg-hotpink' aria-label='Next media'><ChevronRight className='h-5 w-5' /></button>
-                    <div className='absolute bottom-3 right-3 rounded-full border border-white/20 bg-black/45 px-3 py-1 text-xs font-semibold text-white backdrop-blur'>{viewerMediaIndex + 1} / {viewerMediaCount}</div>
+                    <button type='button' onClick={() => moveViewer(-1)} className='blog-viewer-nav blog-viewer-nav-left' aria-label='Previous media'><ChevronLeft className='h-5 w-5' /></button>
+                    <button type='button' onClick={() => moveViewer(1)} className='blog-viewer-nav blog-viewer-nav-right' aria-label='Next media'><ChevronRight className='h-5 w-5' /></button>
+                    <div className='blog-viewer-count'>{viewerMediaIndex + 1} / {viewerMediaCount}</div>
                   </>
                 )}
               </div>
 
               {viewerPost.media.length > 1 && (
-                <div className='mt-4 flex gap-2 overflow-x-auto pb-1'>
+                <div className='blog-viewer-thumbs'>
                   {viewerPost.media.map((media, index) => (
-                    <button key={`${media.name}-${index}`} type='button' onClick={() => setViewerMediaIndex(index)} className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-2xl border transition ${viewerMediaIndex === index ? 'border-hotpink ring-2 ring-hotpink/30' : 'border-border opacity-75 hover:opacity-100'}`} aria-label={`Open media ${index + 1}`}>
+                    <button key={`${media.name}-${index}`} type='button' onClick={() => setViewerMediaIndex(index)} className={`blog-viewer-thumb ${viewerMediaIndex === index ? 'is-active' : ''}`} aria-label={`Open media ${index + 1}`}>
                       <MediaDisplay media={media} caption={viewerPost.caption} index={index} />
                       {media.kind === 'video' && <span className='absolute inset-0 grid place-items-center bg-black/20 text-white'><Film className='h-5 w-5' /></span>}
                     </button>
@@ -878,14 +766,14 @@ export default function Blog() {
                 </div>
               )}
 
-              <div className='grid gap-4 p-2 pt-5 md:grid-cols-[1fr_auto] md:p-3 md:pt-5'>
+              <div className='blog-viewer-caption'>
                 <div>
-                  <p className='text-base leading-8 text-foreground md:text-lg'>{viewerPost.caption}</p>
-                  <div className='mt-4 flex flex-wrap gap-2'>
-                    {(viewerPost.tags.length > 0 ? viewerPost.tags : activeTags.slice(0, 3)).map((tag) => <span key={`viewer-${tag}`} className='rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-muted-foreground'>{tag}</span>)}
+                  <p>{viewerPost.caption}</p>
+                  <div className='blog-viewer-tags'>
+                    {(viewerPost.tags.length > 0 ? viewerPost.tags : activeTags.slice(0, 3)).map((tag) => <span key={`viewer-${tag}`}>{tag}</span>)}
                   </div>
                 </div>
-                <button type='button' onClick={() => void sharePost(viewerPost.id)} className='inline-flex h-11 items-center justify-center gap-2 rounded-full border border-border bg-background/70 px-4 text-sm font-semibold text-muted-foreground transition hover:border-hotpink hover:text-hotpink'><Share2 className='h-4 w-4' /> {sharedPostId === viewerPost.id ? 'Copied' : 'Share'}</button>
+                <button type='button' onClick={() => void sharePost(viewerPost.id)} className='blog-viewer-share'><Share2 className='h-4 w-4' /> {sharedPostId === viewerPost.id ? 'Copied' : 'Share'}</button>
               </div>
             </motion.section>
           </div>

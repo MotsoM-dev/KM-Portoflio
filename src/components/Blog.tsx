@@ -3,7 +3,6 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import {
-  AtSign,
   ArrowRight,
   Camera,
   ChevronLeft,
@@ -29,6 +28,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { CardBody, CardContainer, CardItem } from './ui/3d-card';
+import ProfileCard from './ProfileCard';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
 const SETTINGS_ROW_NAME = 'default';
@@ -599,17 +599,28 @@ export default function Blog() {
               {activeTags.map((tag) => <span key={tag} className='rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-muted-foreground'>{tag}</span>)}
             </div>
           </div>
-          <div className='relative rounded-3xl border border-border bg-background/65 p-5 backdrop-blur sm:p-6'>
-            <div className='mb-5 flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground'><span>Creator profile</span><span className='rounded-full bg-hotpink/10 px-2 py-1 text-hotpink'>Live</span></div>
-            <div className='flex items-center gap-4'>
-              <Avatar size='lg' imageSrc='/creator-profile.jpeg' />
-              <div>
-                <div className='font-display text-xl font-semibold'>Kgomotso Mathombo</div>
-                <div className='mt-1 flex items-center gap-1.5 text-sm text-muted-foreground'><AtSign className='h-3.5 w-3.5' /> MotsoM-Dev</div>
-              </div>
-            </div>
-            <p className='mt-4 text-sm leading-7 text-muted-foreground'>A creator feed for what I am learning, shipping, testing, and thinking about while building digital products.</p>
-            <div className='mt-5 rounded-2xl bg-muted/60 p-3 text-xs leading-5 text-muted-foreground'><span className='font-semibold text-foreground'>Currently exploring</span><br />{interests[0]} · interface experiments · product stories</div>
+          <div className='relative mx-auto w-full max-w-sm'>
+            <div className='mb-3 flex items-center justify-between px-1 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground'><span>Creator profile</span><span className='rounded-full bg-hotpink/10 px-2 py-1 text-hotpink'>Live</span></div>
+            <ProfileCard
+              name='Kgomotso Mathombo'
+              title='Frontend & Mobile Developer'
+              handle='motsoM-dev'
+              status='Building in public'
+              contactText='Contact me'
+              avatarUrl='/creator-profile.jpeg'
+              showUserInfo={false}
+              enableTilt
+              enableMobileTilt={false}
+              behindGlowColor='rgba(255, 79, 179, 0.67)'
+              behindGlowSize='50%'
+              iconUrl='/favicon-k.svg'
+              behindGlowEnabled
+              innerGradient='linear-gradient(145deg,#60496e8c 0%,#ff4fb344 52%,#71C4FF44 100%)'
+              miniAvatarUrl='/creator-profile.jpeg'
+              onContactClick={() => window.location.assign('/contact')}
+              className='w-full'
+            />
+            <div className='mt-3 rounded-2xl border border-border bg-background/65 p-3 text-xs leading-5 text-muted-foreground backdrop-blur'><span className='font-semibold text-foreground'>Currently exploring</span><br />{interests[0]} · interface experiments · product stories</div>
           </div>
         </div>
       </motion.section>

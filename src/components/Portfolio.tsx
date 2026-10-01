@@ -1061,9 +1061,6 @@ function Footer() {
         <div>(c) {new Date().getFullYear()} Kgomotso Mathombo. Built with Next.js & React.</div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-hotpink" /> Crafted in South Africa</span>
-          <a href="/blog?admin=1" aria-label="Open admin login" className="rounded-full border border-border px-2 py-1 text-[10px] uppercase tracking-[0.18em] opacity-45 transition-opacity hover:opacity-100">
-            Login
-          </a>
         </div>
       </div>
     </footer>

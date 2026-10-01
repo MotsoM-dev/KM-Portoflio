@@ -296,7 +296,18 @@ export default function Blog() {
     fetchPosts();
     fetchSettings();
     setIsAdmin(sessionStorage.getItem(ADMIN_KEY) === 'true');
-    setAdminOpen(new URLSearchParams(window.location.search).get('admin') === '1');
+  }, []);
+
+  useEffect(() => {
+    const openPrivateStudio = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'm') {
+        event.preventDefault();
+        setAdminOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', openPrivateStudio);
+    return () => window.removeEventListener('keydown', openPrivateStudio);
   }, []);
 
   const allPostTags = Array.from(new Set(posts.flatMap((post) => post.tags))); 
@@ -619,7 +630,7 @@ export default function Blog() {
                   <h2 className='mt-1 font-display text-2xl font-bold md:text-4xl'>What I build around.</h2>
                 </div>
               </div>
-              <p className='mt-4 max-w-2xl leading-7 text-muted-foreground'>The feed stays centered on the areas I care about most, with editable tags and interest cards from Admin Studio.</p>
+              <p className='mt-4 max-w-2xl leading-7 text-muted-foreground'>The feed stays centered on the areas I care about most, with evolving tags and interest cards.</p>
             </div>
 
             <div className='grid grid-cols-[repeat(auto-fit,minmax(8.5rem,1fr))] gap-2.5 p-4'>
@@ -649,7 +660,7 @@ export default function Blog() {
             <div className='glass card-shadow rounded-3xl border border-border p-8 text-center'>
               <div className='gradient-cool-bg mx-auto grid h-14 w-14 place-items-center rounded-2xl text-white'><PenLine className='h-7 w-7' /></div>
               <h2 className='mt-4 font-display text-2xl font-semibold'>No visual posts yet.</h2>
-              <p className='mx-auto mt-2 max-w-md leading-7 text-muted-foreground'>New media and captions will appear here after they are published from Admin Studio.</p>
+              <p className='mx-auto mt-2 max-w-md leading-7 text-muted-foreground'>New media and captions will appear here as the creator feed grows.</p>
             </div>
           ) : (
             <section className='grid gap-7 xl:grid-cols-2' aria-label='Visual blog posts'>
@@ -772,18 +783,6 @@ export default function Blog() {
               <motion.div animate={{ rotate: [0, 8, -8, 0], scale: [1, 1.08, 1] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} className='gradient-cool-bg grid h-11 w-11 place-items-center rounded-2xl text-white'><ImageIcon className='h-5 w-5' /></motion.div>
             </div>
             <p className='mt-4 text-sm leading-7 text-muted-foreground'>Each post can hold a small album of images and short videos. Tap a card to open the bigger media viewer.</p>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.08 }} className='glass card-shadow rounded-3xl border border-border p-5'>
-            <div className='flex items-center justify-between gap-3'>
-              <div>
-                <div className='text-xs font-semibold uppercase tracking-[0.18em] text-hotpink'>Creator tools</div>
-                <h2 className='mt-1 font-display text-xl font-semibold'>Admin Studio</h2>
-              </div>
-              <div className='gradient-hero-bg grid h-11 w-11 place-items-center rounded-2xl text-white'><Lock className='h-5 w-5' /></div>
-            </div>
-            <p className='mt-4 text-sm leading-7 text-muted-foreground'>Open the studio to publish media posts, edit captions, manage hashtags, and update the interest cards.</p>
-            <button type='button' onClick={() => setAdminOpen(true)} className='mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background/70 px-4 py-3 text-sm font-semibold transition-colors hover:border-hotpink hover:text-hotpink'><Lock className='h-4 w-4' /> Open Admin Studio</button>
           </motion.div>
 
           {featuredPost && (

@@ -48,3 +48,10 @@ To make Blog posts and large images/videos available across devices, create a
 key, then run `supabase-schema.sql` in the Supabase SQL editor. The schema
 creates the `blog-media` public Storage bucket (up to 100 MB per file) and the
 policies required for the portfolio feed to read and upload media.
+
+### Private Blog Studio access
+
+The Admin Studio and login are hidden from public visitors. On the Blog page,
+press `Ctrl + Shift + M` to open the private login dialog, then enter the admin
+password. After signing in, the editor controls appear on posts and the studio
+panels are available. Use **Log out** when finished.

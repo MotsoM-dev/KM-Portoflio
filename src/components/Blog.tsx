@@ -631,6 +631,17 @@ export default function Blog() {
         ))}
       </div>
 
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className='blog-signal-bar mt-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border px-4 py-3 sm:px-5'>
+        <div className='flex items-center gap-3'>
+          <span className='blog-live-dot' aria-hidden='true' />
+          <span className='text-xs font-bold uppercase tracking-[0.18em] text-foreground'>Live from the studio</span>
+          <span className='hidden text-xs text-muted-foreground sm:inline'>New ideas, imperfect drafts, useful lessons.</span>
+        </div>
+        <div className='flex flex-wrap gap-1.5'>
+          {activeTags.slice(0, 4).map((tag) => <span key={`signal-${tag}`} className='blog-signal-tag'>{tag}</span>)}
+        </div>
+      </motion.div>
+
       <section className='blog-layout mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem]'>
         <div className='min-w-0 space-y-6'>
           <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.08 }} className='blog-compass glass card-shadow overflow-hidden rounded-3xl border border-border'>
@@ -670,7 +681,12 @@ export default function Blog() {
               <p className='mx-auto mt-2 max-w-md leading-7 text-muted-foreground'>New media and captions will appear here as the creator feed grows.</p>
             </div>
           ) : (
-            <section className='blog-feed grid gap-7 xl:grid-cols-2' aria-label='Visual blog posts'>
+            <section className='blog-feed' aria-label='Visual blog posts'>
+              <div className='blog-feed-heading mb-4 flex flex-wrap items-end justify-between gap-3'>
+                <div><div className='text-xs font-bold uppercase tracking-[0.2em] text-hotpink'>The archive</div><h2 className='mt-1 font-display text-3xl font-bold sm:text-4xl'>Field notes &amp; fragments</h2></div>
+                <span className='rounded-full border border-border bg-background/60 px-3 py-1.5 text-xs font-semibold text-muted-foreground'>{posts.length} {posts.length === 1 ? 'note' : 'notes'} in the feed</span>
+              </div>
+              <div className='grid gap-7 xl:grid-cols-2'>
               {posts.map((post, index) => {
                 const postTags = post.tags.length > 0 ? post.tags : activeTags.slice(0, 3);
                 const hasVideo = post.media.some((item) => item.kind === 'video');
@@ -690,7 +706,7 @@ export default function Blog() {
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.06, duration: 0.45 }}
-                    className='blog-post min-w-0 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-hotpink focus-visible:ring-offset-4 focus-visible:ring-offset-background'
+                    className={`blog-post min-w-0 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-hotpink focus-visible:ring-offset-4 focus-visible:ring-offset-background ${index === 0 ? 'blog-post-first' : ''}`}
                   >
                     <CardContainer containerClassName='w-full py-0' className='w-full'>
                       <CardBody className='group/card relative h-full min-h-128 w-full max-w-none overflow-hidden rounded-3xl border border-border bg-card/95 p-0 card-shadow'>
@@ -776,6 +792,7 @@ export default function Blog() {
                   </motion.article>
                 );
               })}
+              </div>
             </section>
           )}
         </div>

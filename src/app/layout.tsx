@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   title: "Kgomotso Mathombo - Frontend & Mobile Developer",
   description:
     "Portfolio of Kgomotso Mathombo, a South African Frontend & Mobile App Developer building fast, accessible React and React Native experiences.",
+  icons: {
+    icon: "/favicon-k.svg",
+    shortcut: "/favicon-k.svg",
+    apple: "/favicon-k.svg",
+  },
 };
 
 const themeScript = `
